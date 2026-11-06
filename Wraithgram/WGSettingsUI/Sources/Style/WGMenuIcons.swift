@@ -14,11 +14,11 @@ public func wgMenuIconColor(theme: PresentationTheme) -> UIColor {
     }
 }
 
-/// Name of the ghost glyph in this module's asset catalog (`Assets/WGSettingsUI.xcassets`).
+/// Name of the wraith glyph in this module's asset catalog (`Assets/WGSettingsUI.xcassets`).
 let wgGhostGlyphName = "WGSettingsUI/Ghost"
 
-/// The root header's ghost: the app icon's ghost cut out whole (body, eyes, dust) as a 64 pt
-/// template, so it stays sharp at that size (the row glyph is a 24 pt raster).
+/// The root header's mark: the app icon's wraith as a 64 pt template (hood rim and eyes cut out),
+/// so it stays sharp at that size (the row glyph is a 24 pt raster).
 private let wgHeaderGhostName = "WGSettingsUI/HeaderGhost"
 
 /// Side of the root header's ghost.
@@ -131,8 +131,8 @@ private func wgRenderMenuIcon(_ icon: WGMenuIcon, color: UIColor) -> UIImage? {
     }
 }
 
-/// Name of the «Wraithgram» row's tile in this module's asset catalog: the old Wraithgram's picture
-/// (dark square, white ghost), drawn whole — not a glyph on a generated background.
+/// Name of the «Wraithgram» row's tile in this module's asset catalog: a dark square with the white
+/// wraith, drawn whole — not a glyph on a generated background.
 private let wgSettingsTileName = "WGSettingsUI/SettingsTile"
 
 private func wgRenderHeaderMark(color: UIColor) -> UIImage? {
@@ -152,8 +152,8 @@ private func wgRenderHeaderMark(color: UIColor) -> UIImage? {
 }
 
 private func wgRenderSettingsTile() -> UIImage? {
-    // As the old Wraithgram drew it (owner, 2026-10-27): the full picture through Telegram's own tile
-    // renderer for app icons in Settings (30 pt, corner radius 8, the same gloss as its neighbours).
+    // The full picture through Telegram's own tile renderer for app icons in Settings (30 pt,
+    // corner radius 8, the same gloss as its neighbours).
     if let image = UIImage(bundleImageName: wgSettingsTileName) {
         return renderAttachAppIcon(iconImage: image)
     }

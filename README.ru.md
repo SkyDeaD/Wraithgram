@@ -30,6 +30,13 @@ Wraithgram собран на официальном исходном коде [T
 
 Wraithgram не связан с Telegram.
 
+<p align="center">
+  <img src="docs/assets/screenshots/01-menu-ru.png" width="200" alt="Меню Wraithgram: поиск по настройкам и категории приватности, сообщений, медиа и звонков, оформления, безопасности и другого">
+  <img src="docs/assets/screenshots/02-privacy-ru.png" width="200" alt="Настройки приватности: превью чата, режим призрака, чтение при действиях и вечный онлайн">
+  <img src="docs/assets/screenshots/03-messages-ru.png" width="200" alt="Настройки сообщений: превью с изменённым сообщением, удалённые и изменённые, обходы ограничений, отправка и перевод">
+  <img src="docs/assets/screenshots/04-appearance-ru.png" width="200" alt="Настройки оформления: сообщения, список чатов, панели, тема и фон, иконки, профиль и настройки">
+</p>
+
 ## Скачать
 
 Сборки выкладываются на странице [Releases](https://github.com/SkyDeaD/wraithgram/releases):

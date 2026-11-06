@@ -30,6 +30,13 @@ development.
 
 Wraithgram is not affiliated with Telegram.
 
+<p align="center">
+  <img src="docs/assets/screenshots/01-menu-en.png" width="200" alt="The Wraithgram menu: settings search and categories for privacy, messages, media and calls, appearance, security and more">
+  <img src="docs/assets/screenshots/02-privacy-en.png" width="200" alt="Privacy settings: a chat preview, ghost mode, read on action and always online">
+  <img src="docs/assets/screenshots/03-messages-en.png" width="200" alt="Message settings: a preview with an edited message, deleted and edited history, restriction bypass, sending and translation">
+  <img src="docs/assets/screenshots/04-appearance-en.png" width="200" alt="Appearance settings: messages, chat list, panels, theme and background, icons, profile and settings">
+</p>
+
 ## Download
 
 Builds are published on the [Releases](https://github.com/SkyDeaD/wraithgram/releases) page:
