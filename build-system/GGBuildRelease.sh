@@ -12,7 +12,7 @@
 # The build number must be higher than any build already uploaded for this version.
 #
 # GG_CONFIG and GG_CODESIGN override the two paths above. A purchased ad-hoc certificate with one
-# App ID (docs/codesigning.md): its own config with "app_group", and --disableExtensions:
+# App ID (docs/ios/codesigning.md): its own config with "app_group", and --disableExtensions:
 #
 #   GG_CONFIG=build-system/ghostgram-configuration-device.json \
 #   GG_CODESIGN=build-system/ghostgram-codesigning-device \

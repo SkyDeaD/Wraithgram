@@ -1,18 +1,22 @@
 # Обновление до нового релиза Telegram iOS
 
-Ghostgram — это Telegram iOS плюс изменения Ghostgram, и его история Git продолжает историю Telegram. Здесь
-написано, как влить новый релиз Telegram iOS в Ghostgram и проверить результат.
+Ghostgram — это Telegram iOS плюс изменения Ghostgram. Здесь написано, как перенести в Ghostgram новый релиз
+Telegram iOS и проверить результат.
 
-## Как устроена история
+## Как устроены обновления
 
 - Релизы Telegram iOS — это коммиты в `master` репозитория
   [TelegramMessenger/Telegram-iOS](https://github.com/TelegramMessenger/Telegram-iOS). Релиз — это коммит,
   который меняет `app` в `versions.json`, обычно с заголовком `Bump version`. Тегов релизов в репозитории нет
   с 2023 года.
-- Коммиты Ghostgram лежат поверх коммитов Telegram. Каждый релиз Telegram входит merge-коммитом с именем
-  `Merge Telegram-iOS <версия> (<коммит>)`.
+- История Git Ghostgram начинается с одного коммита и не содержит коммитов Telegram, поэтому релизы не
+  вливаются слиянием. Коммит Telegram, на котором основан Ghostgram, записан в `build-system/upstream-base`.
+- `build-system/GGUpstreamSync.sh` накладывает разницу между этим коммитом и новым релизом как патч, с
+  трёхсторонним слиянием там, где патч не ложится сам. Там, где Telegram и Ghostgram меняли одни и те же
+  строки, в файле остаются маркеры конфликта. Изменения файлов Telegram, которые Ghostgram удаляет (например,
+  `CLAUDE.md` и `AGENTS.md`), пропускаются.
 - Код Ghostgram лежит в `Ghostgram/`. Правки в файлах самого Telegram маленькие и помечены `// GHOST:`.
-  Конфликты слияния бывают именно в этих правках.
+  Конфликты бывают именно в этих правках.
 - Изменения Ghostgram внутри Git-сабмодулей хранятся патчами в `build-system/GGPatches/`, а не коммитами
   в сабмодулях. Их накладывает `build-system/GGBuild.sh`.
 
@@ -20,12 +24,13 @@ Ghostgram — это Telegram iOS плюс изменения Ghostgram, и ег
 
 Нужно:
 
-- Полный клон Ghostgram с сабмодулями (`git clone --recursive`), не shallow.
+- Клон Ghostgram с сабмодулями (`git clone --recursive`).
 - Рабочая сборка, как описано в README.
+- Никаких незакоммиченных изменений. Сабмодули, которые патчит `GGBuild.sh`, могут оставаться изменёнными.
 - Версия Xcode, которую новый релиз указывает в `versions.json`. Если она поменялась, установи этот Xcode и
   выбери его через `xcode-select` перед сборкой.
 
-## Влей релиз
+## Перенеси релиз
 
 1. Добавь Telegram iOS как remote. Если он уже есть, пропусти шаг.
 
@@ -56,19 +61,28 @@ Ghostgram — это Telegram iOS плюс изменения Ghostgram, и ег
    `VERSION` — версия Telegram, например `13.1.3`.
 
 5. Необязательно: посмотри файлы, которые меняли и Telegram, и Ghostgram. Конфликты возможны только в них.
-   `BASE` — коммит Telegram из прошлого слияния, `COMMIT` — новый релиз.
 
    ```sh
-   comm -12 <(git diff --name-only BASE COMMIT | sort) <(git diff --name-only BASE main | sort)
+   BASE=$(cat build-system/upstream-base)
+   comm -12 <(git diff --name-only $BASE COMMIT | sort) <(git diff --name-only $BASE HEAD | sort)
    ```
 
-6. Влей релиз.
+6. Наложи релиз.
 
    ```sh
-   git merge --no-ff -m "Merge Telegram-iOS VERSION (COMMIT)" COMMIT
+   build-system/GGUpstreamSync.sh COMMIT
    ```
 
-7. Разреши каждый конфликт. Список файлов с конфликтами: `git diff --name-only --diff-filter=U`.
+   Скрипт выводит базу, релиз и пропущенные файлы, а затем один из результатов:
+
+   - `Applied cleanly.` — переходи к шагу 8.
+   - `Applied with conflicts.` и список файлов — переходи к шагу 7.
+   - `ERROR: the patch did not apply` — ничего не изменилось. Обычно это значит, что Telegram поменял файл,
+     который Ghostgram тоже изменил так, что трёхстороннее слияние не справляется, например сабмодуль, который
+     Ghostgram переключил на другой коммит. Исправь этот файл вручную и запусти скрипт снова.
+
+7. Разреши каждый конфликт и добавь файл командой `git add FILE`. Список файлов с конфликтами:
+   `git diff --name-only --diff-filter=U`.
 
    В конфликте бери новый код Telegram и заново добавляй в него строки `// GHOST:`. Например, в 13.1.2
    Telegram добавил поле рядом с полем эквалайзера Ghostgram в `ChunkMediaPlayerV2.swift`, и при разрешении
@@ -78,14 +92,10 @@ Ghostgram — это Telegram iOS плюс изменения Ghostgram, и ег
    `versions.json` конфликтует, когда Telegram меняет версию Xcode, потому что Ghostgram ставит свой `xcode`.
    Бери `app` и остальные поля от Telegram, а из двух значений `xcode` оставляй более новое.
 
-   Ghostgram удаляет файлы Telegram `CLAUDE.md` и `AGENTS.md`. Когда Telegram меняет один из них, файл
-   конфликтует как удалённый у нас (deleted by us); разреши конфликт командой `git rm CLAUDE.md AGENTS.md`.
-
-8. Заверши слияние.
+8. Закоммить обновление. Скрипт уже добавил в индекс изменения и новый `build-system/upstream-base`.
 
    ```sh
-   git add -A
-   git commit --no-edit
+   git commit -m "Update to Telegram-iOS VERSION (COMMIT)"
    ```
 
 9. Переключи сабмодули на коммиты, которые использует релиз.
@@ -98,9 +108,8 @@ Ghostgram — это Telegram iOS плюс изменения Ghostgram, и ег
 
 1. Убедись, что от Telegram отличаются только изменения Ghostgram. Команда выводит изменённые файлы вне
    `Ghostgram/`. Каждый из них должен быть исходником с правками `// GHOST:` или файлом, который Ghostgram
-   добавляет или заменяет,
-   например скрипты сборки в `build-system/`, иконки и название приложения, `README.md`, `.gitignore` и
-   `.gitattributes`.
+   добавляет или заменяет, например скрипты сборки в `build-system/`, иконки и название приложения,
+   документация, `.gitignore` и `.gitattributes`.
 
    ```sh
    git diff --name-only COMMIT HEAD -- . ':!Ghostgram'

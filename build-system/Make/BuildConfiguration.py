@@ -22,7 +22,7 @@ class BuildConfiguration:
         premium_iap_product_id,
         enable_siri,
         enable_icloud,
-        app_group='' # GHOST: optional app group override (docs/codesigning.md)
+        app_group='' # GHOST: optional app group override (docs/ios/codesigning.md)
     ):
         self.bundle_id = bundle_id
         self.api_id = api_id

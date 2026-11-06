@@ -17,8 +17,8 @@ follow [Building](../README.md#building) in the README.
 
 ## Change Telegram's own files
 
-Keep edits to files outside `Ghostgram/` as small as you can, so that new Telegram releases merge cleanly
-(see [Updating to a new Telegram iOS release](../docs/upstream-sync.md)):
+Keep edits to files outside `Ghostgram/` as small as you can, so that new Telegram releases apply cleanly
+(see [Updating to a new Telegram iOS release](../docs/ios/upstream-sync.md)):
 
 - Mark each edited line or block with a `// GHOST:` comment that says why it is there. In `BUILD` files, use
   `# GHOST:`.
@@ -51,5 +51,4 @@ these paths and reports a key as unused when the path is shortened through an al
 
 ## Open a pull request
 
-Open the pull request against `main`. A GitHub workflow posts each new pull request to the Ghostgram chat on
-Telegram.
+Open the pull request against `main`.

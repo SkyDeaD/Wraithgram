@@ -303,7 +303,7 @@ class BazelCommandLine:
         if self.disable_provisioning_profiles:
             combined_arguments += ['--//Telegram:disableProvisioningProfiles']
 
-        # GHOST: an app without extensions, for a purchased certificate with a single App ID (docs/codesigning.md)
+        # GHOST: an app without extensions, for a purchased certificate with a single App ID (docs/ios/codesigning.md)
         if getattr(self, 'gg_disable_extensions', False):
             combined_arguments += ['--//Telegram:disableExtensions']
 

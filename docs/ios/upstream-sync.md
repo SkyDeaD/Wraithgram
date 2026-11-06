@@ -1,18 +1,22 @@
 # Updating to a new Telegram iOS release
 
-Ghostgram is Telegram iOS plus Ghostgram's own changes, and its Git history continues Telegram's. This page
-shows how to merge a new Telegram iOS release into Ghostgram and check the result.
+Ghostgram is Telegram iOS plus Ghostgram's own changes. This page shows how to bring a new Telegram iOS
+release into Ghostgram and check the result.
 
-## How the history is organized
+## How updates work
 
 - Telegram iOS releases are commits on `master` of
   [TelegramMessenger/Telegram-iOS](https://github.com/TelegramMessenger/Telegram-iOS). A release is the commit
   that changes `app` in `versions.json`, usually titled `Bump version`. The repository has had no release tags
   since 2023.
-- Ghostgram's commits sit on top of Telegram's commits. Each Telegram release enters with a merge commit named
-  `Merge Telegram-iOS <version> (<commit>)`.
+- Ghostgram's Git history starts from a single commit and does not contain Telegram's commits, so releases are
+  not merged. The Telegram commit that Ghostgram is based on is recorded in `build-system/upstream-base`.
+- `build-system/GGUpstreamSync.sh` applies the difference between that commit and the new release as a patch,
+  with a three-way fallback. Where Telegram and Ghostgram changed the same lines, the file is left with
+  conflict markers. Changes to Telegram files that Ghostgram deletes (such as `CLAUDE.md` and `AGENTS.md`) are
+  skipped.
 - Ghostgram's code lives in `Ghostgram/`. Edits to Telegram's own files are small and marked `// GHOST:`.
-  These edits are where merge conflicts happen.
+  These edits are where conflicts happen.
 - Ghostgram's changes inside Git submodules are kept as patch files in `build-system/GGPatches/`, not as
   submodule commits. `build-system/GGBuild.sh` applies them.
 
@@ -20,12 +24,13 @@ shows how to merge a new Telegram iOS release into Ghostgram and check the resul
 
 You need:
 
-- A full clone of Ghostgram with its submodules (`git clone --recursive`), not a shallow one.
+- A clone of Ghostgram with its submodules (`git clone --recursive`).
 - A working build as described in the README.
+- No uncommitted changes. The submodules that `GGBuild.sh` patches may stay modified.
 - The Xcode version that the new release names in `versions.json`. When it changes, install that Xcode and
   select it with `xcode-select` before you build.
 
-## Merge a release
+## Apply a release
 
 1. Add Telegram iOS as a remote. Skip this step if the remote exists.
 
@@ -56,19 +61,29 @@ You need:
    `VERSION` is the Telegram version, for example `13.1.3`.
 
 5. Optional: preview the files that both Telegram and Ghostgram changed. Conflicts can only happen in these
-   files. `BASE` is the Telegram commit of the previous merge, `COMMIT` the new release.
+   files.
 
    ```sh
-   comm -12 <(git diff --name-only BASE COMMIT | sort) <(git diff --name-only BASE main | sort)
+   BASE=$(cat build-system/upstream-base)
+   comm -12 <(git diff --name-only $BASE COMMIT | sort) <(git diff --name-only $BASE HEAD | sort)
    ```
 
-6. Merge the release.
+6. Apply the release.
 
    ```sh
-   git merge --no-ff -m "Merge Telegram-iOS VERSION (COMMIT)" COMMIT
+   build-system/GGUpstreamSync.sh COMMIT
    ```
 
-7. Resolve each conflict. List the conflicting files with `git diff --name-only --diff-filter=U`.
+   The script prints the base, the release and the skipped files, then one of these results:
+
+   - `Applied cleanly.` — continue with step 8.
+   - `Applied with conflicts.` and a list of files — continue with step 7.
+   - `ERROR: the patch did not apply` — nothing was changed. The usual cause is a change to a file that
+     Ghostgram also changed in a way the three-way fallback cannot handle, such as a submodule that Ghostgram
+     points to a different commit. Fix that file by hand and run the script again.
+
+7. Resolve each conflict, then stage the file with `git add FILE`. List the conflicting files with
+   `git diff --name-only --diff-filter=U`.
 
    In a conflict, keep Telegram's new code and re-apply the `// GHOST:` lines to it. For example, in 13.1.2
    Telegram added a field next to Ghostgram's equalizer field in `ChunkMediaPlayerV2.swift`, and the resolution
@@ -78,14 +93,10 @@ You need:
    `versions.json` conflicts when Telegram changes its Xcode version, because Ghostgram sets its own `xcode`.
    Take Telegram's `app` and the other fields, and keep the newer of the two `xcode` values.
 
-   Ghostgram deletes Telegram's `CLAUDE.md` and `AGENTS.md`. When Telegram changes one of them, it conflicts as
-   deleted by us; resolve it with `git rm CLAUDE.md AGENTS.md`.
-
-8. Finish the merge.
+8. Commit the update. The script has already staged the changes and the new `build-system/upstream-base`.
 
    ```sh
-   git add -A
-   git commit --no-edit
+   git commit -m "Update to Telegram-iOS VERSION (COMMIT)"
    ```
 
 9. Check out the submodule commits that the release uses.
@@ -98,7 +109,7 @@ You need:
 
 1. Confirm that the only differences from Telegram are Ghostgram's. This lists the changed files outside
    `Ghostgram/`. Each one must be a source file with `// GHOST:` edits or a file Ghostgram adds or replaces,
-   such as the build scripts in `build-system/`, the app's icons and name, `README.md`, `.gitignore` and
+   such as the build scripts in `build-system/`, the app's icons and name, the documentation, `.gitignore` and
    `.gitattributes`.
 
    ```sh

@@ -17,8 +17,8 @@
 
 ## Правки в файлах самого Telegram
 
-Правки в файлах вне `Ghostgram/` делай как можно меньше, чтобы новые релизы Telegram вливались чисто
-(см. [Обновление до нового релиза Telegram iOS](../docs/upstream-sync.ru.md)):
+Правки в файлах вне `Ghostgram/` делай как можно меньше, чтобы новые релизы Telegram накладывались чисто
+(см. [Обновление до нового релиза Telegram iOS](../docs/ios/upstream-sync.ru.md)):
 
 - Помечай каждую изменённую строку или блок комментарием `// GHOST:` с объяснением, зачем он. В файлах
   `BUILD` пиши `# GHOST:`.
@@ -51,5 +51,4 @@ python3 Ghostgram/Strings/check.py
 
 ## Открой pull request
 
-Открывай pull request в `main`. GitHub workflow отправляет каждый новый pull request в чат Ghostgram в
-Telegram.
+Открывай pull request в `main`.

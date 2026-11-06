@@ -1,16 +1,42 @@
+<p align="center">
+  <img src="docs/assets/logo.png" width="128" height="128" alt="Логотип Ghostgram: белый призрак на чёрном фоне">
+</p>
+
+<div align="center">
+
 # Ghostgram
 
-[English](README.md) · **Русский**
+</div>
 
-Ghostgram — неофициальный клиент Telegram для iOS. Он собран на официальном исходном коде
-[Telegram iOS](https://github.com/TelegramMessenger/Telegram-iOS) (13.1.2) и добавляет функции
-приватности, истории сообщений и оформления. Все они в одном меню: **Настройки → Ghostgram**.
+<p align="center">
+  Неофициальный клиент Telegram с функциями приватности, истории сообщений и оформления.
+</p>
+
+<p align="center">
+  <a href="https://github.com/SkyDeaD/ghostgram/releases"><img src="https://img.shields.io/github/v/release/SkyDeaD/ghostgram?include_prereleases&label=release" alt="Последний релиз"></a>
+  <img src="https://img.shields.io/badge/iOS-15.0%2B-black?logo=apple" alt="iOS 15.0 и новее">
+  <img src="https://img.shields.io/badge/Telegram-13.1.2-26A5E4?logo=telegram&logoColor=white" alt="Основан на Telegram iOS 13.1.2">
+  <img src="https://img.shields.io/badge/Swift-F05138?logo=swift&logoColor=white" alt="Swift">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--2.0-blue" alt="Лицензия: GPL-2.0"></a>
+</p>
+
+<p align="center">
+  <a href="README.md">English</a> · <b>Русский</b>
+</p>
+
+Ghostgram собран на официальном исходном коде [Telegram iOS](https://github.com/TelegramMessenger/Telegram-iOS)
+(13.1.2). Все его функции собраны в одном меню: **Настройки → Ghostgram**. Нативная версия для macOS в
+разработке.
 
 Ghostgram не связан с Telegram.
 
-- Канал: [@ghostgrama](https://t.me/ghostgrama)
-- Чат: [@ghostgramchat](https://t.me/ghostgramchat)
-- Форум: [@ghostgramforum](https://t.me/ghostgramforum)
+## Скачать
+
+Сборки выкладываются на странице [Releases](https://github.com/SkyDeaD/ghostgram/releases):
+
+- **iOS:** файл `.ipa`. Ghostgram нет в App Store, поэтому ставь его через программу подписи, например ESign
+  или LCSign, со своим сертификатом. Он встаёт рядом с официальным Telegram.
+- **macOS:** файл `.dmg`, когда выйдет версия для macOS.
 
 ## Функции
 
@@ -83,46 +109,42 @@ Ghostgram не связан с Telegram.
 
 Нужны Mac с Xcode и Python 3. Bazel `build-system/Make/Make.py` скачивает сам при первом запуске.
 
-1. Склонировать репозиторий с подмодулями:
+1. Склонируй репозиторий с сабмодулями:
 
    ```sh
-   git clone --recursive -j8 https://github.com/ichmagmaus111/ghostgram.git
+   git clone --recursive -j8 https://github.com/SkyDeaD/ghostgram.git
    cd ghostgram
    ```
 
-2. Создать файл конфигурации и заполнить его: `api_id` и `api_hash` с
-   [my.telegram.org](https://my.telegram.org), свой Apple `team_id` и `bundle_id`, если подписываешь
-   своим аккаунтом.
+2. Создай файл конфигурации и впиши `api_id` и `api_hash` с [my.telegram.org](https://my.telegram.org):
 
    ```sh
    cp build-system/ghostgram-configuration.example.json build-system/ghostgram-configuration.json
    ```
 
-3. Сборка для симулятора:
+3. Собери для симулятора:
 
    ```sh
    build-system/GGBuild.sh
    ```
 
-   Своих профилей для симулятора не нужно. Если нет `build-system/ghostgram-codesigning/profiles`, скрипт
-   берёт тестовые профили Telegram из `build-system/fake-codesigning` (только для `ph.telegra.Telegraph`,
-   поэтому этот `bundle_id` не меняй). Их срок истёк 30 октября 2026 года, поэтому
-   `build-system/GGSimProfiles.py` отдаёт сборке их копии с более поздним сроком. Как собрать со своими
-   профилями — в [Подпись своими профилями](docs/codesigning.ru.md).
+   Своих профилей для симулятора не нужно: без `build-system/ghostgram-codesigning/profiles` скрипт берёт
+   тестовые профили Telegram из `build-system/fake-codesigning` с продлённым сроком. Для этой сборки оставь
+   `bundle_id` равным `ph.telegra.Telegraph`.
 
-4. Сборка для устройства (IPA):
+4. Собери IPA для iPhone. Чтобы подписать её на телефоне через ESign, LCSign или похожую программу:
 
    ```sh
-   build-system/GGBuildRelease.sh <номер сборки>
+   build-system/GGBuildResign.sh
    ```
 
-   Нужны сертификат распространения (`.p12` с пустым паролем) в `build-system/ghostgram-codesigning/certs`
-   и профили приложения и его расширений в `build-system/ghostgram-codesigning/profiles`. Результат —
-   `build-output/ipa/Ghostgram.ipa`.
+   Результат — `build-output/ipa/Ghostgram-for-resign.ipa` с bundle ID `org.ghostgram.app`. Чтобы вместо
+   этого подписать на Mac своим сертификатом и профилями, смотри
+   [Подпись своими профилями](docs/ios/codesigning.ru.md).
 
-Оба скрипта привязывают Bazel к Xcode, выбранному через `xcode-select` (`build-system/GGXcodeConfig.sh`),
-и накладывают патчи из `build-system/GGPatches` на подмодули `rules_apple` и `tgcalls`. Файл конфигурации,
-папка подписи и результаты сборки — в `.gitignore`.
+Скрипты сборки привязывают Bazel к Xcode, выбранному через `xcode-select`, и накладывают патчи из
+`build-system/GGPatches` на сабмодули `rules_apple` и `tgcalls`. Файл конфигурации, папки подписи и
+результаты сборки — в `.gitignore`.
 
 ### Ядро VPN (по желанию)
 
@@ -130,29 +152,45 @@ Ghostgram не связан с Telegram.
 Ghostgram/Features/Vless/Core/build-core.sh
 ```
 
-Нужны Go 1.26 или новее и инструменты командной строки Xcode; первый запуск скачивает
-[Xray-core](https://github.com/XTLS/Xray-core). Без ядра приложение тоже собирается, а экран VPN
-сообщает, что ядра в сборке нет.
+Нужны Go 1.26 или новее и инструменты командной строки Xcode; при первом запуске скачивается
+[Xray-core](https://github.com/XTLS/Xray-core). Без ядра приложение всё равно собирается, а экран VPN пишет,
+что ядро не включено в сборку.
 
-## Устройство кода
+## Структура репозитория
 
-- `Ghostgram/` — всё, что добавляет Ghostgram: `GGCore` (настройки, строки, журнал), `GGHooks` (места, где
-  Ghostgram подключается к коду Telegram), `GGSettingsUI` (меню), `Features/` (функции), `Strings/`
-  (переводы; `generate.py` собирает таблицы строк, `check.py` их проверяет).
-- Остальное дерево — Telegram iOS. Правки в собственных файлах Telegram минимальные, помечены `// GHOST:` и
-  вызывают `GGHooks`.
+```text
+ghostgram/
+├── Ghostgram/            код Ghostgram
+│   ├── GGCore/           настройки, строки, журнал (общее, без интерфейса)
+│   ├── GGHooks/          точки, через которые Ghostgram подключается к коду Telegram
+│   ├── GGSettingsUI/     меню Ghostgram
+│   ├── Features/         функции, по модулю на каждую
+│   └── Strings/          переводы и инструменты для них
+├── build-system/         скрипты сборки (GG*.sh), патчи, шаблон конфигурации
+├── docs/ios/             гайды для iOS: подпись, обновление до нового релиза Telegram
+└── Telegram/, submodules/, third-party/, …
+                          Telegram iOS; лежит в корне, потому что этого требует его сборка на Bazel
+```
 
-История Git продолжает историю Telegram iOS: коммиты Ghostgram лежат поверх коммитов Telegram, а каждый новый
-релиз Telegram вливается слиянием. Как это сделать — в [Обновление до нового релиза Telegram iOS](docs/upstream-sync.ru.md).
-Как предложить изменения — в [Как вносить изменения](.github/CONTRIBUTING.ru.md).
+Правки в файлах самого Telegram маленькие, помечены `// GHOST:` и вызывают `GGHooks`. Новые релизы
+Telegram накладываются патчем: смотри [Обновление до нового релиза Telegram iOS](docs/ios/upstream-sync.ru.md).
+Как вносить изменения — в [Как вносить изменения в Ghostgram](.github/CONTRIBUTING.ru.md).
+
+## Благодарности
+
+- [Telegram iOS](https://github.com/TelegramMessenger/Telegram-iOS) от Telegram: Ghostgram собран на его
+  исходном коде.
+- [ichmagmaus111/ghostgram](https://github.com/ichmagmaus111/ghostgram): оригинальный Ghostgram, который
+  продолжает этот проект. Спасибо! Его сообщество в Telegram: [канал](https://t.me/ghostgrama),
+  [чат](https://t.me/ghostgramchat) и [форум](https://t.me/ghostgramforum).
 
 ## Лицензия
 
-Ghostgram распространяется по [GNU General Public License v2](LICENSE), как и исходный код Telegram iOS,
-на котором он построен. У сторонних компонентов свои лицензии; их список есть в приложении
+Ghostgram распространяется по [GNU General Public License v2](LICENSE), как и исходный код Telegram iOS, на
+котором он основан. У сторонних компонентов свои лицензии; их список есть в приложении
 (**Настройки → Ghostgram → О приложении → Сторонние компоненты**).
 
 Если собираешь своё приложение из этого кода, соблюдай
 [правила Telegram для разработчиков](https://github.com/TelegramMessenger/Telegram-iOS#creating-your-telegram-application):
-получи свой `api_id`, не называй приложение Telegram и не используй его логотип, береги данные
+получи свой `api_id`, не называй приложение Telegram и не используй его логотип, заботься о приватности
 пользователей и публикуй свой код.

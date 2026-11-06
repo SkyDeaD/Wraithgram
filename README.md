@@ -1,16 +1,42 @@
+<p align="center">
+  <img src="docs/assets/logo.png" width="128" height="128" alt="Ghostgram logo: a white ghost on a black background">
+</p>
+
+<div align="center">
+
 # Ghostgram
 
-**English** · [Русский](README.ru.md)
+</div>
 
-Ghostgram is an unofficial Telegram client for iOS. It is built on the official
-[Telegram iOS](https://github.com/TelegramMessenger/Telegram-iOS) source code (13.1.2) and adds privacy,
-message history and customization features. All of them are in one menu: **Settings → Ghostgram**.
+<p align="center">
+  An unofficial Telegram client with privacy, message history and customization features.
+</p>
+
+<p align="center">
+  <a href="https://github.com/SkyDeaD/ghostgram/releases"><img src="https://img.shields.io/github/v/release/SkyDeaD/ghostgram?include_prereleases&label=release" alt="Latest release"></a>
+  <img src="https://img.shields.io/badge/iOS-15.0%2B-black?logo=apple" alt="iOS 15.0 or later">
+  <img src="https://img.shields.io/badge/Telegram-13.1.2-26A5E4?logo=telegram&logoColor=white" alt="Based on Telegram iOS 13.1.2">
+  <img src="https://img.shields.io/badge/Swift-F05138?logo=swift&logoColor=white" alt="Swift">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--2.0-blue" alt="License: GPL-2.0"></a>
+</p>
+
+<p align="center">
+  <b>English</b> · <a href="README.ru.md">Русский</a>
+</p>
+
+Ghostgram is built on the official [Telegram iOS](https://github.com/TelegramMessenger/Telegram-iOS) source
+code (13.1.2). All of its features are in one menu: **Settings → Ghostgram**. A native macOS version is in
+development.
 
 Ghostgram is not affiliated with Telegram.
 
-- Channel: [@ghostgrama](https://t.me/ghostgrama)
-- Chat: [@ghostgramchat](https://t.me/ghostgramchat)
-- Forum: [@ghostgramforum](https://t.me/ghostgramforum)
+## Download
+
+Builds are published on the [Releases](https://github.com/SkyDeaD/ghostgram/releases) page:
+
+- **iOS:** an `.ipa` file. Ghostgram is not in the App Store, so install it with a signing app such as ESign
+  or LCSign and your own certificate. It installs next to the official Telegram app.
+- **macOS:** a `.dmg` file, once the macOS version is released.
 
 ## Features
 
@@ -88,43 +114,40 @@ run.
 1. Clone the repository with its submodules:
 
    ```sh
-   git clone --recursive -j8 https://github.com/ichmagmaus111/ghostgram.git
+   git clone --recursive -j8 https://github.com/SkyDeaD/ghostgram.git
    cd ghostgram
    ```
 
-2. Create the configuration file and fill it in: `api_id` and `api_hash` from
-   [my.telegram.org](https://my.telegram.org), your Apple `team_id`, and `bundle_id` if you sign the app
-   with your own account.
+2. Create the configuration file and fill in `api_id` and `api_hash` from
+   [my.telegram.org](https://my.telegram.org):
 
    ```sh
    cp build-system/ghostgram-configuration.example.json build-system/ghostgram-configuration.json
    ```
 
-3. Simulator build:
+3. Build for the simulator:
 
    ```sh
    build-system/GGBuild.sh
    ```
 
-   The simulator needs no profiles of your own. Without `build-system/ghostgram-codesigning/profiles` the
-   script uses Telegram's test profiles from `build-system/fake-codesigning` (for `ph.telegra.Telegraph`
-   only, so keep that `bundle_id`). They expired on October 30, 2026, so `build-system/GGSimProfiles.py`
-   gives the build copies with a later expiration date. To build with your own profiles, see
-   [Signing with your own profiles](docs/codesigning.md).
+   The simulator needs no profiles of your own: without `build-system/ghostgram-codesigning/profiles` the
+   script uses Telegram's test profiles from `build-system/fake-codesigning` with an extended expiration
+   date. Keep `bundle_id` set to `ph.telegra.Telegraph` for this build.
 
-4. Device build (IPA):
+4. Build an IPA for your iPhone. To sign it on the phone with ESign, LCSign or a similar app:
 
    ```sh
-   build-system/GGBuildRelease.sh <build number>
+   build-system/GGBuildResign.sh
    ```
 
-   It needs a distribution certificate (`.p12` with an empty password) in
-   `build-system/ghostgram-codesigning/certs` and profiles for the app and its extensions in
-   `build-system/ghostgram-codesigning/profiles`. The result is `build-output/ipa/Ghostgram.ipa`.
+   The result is `build-output/ipa/Ghostgram-for-resign.ipa` with the bundle ID `org.ghostgram.app`. To
+   sign on the Mac with your own certificate and profiles instead, see
+   [Signing with your own profiles](docs/ios/codesigning.md).
 
-Both scripts pin Bazel to the Xcode chosen with `xcode-select` (`build-system/GGXcodeConfig.sh`) and apply
-the patches from `build-system/GGPatches` to the `rules_apple` and `tgcalls` submodules. The configuration
-file, the signing folder and the build output are in `.gitignore`.
+The build scripts pin Bazel to the Xcode chosen with `xcode-select` and apply the patches from
+`build-system/GGPatches` to the `rules_apple` and `tgcalls` submodules. The configuration file, the
+signing folders and the build output are in `.gitignore`.
 
 ### VPN core (optional)
 
@@ -136,17 +159,33 @@ Needs Go 1.26 or newer and the Xcode command line tools; the first run downloads
 [Xray-core](https://github.com/XTLS/Xray-core). Without the core the app still builds, and the VPN screen
 says that the core is not included.
 
-## Code layout
+## Repository structure
 
-- `Ghostgram/` — everything Ghostgram adds: `GGCore` (settings, strings, logging), `GGHooks` (the points
-  where Ghostgram connects to Telegram's code), `GGSettingsUI` (the menu), `Features/` (the features),
-  `Strings/` (translations; `generate.py` builds the string tables, `check.py` checks them).
-- The rest of the tree is Telegram iOS. Changes to Telegram's own files are kept small, marked
-  `// GHOST:` and call into `GGHooks`.
+```text
+ghostgram/
+├── Ghostgram/            Ghostgram's code
+│   ├── GGCore/           settings, strings, logging (shared, no UI)
+│   ├── GGHooks/          the points where Ghostgram connects to Telegram's code
+│   ├── GGSettingsUI/     the Ghostgram menu
+│   ├── Features/         the features, one module each
+│   └── Strings/          translations and their tools
+├── build-system/         build scripts (GG*.sh), patches, configuration template
+├── docs/ios/             iOS guides: signing, updating to a new Telegram release
+└── Telegram/, submodules/, third-party/, …
+                          Telegram iOS; kept at the root because its Bazel build expects it
+```
 
-The Git history continues Telegram iOS's own: Ghostgram's commits sit on top of Telegram's, and each new
-Telegram release is merged in. How to do that is in [Updating to a new Telegram iOS release](docs/upstream-sync.md).
+Changes to Telegram's own files are kept small, marked `// GHOST:` and call into `GGHooks`. New Telegram
+releases are applied as patches: see [Updating to a new Telegram iOS release](docs/ios/upstream-sync.md).
 To contribute, see [Contributing](.github/CONTRIBUTING.md).
+
+## Credits
+
+- [Telegram iOS](https://github.com/TelegramMessenger/Telegram-iOS) by Telegram: Ghostgram is built on its
+  source code.
+- [ichmagmaus111/ghostgram](https://github.com/ichmagmaus111/ghostgram): the original Ghostgram, which this
+  project continues. Thank you! Its Telegram community: [channel](https://t.me/ghostgrama),
+  [chat](https://t.me/ghostgramchat) and [forum](https://t.me/ghostgramforum).
 
 ## License
 
