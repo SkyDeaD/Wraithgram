@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/logo.png" width="128" height="128" alt="Логотип Wraithgram: тёмный призрак в капюшоне с белыми глазами на светло-сером фоне">
+  <img src="docs/assets/logo.png" width="128" height="128" alt="Логотип Wraithgram: тёмный призрак в капюшоне с белыми глазами и развевающимся плащом на светло-сером фоне">
 </p>
 
 <div align="center">

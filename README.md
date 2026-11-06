@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/logo.png" width="128" height="128" alt="Wraithgram logo: a dark hooded wraith with white eyes on a light grey background">
+  <img src="docs/assets/logo.png" width="128" height="128" alt="Wraithgram logo: a dark hooded wraith with white eyes and a flowing cloak on a light grey background">
 </p>
 
 <div align="center">
