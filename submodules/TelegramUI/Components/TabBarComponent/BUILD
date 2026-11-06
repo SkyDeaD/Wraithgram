@@ -6,8 +6,8 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: tab bar style point (organizer, labels, height — W2-5)
-        "//Ghostgram/Features/Interface:TabBarComponentPointSources",
+        # WRAITH: tab bar style point (organizer, labels, height — W2-5)
+        "//Wraithgram/Features/Interface:TabBarComponentPointSources",
     ],
     copts = [
         "-warnings-as-errors",
@@ -29,8 +29,8 @@ swift_library(
         "//submodules/SearchBarNode",
         "//submodules/TelegramUI/Components/TabSelectionRecognizer",
         "//submodules/TelegramUI/Components/TabBarLayout",
-        # GHOST: hook points
-        "//Ghostgram/GGCore:GGCore",
+        # WRAITH: hook points
+        "//Wraithgram/WGCore:WGCore",
     ],
     visibility = [
         "//visibility:public",

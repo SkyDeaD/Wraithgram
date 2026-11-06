@@ -47,8 +47,8 @@ package_group(
         "//submodules/TelegramUI/Components/TelegramAccountAuxiliaryMethods",
         "//submodules/TelegramUniversalVideoContent",
         "//submodules/TemporaryCachedPeerDataManager",
-        # GHOST: Ghostgram's own modules still read Postbox directly
-        "//Ghostgram/...",
+        # WRAITH: Wraithgram's own modules still read Postbox directly
+        "//Wraithgram/...",
     ],
 )
 

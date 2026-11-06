@@ -2,7 +2,7 @@
 #define OngoingCallContext_h
 
 #import <Foundation/Foundation.h>
-#import <GGCallAudio/GGCallAudio.h> // GHOST: call audio effects of SharedCallAudioDevice (Ghostgram calls)
+#import <WGCallAudio/WGCallAudio.h> // WRAITH: call audio effects of SharedCallAudioDevice (Wraithgram calls)
 
 #if TARGET_OS_IOS
 #import <UIKit/UIKit.h>
@@ -77,8 +77,8 @@
 /// Stops the real device for good and ignores every later activation change.
 - (void)stop;
 
-// GHOST: silent mute, soundboard, voice effect and recording tap of this device only (GGCallAudio)
-@property (nonatomic, strong, readonly) GGCallAudioEffects * _Nonnull ggAudioEffects;
+// WRAITH: silent mute, soundboard, voice effect and recording tap of this device only (WGCallAudio)
+@property (nonatomic, strong, readonly) WGCallAudioEffects * _Nonnull wgAudioEffects;
 
 @end
 

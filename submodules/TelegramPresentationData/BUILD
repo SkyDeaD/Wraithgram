@@ -6,8 +6,8 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: PresentationData transformer chain (GGThemeHooks)
-        "//Ghostgram/GGHooks:TelegramPresentationDataHookSources",
+        # WRAITH: PresentationData transformer chain (WGThemeHooks)
+        "//Wraithgram/WGHooks:TelegramPresentationDataHookSources",
     ],
     copts = [
         "-warnings-as-errors",
@@ -25,8 +25,8 @@ swift_library(
         "//submodules/TinyThumbnail:TinyThumbnail",
         "//submodules/FastBlur:FastBlur",
         "//Telegram:PresentationStrings",
-        # GHOST: hook points
-        "//Ghostgram/GGCore:GGCore",
+        # WRAITH: hook points
+        "//Wraithgram/WGCore:WGCore",
     ],
     visibility = [
         "//visibility:public",

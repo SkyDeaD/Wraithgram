@@ -137,11 +137,11 @@ swift_library(
         "//submodules/TelegramUI/Components/AlertComponent",
         "//submodules/TelegramUI/Components/AlertComponent/AlertInputFieldComponent",
         "//submodules/TelegramUI/Components/GlassControls",
-        # GHOST: extension points of Ghostgram call features (W3-3)
-        "//Ghostgram/Features/CallsMedia/Hooks:GGCallsMediaHooks",
-        "//Ghostgram/Features/CallsMedia/CallAudio:GGCallAudio",
-        # GHOST: call camera points of Ghostgram (virtual camera capturer, W3-2)
-        "//Ghostgram/Features/CameraMasks:GGCallCameraHooks",
+        # WRAITH: extension points of Wraithgram call features (W3-3)
+        "//Wraithgram/Features/CallsMedia/Hooks:WGCallsMediaHooks",
+        "//Wraithgram/Features/CallsMedia/CallAudio:WGCallAudio",
+        # WRAITH: call camera points of Wraithgram (virtual camera capturer, W3-2)
+        "//Wraithgram/Features/CameraMasks:WGCallCameraHooks",
     ],
     visibility = [
         "//visibility:public",

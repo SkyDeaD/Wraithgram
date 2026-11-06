@@ -80,12 +80,12 @@ public final class ChatTitleProxyNode: ASDisplayNode {
         self.iconNode.isLayerBacked = true
         self.iconNode.displayWithoutProcessing = true
         self.iconNode.displaysAsynchronously = false
-        // GHOST: draw the declared default status (`.connected`: shield + check, no spinner); upstream drew
+        // WRAITH: draw the declared default status (`.connected`: shield + check, no spinner); upstream drew
         // `.available` and a spinning arc, and a node then told `.connected` never redrew (doubled glyphs).
         self.iconNode.image = generateIcon(color: theme.chat.inputPanel.panelControlColor, connected: true, off: false)
         
         self.activityIndicator = ActivityIndicator(type: .custom(theme.chat.inputPanel.panelControlColor, 10.0, 1.3333, true), speed: .slow)
-        self.activityIndicator.isHidden = true // GHOST: see above
+        self.activityIndicator.isHidden = true // WRAITH: see above
         
         super.init()
         

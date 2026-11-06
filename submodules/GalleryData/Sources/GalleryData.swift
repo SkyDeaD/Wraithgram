@@ -112,9 +112,9 @@ public func chatMessageGalleryControllerData(
     if message.id.peerId.namespace == Namespaces.Peer.CloudUser && message.id.namespace != Namespaces.Message.Cloud {
         standalone = true
     }
-    // GHOST: self-destructing media shown as ordinary media (GGRestrictionHooks.secretMediaDisplay) is
+    // WRAITH: self-destructing media shown as ordinary media (WGRestrictionHooks.secretMediaDisplay) is
     // browsed on its own: such messages carry no media tags, so the chat's media list does not have it
-    if message.ggRawContainsSecretMedia && !message.containsSecretMedia {
+    if message.wgRawContainsSecretMedia && !message.containsSecretMedia {
         standalone = true
     }
     var candidateMedia = message.effectiveMedia

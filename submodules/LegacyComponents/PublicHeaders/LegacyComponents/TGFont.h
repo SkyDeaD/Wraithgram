@@ -21,7 +21,7 @@ CTFontRef TGCoreTextLightFontOfSize(CGFloat size);
 CTFontRef TGCoreTextFixedFontOfSize(CGFloat size);
 CTFontRef TGCoreTextItalicFontOfSize(CGFloat size);
 
-// GHOST: custom font family for the legacy screens. Set once at launch by Ghostgram; the block gets
+// WRAITH: custom font family for the legacy screens. Set once at launch by Wraithgram; the block gets
 // the size, a weight (0 regular, 1 light, 2 medium, 3 semibold, 4 bold) and italic, and returns the
 // replacement or nil for the system font.
 typedef UIFont *(^TGFontSubstitutionBlock)(CGFloat size, NSInteger weight, bool italic);

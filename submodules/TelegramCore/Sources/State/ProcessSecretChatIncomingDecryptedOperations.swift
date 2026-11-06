@@ -301,14 +301,14 @@ func processSecretChatIncomingDecryptedOperations(encryptionProvider: Encryption
                                                 }
                                             }
                                         }
-                                        // GHOST: features may keep messages the other side deleted (GGUpdateHooks.messagesWillBeDeleted)
-                                        _internal_deleteMessages(transaction: transaction, mediaBox: mediaBox, ids: ggMessageIdsToDelete(filteredMessageIds, source: .secretChat, transaction: transaction, accountPeerId: nil))
+                                        // WRAITH: features may keep messages the other side deleted (WGUpdateHooks.messagesWillBeDeleted)
+                                        _internal_deleteMessages(transaction: transaction, mediaBox: mediaBox, ids: wgMessageIdsToDelete(filteredMessageIds, source: .secretChat, transaction: transaction, accountPeerId: nil))
                                     }
                                 case .clearHistory:
-                                    // GHOST: features may keep a history the other side cleared (GGUpdateHooks.historyWillBeCleared)
-                                    if !ggKeepsClearedHistory(peerId: peerId, source: .secretChat, transaction: transaction) {
+                                    // WRAITH: features may keep a history the other side cleared (WGUpdateHooks.historyWillBeCleared)
+                                    if !wgKeepsClearedHistory(peerId: peerId, source: .secretChat, transaction: transaction) {
                                     _internal_clearHistory(transaction: transaction, mediaBox: mediaBox, peerId: peerId, threadId: nil, namespaces: .all)
-                                    } // GHOST: end of the guard above
+                                    } // WRAITH: end of the guard above
                                 case let .markMessagesContentAsConsumed(globallyUniqueIds):
                                     var messageIds: [MessageId] = []
                                     for id in globallyUniqueIds {

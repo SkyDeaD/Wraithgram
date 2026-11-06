@@ -38,7 +38,7 @@ import TextFormat
 import ChatNewThreadInfoItem
 import PhoneNumberFormat
 import Postbox
-import GGHooks // GHOST: chat screen points
+import WGHooks // WRAITH: chat screen points
 
 struct ChatTopVisibleMessageRange: Equatable {
     var lowerBound: MessageIndex
@@ -911,8 +911,8 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
                 self.allowDustEffect = false
             }
         }
-        // GHOST: features may turn off the delete effect (GGChatScreenHooks.deleteEffect)
-        if !GGChatScreenHooks.allowsDeleteEffect(context: context) { self.allowDustEffect = false }
+        // WRAITH: features may turn off the delete effect (WGChatScreenHooks.deleteEffect)
+        if !WGChatScreenHooks.allowsDeleteEffect(context: context) { self.allowDustEffect = false }
         
         let presentationData = updatedPresentationData.initial
         self.currentPresentationData = ChatPresentationData(theme: ChatPresentationThemeData(theme: presentationData.theme, wallpaper: presentationData.chatWallpaper), fontSize: presentationData.chatFontSize, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat, nameDisplayOrder: presentationData.nameDisplayOrder, disableAnimations: true, largeEmoji: presentationData.largeEmoji, chatBubbleCorners: presentationData.chatBubbleCorners, animatedEmojiScale: 1.0)
@@ -1041,8 +1041,8 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
         self.listView = ChatHistoryListNodeImpl.makeListView(rotated: rotated, useCoreListBackend: useCoreListBackend)
 
         super.init()
-        // GHOST: bubbles re-lay out on GGMessageDecorationHooks.redraw(messageIds:)
-        ggObserveMessageDecorationRedraws(self)
+        // WRAITH: bubbles re-lay out on WGMessageDecorationHooks.redraw(messageIds:)
+        wgObserveMessageDecorationRedraws(self)
         
         // Force-load this node's view in the initializer. ChatHistoryListNodeImpl used to *be* the
         // ListViewImpl, whose view was loaded eagerly during init, so `self.isNodeLoaded` was always
@@ -2321,7 +2321,7 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
                 )
                 
                 var translateToLanguage: (fromLang: String, toLang: String)?
-                if let translationState, (isPremium || autoTranslate || GGChatScreenHooks.translatesWithoutPremium())  && translationState.isEnabled { // GHOST: features may translate chats without Premium (GGChatScreenHooks.translatesChatsWithoutPremium)
+                if let translationState, (isPremium || autoTranslate || WGChatScreenHooks.translatesWithoutPremium())  && translationState.isEnabled { // WRAITH: features may translate chats without Premium (WGChatScreenHooks.translatesChatsWithoutPremium)
                     var languageCode = translationState.toLang ?? chatPresentationData.strings.baseLanguageCode
                     let rawSuffix = "-raw"
                     if languageCode.hasSuffix(rawSuffix) {
@@ -5159,15 +5159,15 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
         }
     }
     
-    // GHOST: the view the list holds right now. `historyView` catches up only when a transaction completes, and a
+    // WRAITH: the view the list holds right now. `historyView` catches up only when a transaction completes, and a
     // row that re-measures itself while that transaction lays rows out (requestFullUpdate, requestUpdateLayout)
     // gets here before it does: its index would be the row's place in the previous list.
-    private var ggListedHistoryView: ChatHistoryView? {
+    private var wgListedHistoryView: ChatHistoryView? {
         return (self.listView.opaqueTransactionState as? ChatHistoryTransactionOpaqueState)?.historyView ?? self.historyView
     }
 
     func requestMessageUpdate(_ id: MessageId, andScrollToItem scroll: Bool = false, customTransition: ControlledTransition? = nil) {
-        if let historyView = self.ggListedHistoryView { // GHOST: was self.historyView
+        if let historyView = self.wgListedHistoryView { // WRAITH: was self.historyView
             var messageItem: ChatMessageItem?
             self.forEachItemNode({ itemNode in
                 if let itemNode = itemNode as? ChatMessageItemView, let item = itemNode.item {
@@ -5245,7 +5245,7 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
     }
 
     func requestMessageUpdate(stableId: UInt32) {
-        if let historyView = self.ggListedHistoryView { // GHOST: was self.historyView
+        if let historyView = self.wgListedHistoryView { // WRAITH: was self.historyView
             var messageItem: ChatMessageItem?
             self.forEachItemNode({ itemNode in
                 if let itemNode = itemNode as? ChatMessageItemView, let item = itemNode.item {

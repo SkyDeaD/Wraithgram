@@ -29,7 +29,7 @@ import InteractiveTextComponent
 import ShimmeringMask
 import StreamingTextReveal
 import WalletContext
-import GGHooks // GHOST: message decorations
+import WGHooks // WRAITH: message decorations
 
 private final class CachedChatMessageText {
     let text: String
@@ -220,7 +220,7 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
         
         let textLayout = InteractiveTextNodeWithEntities.asyncLayout(self.textNode)
         let statusLayout = ChatMessageDateAndStatusNode.asyncLayout(self.statusNode)
-        let ggFootnoteLayout = ggTextBubbleFootnoteLayout(self) // GHOST: a footnote under the text in its own node (GGMessageDecoration.footnote)
+        let wgFootnoteLayout = wgTextBubbleFootnoteLayout(self) // WRAITH: a footnote under the text in its own node (WGMessageDecoration.footnote)
         
         let currentCachedChatMessageText = self.cachedChatMessageText
         let expandedBlockIds = self.expandedBlockIds
@@ -305,9 +305,9 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
                     }
                 }
                 
-                let ggIsMenuPreview = item.presentationData.isPreview && GGPreviewMessageDecorations.isMenuPreview(item.message) // GHOST: Ghostgram menu previews look like the chat: time only, «edited» shown
+                let wgIsMenuPreview = item.presentationData.isPreview && WGPreviewMessageDecorations.isMenuPreview(item.message) // WRAITH: Wraithgram menu previews look like the chat: time only, «edited» shown
                 let dateFormat: MessageTimestampStatusFormat
-                if item.presentationData.isPreview && !ggIsMenuPreview { // GHOST: see ggIsMenuPreview
+                if item.presentationData.isPreview && !wgIsMenuPreview { // WRAITH: see wgIsMenuPreview
                     dateFormat = .full
                 } else if let subject = item.associatedData.subject, case .messageOptions = subject {
                     dateFormat = .minimal
@@ -443,8 +443,8 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
                     }
                 }
                 
-                // GHOST: features may show another text (local edit, versions) or reveal spoilers (GGMessageDecorationHooks)
-                GGMessageDecorationHooks.applyText(&rawText, entities: &messageEntities, message: item.message, context: item.context)
+                // WRAITH: features may show another text (local edit, versions) or reveal spoilers (WGMessageDecorationHooks)
+                WGMessageDecorationHooks.applyText(&rawText, entities: &messageEntities, message: item.message, context: item.context)
                 
                 if incoming && item.associatedData.isSuspiciousPeer, let entities = messageEntities {
                     messageEntities = entities.filter(\.isShownFromSuspiciousPeer)
@@ -663,7 +663,7 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
                 
                 let textInsets = UIEdgeInsets(top: 2.0, left: 2.0, bottom: 5.0, right: 2.0)
                 let (textLayout, textApply) = textLayout(InteractiveTextNodeLayoutArguments(
-                    attributedString: GGMessageTextHooks.attributedText(attributedText, message: item.message, context: item.context), // GHOST: features may decorate the text, e.g. color swatches (GGMessageTextHooks)
+                    attributedString: WGMessageTextHooks.attributedText(attributedText, message: item.message, context: item.context), // WRAITH: features may decorate the text, e.g. color swatches (WGMessageTextHooks)
                     backgroundColor: nil,
                     maximumNumberOfLines: maximumNumberOfLines,
                     truncationType: .end,
@@ -677,7 +677,7 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
                     expandedBlocks: expandedBlockIds,
                     computeCharacterRects: true
                 ))
-                let ggFootnote = ggFootnoteLayout?(item, textConstrainedSize, messageTheme) // GHOST: see ggFootnoteLayout
+                let wgFootnote = wgFootnoteLayout?(item, textConstrainedSize, messageTheme) // WRAITH: see wgFootnoteLayout
                 
                 var maxGlyphCount = currentMaxGlyphCount
                 if maxGlyphCount == nil && (hasDraft || hadDraft) {
@@ -696,7 +696,7 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
                     }
                     
                     let trailingWidthToMeasure: CGFloat
-                    if ggFootnote != nil { trailingWidthToMeasure = 10000.0 } else // GHOST: with a footnote the status goes on its own line
+                    if wgFootnote != nil { trailingWidthToMeasure = 10000.0 } else // WRAITH: with a footnote the status goes on its own line
                     if let lastSegment = textLayout.segments.last, lastSegment.hasRTL {
                         trailingWidthToMeasure = 10000.0
                     } else if let lastSegment = textLayout.segments.last, lastSegment.hasBlockQuote {
@@ -715,7 +715,7 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
                     statusSuggestedWidthAndContinue = statusLayout(ChatMessageDateAndStatusNode.Arguments(
                         context: item.context,
                         presentationData: item.presentationData,
-                        edited: edited && (!item.presentationData.isPreview || ggIsMenuPreview), // GHOST: see ggIsMenuPreview
+                        edited: edited && (!item.presentationData.isPreview || wgIsMenuPreview), // WRAITH: see wgIsMenuPreview
                         impressionCount: !item.presentationData.isPreview ? viewCount : nil,
                         dateText: dateText,
                         type: statusType,
@@ -752,7 +752,7 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
                 }
                 
                 textFrameWithoutInsets = textFrameWithoutInsets.offsetBy(dx: layoutConstants.text.bubbleInsets.left, dy: topInset)
-                if let ggFootnote { textFrameWithoutInsets.size = CGSize(width: max(textFrameWithoutInsets.width, ggFootnote.size.width), height: textFrameWithoutInsets.height + GGTextBubbleFootnote.spacing + ggFootnote.size.height) } // GHOST: the footnote takes room under the text
+                if let wgFootnote { textFrameWithoutInsets.size = CGSize(width: max(textFrameWithoutInsets.width, wgFootnote.size.width), height: textFrameWithoutInsets.height + WGTextBubbleFootnote.spacing + wgFootnote.size.height) } // WRAITH: the footnote takes room under the text
                 
                 var suggestedBoundingWidth: CGFloat = textFrameWithoutInsets.width
                 if let statusSuggestedWidthAndContinue = statusSuggestedWidthAndContinue, !hasDraft {
@@ -875,7 +875,7 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
                             ))
                             animation.animator.updatePosition(layer: strongSelf.textNode.textNode.layer, position: realTextFrame.center, completion: nil)
                             animation.animator.updateBounds(layer: strongSelf.textNode.textNode.layer, bounds: CGRect(origin: CGPoint(), size: realTextFrame.size), completion: nil)
-                            ggApplyTextBubbleFootnote(strongSelf, ggFootnote, textFrame: textFrameWithoutInsets) // GHOST: see ggFootnoteLayout
+                            wgApplyTextBubbleFootnote(strongSelf, wgFootnote, textFrame: textFrameWithoutInsets) // WRAITH: see wgFootnoteLayout
                             
                             
                             switch strongSelf.visibility {

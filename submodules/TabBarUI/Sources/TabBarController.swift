@@ -46,7 +46,7 @@ public protocol TabBarContainedController {
 
 open class TabBarControllerImpl: ViewController, TabBarController {
     private var validLayout: ContainerViewLayout?
-    private var ggTabBarBottomInset: CGFloat? // GHOST: the controllers' bottom inset of the last layout (the real height of the tab bar)
+    private var wgTabBarBottomInset: CGFloat? // WRAITH: the controllers' bottom inset of the last layout (the real height of the tab bar)
     
     private var tabBarControllerNode: TabBarControllerNode {
         get {
@@ -206,9 +206,9 @@ open class TabBarControllerImpl: ViewController, TabBarController {
                         } else {
                             tabBarHeight = 49.0 + bottomInset
                         }
-                        if let ggInset = strongSelf.ggTabBarBottomInset, strongSelf.currentController?.toolbar == nil { // GHOST: the inset of the regular layout — the legacy 49 pt dropped «Папки внизу» on a tap of the open tab
-                            tabBarHeight = ggInset // GHOST: see above
-                        } // GHOST: see above
+                        if let wgInset = strongSelf.wgTabBarBottomInset, strongSelf.currentController?.toolbar == nil { // WRAITH: the inset of the regular layout — the legacy 49 pt dropped «Папки внизу» on a tap of the open tab
+                            tabBarHeight = wgInset // WRAITH: see above
+                        } // WRAITH: see above
                         updatedLayout.intrinsicInsets.bottom = tabBarHeight
                     }
                     
@@ -384,13 +384,13 @@ open class TabBarControllerImpl: ViewController, TabBarController {
         self.validLayout = layout
         
         let bottomInset = self.tabBarControllerNode.containerLayoutUpdated(layout, toolbar: self.currentController?.toolbar, transition: transition)
-        self.ggTabBarBottomInset = bottomInset // GHOST: see ggTabBarBottomInset
+        self.wgTabBarBottomInset = bottomInset // WRAITH: see wgTabBarBottomInset
         
         if let currentController = self.currentController {
             currentController.view.frame = CGRect(origin: CGPoint(), size: layout.size)
             
             var updatedLayout = layout
-            if !self.tabBarControllerNode.isTabBarEffectivelyHidden, let bottomInset { // GHOST: «Скрыть панель вкладок»
+            if !self.tabBarControllerNode.isTabBarEffectivelyHidden, let bottomInset { // WRAITH: «Скрыть панель вкладок»
                 updatedLayout.intrinsicInsets.bottom = bottomInset
             }
             
@@ -419,10 +419,10 @@ open class TabBarControllerImpl: ViewController, TabBarController {
             } else {
                 tabBarHeight = 49.0 + bottomInset
             }
-            if let ggInset = self.ggTabBarBottomInset, currentController === self.currentController { // GHOST: the inset of the regular layout (see the tap handler); it carries the open controller's toolbar
-                tabBarHeight = ggInset // GHOST: see above
-            } // GHOST: see above
-            if !self.tabBarControllerNode.isTabBarEffectivelyHidden && self.tabBarControllerNode.sidePlacement(for: layout) == nil { // GHOST: «Скрыть панель вкладок»
+            if let wgInset = self.wgTabBarBottomInset, currentController === self.currentController { // WRAITH: the inset of the regular layout (see the tap handler); it carries the open controller's toolbar
+                tabBarHeight = wgInset // WRAITH: see above
+            } // WRAITH: see above
+            if !self.tabBarControllerNode.isTabBarEffectivelyHidden && self.tabBarControllerNode.sidePlacement(for: layout) == nil { // WRAITH: «Скрыть панель вкладок»
                 updatedLayout.intrinsicInsets.bottom = tabBarHeight
             }
             

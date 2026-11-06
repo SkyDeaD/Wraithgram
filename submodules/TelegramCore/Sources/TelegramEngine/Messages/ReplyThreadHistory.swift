@@ -477,8 +477,8 @@ private class ReplyThreadHistoryContextImpl {
                 }
             }
 
-            // GHOST: features may keep a thread read receipt on the device (GGPresenceHooks.sendReadReceipt)
-            if !ggShouldSendReadReceipt(peerId: messageIndex.id.peerId, kind: .thread(threadId: threadId, maxId: messageIndex.id.id), accountPeerId: strongSelf.account.peerId) { return }
+            // WRAITH: features may keep a thread read receipt on the device (WGPresenceHooks.sendReadReceipt)
+            if !wgShouldSendReadReceipt(peerId: messageIndex.id.peerId, kind: .thread(threadId: threadId, maxId: messageIndex.id.id), accountPeerId: strongSelf.account.peerId) { return }
             if let subPeerId {
                 let signal = strongSelf.account.network.request(Api.functions.messages.readSavedHistory(parentPeer: inputPeer, peer: subPeerId, maxId: messageIndex.id.id))
                 |> `catch` { _ -> Signal<Api.Bool, NoError> in

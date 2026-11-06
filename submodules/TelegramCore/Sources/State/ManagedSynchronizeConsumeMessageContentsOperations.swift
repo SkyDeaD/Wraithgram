@@ -110,8 +110,8 @@ func managedSynchronizeConsumeMessageContentOperations(postbox: Postbox, network
 }
 
 private func synchronizeConsumeMessageContents(transaction: Transaction, network: Network, stateManager: AccountStateManager, peerId: PeerId, operation: SynchronizeConsumeMessageContentsOperation) -> Signal<Void, NoError> {
-    // GHOST: features may keep "listened / viewed" on the device (GGPresenceHooks.sendReadReceipt)
-    if !ggShouldSendReadReceipt(peerId: peerId, kind: .messageContents(ids: operation.messageIds), accountPeerId: stateManager.accountPeerId) { return .complete() }
+    // WRAITH: features may keep "listened / viewed" on the device (WGPresenceHooks.sendReadReceipt)
+    if !wgShouldSendReadReceipt(peerId: peerId, kind: .messageContents(ids: operation.messageIds), accountPeerId: stateManager.accountPeerId) { return .complete() }
     if peerId.namespace == Namespaces.Peer.CloudUser || peerId.namespace == Namespaces.Peer.CloudGroup {
         return network.request(Api.functions.messages.readMessageContents(id: operation.messageIds.map { $0.id }))
         |> map(Optional.init)

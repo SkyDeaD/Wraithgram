@@ -23,8 +23,8 @@ swift_library(
         "//submodules/ComponentFlow",
         "//submodules/Components/ComponentDisplayAdapters",
         "//submodules/ActivityIndicator",
-        # GHOST: bookmarks row under the search field (W2-2)
-        "//Ghostgram/Features/AntiDelete:GGBookmarkSearchRow",
+        # WRAITH: bookmarks row under the search field (W2-2)
+        "//Wraithgram/Features/AntiDelete:WGBookmarkSearchRow",
     ],
     visibility = [
         "//visibility:public",

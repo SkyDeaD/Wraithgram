@@ -8,16 +8,16 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: built-in microphone policy of the voice zone (W3-1)
-        "//Ghostgram/Features/Voice:TelegramAudioPoints",
+        # WRAITH: built-in microphone policy of the voice zone (W3-1)
+        "//Wraithgram/Features/Voice:TelegramAudioPoints",
     ],
     copts = [
         "-warnings-as-errors",
     ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
-        # GHOST: hook point container (GGHookPoint)
-        "//Ghostgram/GGCore:GGCore",
+        # WRAITH: hook point container (WGHookPoint)
+        "//Wraithgram/WGCore:WGCore",
     ],
     visibility = [
         "//visibility:public",

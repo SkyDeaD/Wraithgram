@@ -76,7 +76,7 @@ import RichTextEditorUIKit
 import RichTextEditorMediaView
 import InstantPageUI
 import ChatRichTextEditorComposer
-import GGHooks // GHOST: chat screen points
+import WGHooks // WRAITH: chat screen points
 
 final class VideoNavigationControllerDropContentItem: NavigationControllerDropContentItem {
     let itemNode: OverlayMediaItemNode
@@ -802,8 +802,8 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
                 break
             }
         }
-        // GHOST: features may turn off sponsored messages (GGChatScreenHooks.showsAdMessages)
-        if let displayAdPeer, GGChatScreenHooks.showsAdMessages(context: context, peerId: displayAdPeer) {
+        // WRAITH: features may turn off sponsored messages (WGChatScreenHooks.showsAdMessages)
+        if let displayAdPeer, WGChatScreenHooks.showsAdMessages(context: context, peerId: displayAdPeer) {
             self.adMessagesContext = context.engine.messages.adMessages(peerId: displayAdPeer, activateManually: true)
         } else {
             self.adMessagesContext = nil
@@ -915,8 +915,8 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
         self.wrappingNode.contentNode.addSubnode(self.contentContainerNode)
         self.contentContainerNode.contentNode.addSubnode(self.backgroundNode)
         self.contentContainerNode.contentNode.addSubnode(self.historyNodeContainer)
-        // GHOST: feature overlays above the wallpaper / the history (GGChatScreenHooks.overlays)
-        ggInstallChatOverlays(self, context: context, chatLocation: chatLocation, controller: controller)
+        // WRAITH: feature overlays above the wallpaper / the history (WGChatScreenHooks.overlays)
+        wgInstallChatOverlays(self, context: context, chatLocation: chatLocation, controller: controller)
         
         self.contentContainerNode.contentNode.addSubnode(self.messageTransitionNode)
         
@@ -1242,8 +1242,8 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
             }
         }
         
-        // GHOST: features may force or lift capture protection (GGChatScreenHooks.captureProtection)
-        let isSecret = GGChatScreenHooks.captureProtection(self.chatPresentationInterfaceState.copyProtectionEnabled || self.chatLocation.peerId?.namespace == Namespaces.Peer.SecretChat || self.chatLocation.peerId?.isVerificationCodes == true, context: self.context, chatLocation: self.chatLocation)
+        // WRAITH: features may force or lift capture protection (WGChatScreenHooks.captureProtection)
+        let isSecret = WGChatScreenHooks.captureProtection(self.chatPresentationInterfaceState.copyProtectionEnabled || self.chatLocation.peerId?.namespace == Namespaces.Peer.SecretChat || self.chatLocation.peerId?.isVerificationCodes == true, context: self.context, chatLocation: self.chatLocation)
         if self.historyNodeContainer.isSecret != isSecret {
             #if DEBUG
             self.historyNodeContainer.isSecret = false
@@ -1252,7 +1252,7 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
             #endif
             setLayerDisableScreenshots(self.titleAccessoryPanelContainer.layer, isSecret)
         }
-        ggUpdateChatChromeCaptureProtection(self) // GHOST: features may hide the chat's chrome from screenshots (GGChatScreenHooks.hidesChromeFromCapture)
+        wgUpdateChatChromeCaptureProtection(self) // WRAITH: features may hide the chat's chrome from screenshots (WGChatScreenHooks.hidesChromeFromCapture)
 
         var previousListBottomInset: CGFloat?
         if !self.historyNode.frame.isEmpty {
@@ -2454,8 +2454,8 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
             }
         }
         
-        // GHOST: lay out feature overlays (GGChatScreenHooks.overlays); the bottom inset includes the input panels
-        ggLayoutChatOverlays(self, bounds: wallpaperBounds, insets: UIEdgeInsets(top: insets.top, left: insets.left, bottom: insets.bottom + bottomOverflowOffset + inputPanelsHeight + inputPanelsInset, right: insets.right), transition: transition)
+        // WRAITH: lay out feature overlays (WGChatScreenHooks.overlays); the bottom inset includes the input panels
+        wgLayoutChatOverlays(self, bounds: wallpaperBounds, insets: UIEdgeInsets(top: insets.top, left: insets.left, bottom: insets.bottom + bottomOverflowOffset + inputPanelsHeight + inputPanelsInset, right: insets.right), transition: transition)
         var inputBackgroundFrame = CGRect(origin: CGPoint(x: 0.0, y: layout.size.height - insets.bottom - bottomOverflowOffset - inputPanelsHeight - inputPanelsInset), size: CGSize(width: layout.size.width, height: inputPanelsHeight))
         if self.dismissedAsOverlay {
             inputBackgroundFrame.origin.y = layout.size.height
@@ -5059,8 +5059,8 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
     }
 
     func sendCurrentMessage(silentPosting: Bool? = nil, scheduleTime: Int32? = nil, repeatPeriod: Int32? = nil, postpone: Bool = false, messageEffect: ChatSendMessageEffect? = nil, sendWithoutFormatting: Bool = false, completion: @escaping () -> Void = {}) {
-        // GHOST: features may pre-process the composed text, e.g. translate it (GGChatScreenHooks.willSendText)
-        if ggInterceptSendCurrentMessage(self, proceed: { [weak self] in self?.sendCurrentMessage(silentPosting: silentPosting, scheduleTime: scheduleTime, repeatPeriod: repeatPeriod, postpone: postpone, messageEffect: messageEffect, sendWithoutFormatting: sendWithoutFormatting, completion: completion) }) { return }
+        // WRAITH: features may pre-process the composed text, e.g. translate it (WGChatScreenHooks.willSendText)
+        if wgInterceptSendCurrentMessage(self, proceed: { [weak self] in self?.sendCurrentMessage(silentPosting: silentPosting, scheduleTime: scheduleTime, repeatPeriod: repeatPeriod, postpone: postpone, messageEffect: messageEffect, sendWithoutFormatting: sendWithoutFormatting, completion: completion) }) { return }
         guard let textInputPanelNode = self.inputPanelNode as? ChatTextInputPanelNode else {
             return
         }
@@ -5641,7 +5641,7 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
         if (self.context.sharedContext.currentPresentationData.with({ $0 })).reduceMotion {
             return false
         }
-        if ggChatChromeHiddenFromCapture(self) { return false } // GHOST: no send animation while the chrome is hidden from capture (GGChatScreenHooks.hidesChromeFromCapture)
+        if wgChatChromeHiddenFromCapture(self) { return false } // WRAITH: no send animation while the chrome is hidden from capture (WGChatScreenHooks.hidesChromeFromCapture)
         
         if self.chatPresentationInterfaceState.showCommands {
             return false

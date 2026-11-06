@@ -4,7 +4,7 @@ import Display
 import TelegramCore
 import TelegramPresentationData
 import TelegramStringFormatting
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 private enum NotificationMuteOption {
     case `default`
@@ -43,14 +43,14 @@ public func notificationMuteSettingsController(presentationData: PresentationDat
         updateSettings(muteInterval)
     }
     
-    var options: [NotificationMuteOption] = [ // GHOST: var — see below
+    var options: [NotificationMuteOption] = [ // WRAITH: var — see below
         .enable,
         .interval(1 * 60 * 60),
         .interval(2 * 24 * 60 * 60),
         .disable
     ]
-    // GHOST: «Больше вариантов отключения»: 4 h, 8 h, 1 day between 1 h and 2 days (GGExtrasPolicy.extraMuteIntervals)
-    options.insert(contentsOf: GGExtrasPolicy.extraMuteIntervals.map { NotificationMuteOption.interval($0) }, at: 2)
+    // WRAITH: «Больше вариантов отключения»: 4 h, 8 h, 1 day between 1 h and 2 days (WGExtrasPolicy.extraMuteIntervals)
+    options.insert(contentsOf: WGExtrasPolicy.extraMuteIntervals.map { NotificationMuteOption.interval($0) }, at: 2)
     var items: [ActionSheetItem] = []
     for option in options {
         let item: ActionSheetButtonItem

@@ -160,12 +160,12 @@ public func chatMessageBubbleImageContentCorners(relativeContentPosition positio
             }
     }
     
-    // GHOST: «Без хвостиков» — the media tail goes like the bubble images' tail (ggBubbleDrawsTail)
-    func ggTailless(_ corner: ImageCorner, incoming: Bool) -> ImageCorner {
-        if case let .Tail(radius, _) = corner, !ggBubbleDrawsTail(incoming: incoming) {
+    // WRAITH: «Без хвостиков» — the media tail goes like the bubble images' tail (wgBubbleDrawsTail)
+    func wgTailless(_ corner: ImageCorner, incoming: Bool) -> ImageCorner {
+        if case let .Tail(radius, _) = corner, !wgBubbleDrawsTail(incoming: incoming) {
             return .Corner(radius)
         }
         return corner
     }
-    return ImageCorners(topLeft: topLeftCorner, topRight: topRightCorner, bottomLeft: ggTailless(bottomLeftCorner, incoming: true), bottomRight: ggTailless(bottomRightCorner, incoming: false))
+    return ImageCorners(topLeft: topLeftCorner, topRight: topRightCorner, bottomLeft: wgTailless(bottomLeftCorner, incoming: true), bottomRight: wgTailless(bottomRightCorner, incoming: false))
 }

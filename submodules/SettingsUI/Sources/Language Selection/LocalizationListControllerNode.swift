@@ -16,7 +16,7 @@ import UndoUI
 import TelegramUIPreferences
 import TranslateUI
 import PremiumUI
-import GGFeaturesShared // GHOST: Ghostgram translation settings (W2-3)
+import WGFeaturesShared // WRAITH: Wraithgram translation settings (W2-3)
 
 private enum LanguageListSection: ItemListSectionId {
     case translate
@@ -461,8 +461,8 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
         default:
             break
         }
-        // GHOST: «Перевод сообщений» whatever the server's translation config says, as in Swiftgram (GGMessagesPolicy)
-        if GGMessagesPolicy.translatesChatsWithoutPremium { translateButtonAvailable = true; chatTranslationAvailable = true }
+        // WRAITH: «Перевод сообщений» whatever the server's translation config says, as in Swiftgram (WGMessagesPolicy)
+        if WGMessagesPolicy.translatesChatsWithoutPremium { translateButtonAvailable = true; chatTranslationAvailable = true }
         
         let previousState = Atomic<LocalizationListState?>(value: nil)
         let previousEntriesHolder = Atomic<([LanguageListEntry], PresentationTheme, PresentationStrings)?>(value: nil)
@@ -480,8 +480,8 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
                 return
             }
             
-            // GHOST: «Translate entire chat» without Premium when Google / system translation is chosen (GGMessagesPolicy)
-            let isPremium = (peer?.isPremium ?? false) || GGMessagesPolicy.translatesChatsWithoutPremium
+            // WRAITH: «Translate entire chat» without Premium when Google / system translation is chosen (WGMessagesPolicy)
+            let isPremium = (peer?.isPremium ?? false) || WGMessagesPolicy.translatesChatsWithoutPremium
                         
             var entries: [LanguageListEntry] = []
             var activeLanguageCode: String?
@@ -588,8 +588,8 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
                 } else {
                     entries.append(.localizationTitle(text: presentationData.strings.Localization_InterfaceLanguage.uppercased(), section: LanguageListSection.official.rawValue))
                 }
-                // GHOST: «Дополнительные языки» — community translations from Telegram's platform (GGExtrasPolicy.extraLocalizations)
-                for info in GGExtrasPolicy.extraLocalizations where !existingIds.contains(info.languageCode) { existingIds.insert(info.languageCode); entries.append(.localization(index: entries.count, info: info, type: .official, selected: info.languageCode == activeLanguageCode, activity: applyingCode == info.languageCode, revealed: revealedCode == info.languageCode, editing: false)) }
+                // WRAITH: «Дополнительные языки» — community translations from Telegram's platform (WGExtrasPolicy.extraLocalizations)
+                for info in WGExtrasPolicy.extraLocalizations where !existingIds.contains(info.languageCode) { existingIds.insert(info.languageCode); entries.append(.localization(index: entries.count, info: info, type: .official, selected: info.languageCode == activeLanguageCode, activity: applyingCode == info.languageCode, revealed: revealedCode == info.languageCode, editing: false)) }
                 for info in localizationListState.availableOfficialLocalizations {
                     if existingIds.contains(info.languageCode) {
                         continue

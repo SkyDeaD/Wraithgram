@@ -250,8 +250,8 @@ private var declaredEncodables: Void = {
     declareEncodable(ScheduledRepeatAttribute.self, f: { ScheduledRepeatAttribute(decoder: $0) })
     declareEncodable(SummarizationMessageAttribute.self, f: { SummarizationMessageAttribute(decoder: $0) })
     declareEncodable(GuestChatMessageAttribute.self, f: { GuestChatMessageAttribute(decoder: $0) })
-    // GHOST: features declare their own attributes before any Postbox opens (GGMessageAttributeHooks)
-    ggDeclareFeatureEncodables()
+    // WRAITH: features declare their own attributes before any Postbox opens (WGMessageAttributeHooks)
+    wgDeclareFeatureEncodables()
     return
 }()
 
@@ -271,8 +271,8 @@ public func performAppGroupUpgrades(appGroupPath: String, rootPath: String) {
             let allowedDirectories: [String] = [
                 "telegram-data",
                 "Library",
-                // GHOST: GGCore keeps settings and the extension inbox in <appGroup>/ghostgram
-                "ghostgram"
+                // WRAITH: WGCore keeps settings and the extension inbox in <appGroup>/wraithgram
+                "wraithgram"
             ]
 
             for url in items {
@@ -371,8 +371,8 @@ public func currentAccount(allocateIfNotExists: Bool, networkArguments: NetworkI
 
 public func logoutFromAccount(id: AccountRecordId, accountManager: AccountManager<TelegramAccountManagerTypes>, alreadyLoggedOutRemotely: Bool) -> Signal<Void, NoError> {
     Logger.shared.log("AccountManager", "logoutFromAccount \(id)")
-    // GHOST: the record is dropped right away here, cleanupAccount never runs (GGAccountHooks.accountWillBeRemoved)
-    if alreadyLoggedOutRemotely { ggAccountWillBeRemoved(id: id) }
+    // WRAITH: the record is dropped right away here, cleanupAccount never runs (WGAccountHooks.accountWillBeRemoved)
+    if alreadyLoggedOutRemotely { wgAccountWillBeRemoved(id: id) }
     return accountManager.transaction { transaction -> Void in
         transaction.updateRecord(id, { current in
             if alreadyLoggedOutRemotely {
@@ -526,8 +526,8 @@ private func cleanupAccount(networkArguments: NetworkInitializationArguments, ac
                         break
                     }
                     account.shouldBeServiceTaskMaster.set(.single(.never))
-                    // GHOST: the account is gone for good (GGAccountHooks.accountWillBeRemoved)
-                    ggAccountWillBeRemoved(id: id)
+                    // WRAITH: the account is gone for good (WGAccountHooks.accountWillBeRemoved)
+                    wgAccountWillBeRemoved(id: id)
                     return accountManager.transaction { transaction -> Void in
                         transaction.updateRecord(id, { _ in
                             return nil

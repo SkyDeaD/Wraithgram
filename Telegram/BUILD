@@ -58,7 +58,7 @@ load(
     "telegram_team_id",
     "telegram_enable_icloud",
     "telegram_enable_siri",
-    "telegram_app_group", # GHOST: app group override for a purchased single-profile certificate
+    "telegram_app_group", # WRAITH: app group override for a purchased single-profile certificate
 )
 
 load("@build_bazel_rules_apple//apple:resources.bzl",
@@ -344,12 +344,12 @@ alternate_icon_folders = [
 
 composer_icon_folders = ["Telegram"]
 
-# GHOST: Ghostgram's primary app icon (single 1024 pt image, from the old client)
+# WRAITH: Wraithgram's primary app icon (Icon Composer: light, dark, tinted and Liquid Glass)
 filegroup(
-    name = "GhostgramPrimaryAppIcon",
+    name = "WraithgramPrimaryAppIcon",
     srcs = glob([
-        "Telegram-iOS/GhostgramAppIcon.xcassets/**/*",
-    ], exclude = ["Telegram-iOS/GhostgramAppIcon.xcassets/**/.*"]),
+        "Telegram-iOS/Wraithgram.icon/**/*",
+    ], exclude = ["Telegram-iOS/Wraithgram.icon/**/.*"]),
 )
 
 [
@@ -405,10 +405,10 @@ swift_library(
         "//submodules/DrawingUI:DrawingUIResources",
         "//submodules/TelegramUI:TelegramUIResources",
         "//submodules/TelegramUI:TelegramUIAssets",
-        # GHOST: Ghostgram menu assets (W1-3)
-        "//Ghostgram/GGSettingsUI:GGSettingsUIAssets",
-        # GHOST: interface assets (island badge, W2-5)
-        "//Ghostgram/Features/Interface:GGInterfaceAssets",
+        # WRAITH: Wraithgram menu assets (W1-3)
+        "//Wraithgram/WGSettingsUI:WGSettingsUIAssets",
+        # WRAITH: interface assets (island badge, W2-5)
+        "//Wraithgram/Features/Interface:WGInterfaceAssets",
         "//submodules/TelegramUI/Components/Calls/CallScreen:Assets",
         ":GeneratedPresentationStrings/Resources/PresentationStrings.data",
     ],
@@ -429,7 +429,7 @@ plist_fragment(
     defaults = {"buildNumber": "1"},
 )
 
-# GHOST: Ghostgram's own URL schemes `ghostgram://` and `gg://` (first dict below)
+# WRAITH: Wraithgram's own URL schemes `wraithgram://` and `wg://` (first dict below)
 plist_fragment(
     name = "UrlTypesInfoPlist",
     extension = "plist",
@@ -437,16 +437,16 @@ plist_fragment(
     """
     <key>CFBundleURLTypes</key>
     <array>
-        <!-- GHOST: Ghostgram URL schemes -->
+        <!-- WRAITH: Wraithgram URL schemes -->
         <dict>
             <key>CFBundleTypeRole</key>
             <string>Viewer</string>
             <key>CFBundleURLName</key>
-            <string>{telegram_bundle_id}.ghostgram</string>
+            <string>{telegram_bundle_id}.wraithgram</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>ghostgram</string>
-                <string>gg</string>
+                <string>wraithgram</string>
+                <string>wg</string>
             </array>
         </dict>
         <dict>
@@ -600,14 +600,14 @@ app_groups_fragment = """
     telegram_bundle_id=telegram_bundle_id,
     telegram_app_group=telegram_app_group,
     telegram_app_group_suffix=telegram_app_group[len("group."):],
-) # GHOST: a purchased profile names its own app group; the passcode keychain group must end with it (PasscodeCore)
+) # WRAITH: a purchased profile names its own app group; the passcode keychain group must end with it (PasscodeCore)
 
-# GHOST: tells the app which app group to open (GGAppGroup, read next to every "group.<bundle id>")
+# WRAITH: tells the app which app group to open (WGAppGroup, read next to every "group.<bundle id>")
 plist_fragment(
-    name = "GGAppGroupInfoPlist",
+    name = "WGAppGroupInfoPlist",
     extension = "plist",
     template = "" if telegram_app_group == "" else """
-    <key>GGAppGroup</key>
+    <key>WGAppGroup</key>
     <string>{}</string>
     """.format(telegram_app_group),
 )
@@ -616,7 +616,7 @@ official_communication_notifications_fragment = """
 <key>com.apple.developer.usernotifications.communication</key>
 <true/>
 """
-communication_notifications_fragment = official_communication_notifications_fragment if (telegram_bundle_id in official_bundle_ids or telegram_bundle_id == "org.ghostgram.app") else "" # GHOST: Ghostgram's profiles carry the entitlement
+communication_notifications_fragment = official_communication_notifications_fragment if (telegram_bundle_id in official_bundle_ids or telegram_bundle_id == "org.wraithgram.app") else "" # WRAITH: Wraithgram's profiles carry the entitlement
 
 official_notification_filtering_fragment = """
 <key>com.apple.developer.usernotifications.filtering</key>
@@ -688,14 +688,14 @@ plist_fragment(
     """
 )
 
-# GHOST: the app (and its extensions) are shown as «Ghostgram»
+# WRAITH: the app (and its extensions) are shown as «Wraithgram»
 plist_fragment(
     name = "AppNameInfoPlist",
     extension = "plist",
     template =
     """
     <key>CFBundleDisplayName</key>
-    <string>Ghostgram</string> <!-- GHOST: app name -->
+    <string>Wraithgram</string> <!-- WRAITH: app name -->
     """
 )
 
@@ -1094,7 +1094,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.Share</string>
     <key>CFBundleName</key>
-    <string>Ghostgram</string> <!-- GHOST: app name -->
+    <string>Wraithgram</string> <!-- WRAITH: app name -->
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1199,7 +1199,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.NotificationContent</string>
     <key>CFBundleName</key>
-    <string>Ghostgram</string> <!-- GHOST: app name -->
+    <string>Wraithgram</string> <!-- WRAITH: app name -->
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1307,7 +1307,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.Widget</string>
     <key>CFBundleName</key>
-    <string>Ghostgram</string> <!-- GHOST: app name -->
+    <string>Wraithgram</string> <!-- WRAITH: app name -->
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1424,7 +1424,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.SiriIntents</string>
     <key>CFBundleName</key>
-    <string>Ghostgram</string> <!-- GHOST: app name -->
+    <string>Wraithgram</string> <!-- WRAITH: app name -->
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1475,8 +1475,8 @@ swift_library(
     srcs = glob([
         "SiriIntents/**/*.swift",
     ]) + [
-        # GHOST: launch of Ghostgram in the Siri extension (ghost mode for Siri reads)
-        "//Ghostgram/GGHooks:SiriIntentsHookSources",
+        # WRAITH: launch of Wraithgram in the Siri extension (ghost mode for Siri reads)
+        "//Wraithgram/WGHooks:SiriIntentsHookSources",
     ],
     copts = [
         "-warnings-as-errors",
@@ -1496,9 +1496,9 @@ swift_library(
         "//submodules/PasscodeCore",
         "//Telegram:GeneratedSources",
         "//submodules/WidgetItems:WidgetItems",
-        # GHOST: Ghostgram core and the shared part of the features
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
+        # WRAITH: Wraithgram core and the shared part of the features
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
     ],
 )
 
@@ -1593,7 +1593,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.BroadcastUpload</string>
     <key>CFBundleName</key>
-    <string>Ghostgram</string> <!-- GHOST: app name -->
+    <string>Wraithgram</string> <!-- WRAITH: app name -->
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1687,7 +1687,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.NotificationService</string>
     <key>CFBundleName</key>
-    <string>Ghostgram</string> <!-- GHOST: app name -->
+    <string>Wraithgram</string> <!-- WRAITH: app name -->
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1740,7 +1740,7 @@ ios_extension(
     ],
 )
 
-# GHOST: CFBundleDisplayName below is «Ghostgram»
+# WRAITH: CFBundleDisplayName below is «Wraithgram»
 plist_fragment(
     name = "TelegramInfoPlist",
     extension = "plist",
@@ -1757,11 +1757,11 @@ plist_fragment(
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleDisplayName</key>
-    <string>Ghostgram</string> <!-- GHOST: app name -->
+    <string>Wraithgram</string> <!-- WRAITH: app name -->
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}</string>
     <key>CFBundleName</key>
-    <string>Ghostgram</string> <!-- GHOST: app name -->
+    <string>Wraithgram</string> <!-- WRAITH: app name -->
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleSignature</key>
@@ -1819,17 +1819,17 @@ plist_fragment(
     <key>NSCameraUsageDescription</key>
     <string>We need this so that you can take and share photos and videos.</string>
     <key>NSContactsUsageDescription</key>
-    <string>Telegram stores your contacts heavily encrypted in the cloud to let you connect with your friends across all your devices.</string> <!-- GHOST: Telegram's cloud, the name stays -->
+    <string>Telegram stores your contacts heavily encrypted in the cloud to let you connect with your friends across all your devices.</string> <!-- WRAITH: Telegram's cloud, the name stays -->
     <key>NSFaceIDUsageDescription</key>
     <string>You can use Face ID to unlock the app.</string>
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>When you send your location to your friends, Ghostgram needs access to show them a map. You also need this to send locations from an Apple Watch.</string> <!-- GHOST: app name -->
+    <string>When you send your location to your friends, Wraithgram needs access to show them a map. You also need this to send locations from an Apple Watch.</string> <!-- WRAITH: app name -->
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>When you send your location to your friends, Ghostgram needs access to show them a map.</string> <!-- GHOST: app name -->
+    <string>When you send your location to your friends, Wraithgram needs access to show them a map.</string> <!-- WRAITH: app name -->
     <key>NSMicrophoneUsageDescription</key>
     <string>We need this so that you can record and share voice messages and videos with sound.</string>
     <key>NSMotionUsageDescription</key>
-    <string>When you send your location to your friends, Ghostgram needs access to show them a map.</string> <!-- GHOST: app name -->
+    <string>When you send your location to your friends, Wraithgram needs access to show them a map.</string> <!-- WRAITH: app name -->
     <key>NSPhotoLibraryAddUsageDescription</key>
     <string>We need this so that you can share photos and videos from your photo library.</string>
     <key>NSPhotoLibraryUsageDescription</key>
@@ -1930,7 +1930,7 @@ plist_fragment(
             </dict>
         </dict>
     </array>
-    <!-- GHOST: Ghostgram mask packages (.ggmask, JSON) shared by the mask studio; no document type until the app opens them -->
+    <!-- WRAITH: Wraithgram mask packages (.ggmask, JSON) shared by the mask studio; no document type until the app opens them -->
     <key>UTExportedTypeDeclarations</key>
     <array>
         <dict>
@@ -1940,9 +1940,9 @@ plist_fragment(
                 <string>public.data</string>
             </array>
             <key>UTTypeDescription</key>
-            <string>Ghostgram Mask</string>
+            <string>Wraithgram Mask</string>
             <key>UTTypeIdentifier</key>
-            <string>org.ghostgram.mask</string>
+            <string>org.wraithgram.mask</string>
             <key>UTTypeTagSpecification</key>
             <dict>
                 <key>public.filename-extension</key>
@@ -1951,7 +1951,7 @@ plist_fragment(
                 </array>
             </dict>
         </dict>
-        <!-- GHOST: Ghostgram badge packages (.ggbadge, JSON — the old client's format) of «Бейджи» -->
+        <!-- WRAITH: Wraithgram badge packages (.ggbadge, JSON — the old client's format) of «Бейджи» -->
         <dict>
             <key>UTTypeConformsTo</key>
             <array>
@@ -1959,9 +1959,9 @@ plist_fragment(
                 <string>public.data</string>
             </array>
             <key>UTTypeDescription</key>
-            <string>Ghostgram Badge</string>
+            <string>Wraithgram Badge</string>
             <key>UTTypeIdentifier</key>
-            <string>org.ghostgram.badge</string>
+            <string>org.wraithgram.badge</string>
             <key>UTTypeTagSpecification</key>
             <dict>
                 <key>public.filename-extension</key>
@@ -2011,7 +2011,7 @@ apple_prebuilt_watchos_application(
 
 ios_application(
     name = "Telegram",
-    bundle_name = "Ghostgram", # GHOST: Ghostgram.app with the Ghostgram executable, as in the old client
+    bundle_name = "Wraithgram", # WRAITH: Wraithgram.app with the Wraithgram executable, as in the old client
     bundle_id = "{telegram_bundle_id}".format(
         telegram_bundle_id = telegram_bundle_id,
     ),
@@ -2028,13 +2028,13 @@ ios_application(
         ":VersionInfoPlist",
         ":RequiredDeviceCapabilitiesPlist",
         ":UrlTypesInfoPlist",
-        ":GGAppGroupInfoPlist", # GHOST: app group override
+        ":WGAppGroupInfoPlist", # WRAITH: app group override
     ],
-    app_icons = [":GhostgramPrimaryAppIcon"], # GHOST: the ghost is the primary icon
-    # GHOST: client branding — Telegram's own icons are not shipped (owner, 2026-10-27), only Ghostgram's
+    app_icons = [":WraithgramPrimaryAppIcon"], # WRAITH: Wraithgram's primary icon
+    # WRAITH: client branding — Telegram's own icons are not shipped (owner, 2026-10-27), only Wraithgram's
     alternate_icons = [
-        # GHOST: Ghostgram's app icon (Ghost — W2-5; the duck removed by the owner, 2026-10-28); the identifier is the `.alticon` folder name
-        "//Ghostgram/Features/Interface:GhostAppIcon",
+        # WRAITH: Wraithgram's app icon (Wraith); the identifier is the `.alticon` folder name
+        "//Wraithgram/Features/Interface:WraithAppIcon",
     ],
     resources = [
         ":LaunchScreen",
@@ -2068,8 +2068,8 @@ ios_application(
         ":embedWatchAppSetting": ":TelegramWatchApp",
         "//conditions:default": None,
     }),
-    # GHOST: the VLESS core framework, opened with dlopen only when the VPN is on (Ghostgram/Features/Vless/README.md); runs before signing
-    ipa_post_processor = "//Ghostgram/Features/Vless:EmbedXrayCore",
+    # WRAITH: the VLESS core framework, opened with dlopen only when the VPN is on (Wraithgram/Features/Vless/README.md); runs before signing
+    ipa_post_processor = "//Wraithgram/Features/Vless:EmbedXrayCore",
     deps = [
         ":Main",
         ":Lib",

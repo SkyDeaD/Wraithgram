@@ -69,13 +69,13 @@ final class PeerInfoEditingAvatarOverlayNode: ASDisplayNode {
         
         let transition = ContainedViewLayoutTransition.animated(duration: 0.2, curve: .linear)
         
-        var clipStyle: AvatarNodeClipStyle // GHOST: var — square avatars adjust it below
+        var clipStyle: AvatarNodeClipStyle // WRAITH: var — square avatars adjust it below
         if case let .channel(channel) = peer, channel.isForumOrMonoForum {
             clipStyle = .roundedRect
         } else {
             clipStyle = .round
         }
-        clipStyle = ggAvatarClipStyle(clipStyle) // GHOST: square avatars (GGAvatarHooks.shape)
+        clipStyle = wgAvatarClipStyle(clipStyle) // WRAITH: square avatars (WGAvatarHooks.shape)
         
         var isPersonal = false
         if let updatingAvatar, case let .image(image) = updatingAvatar, image.isPersonal {
@@ -134,7 +134,7 @@ final class PeerInfoEditingAvatarOverlayNode: ASDisplayNode {
                 case .round:
                     self.updatingAvatarOverlay.image = generateFilledCircleImage(diameter: avatarSize, color: UIColor(white: 0.0, alpha: 0.4), backgroundColor: nil)
                 case .roundedRect:
-                    self.updatingAvatarOverlay.image = generateFilledRoundedRectImage(size: CGSize(width: avatarSize, height: avatarSize), cornerRadius: ggAvatarRoundedRectRadius(avatarSize, upstream: avatarSize * 0.25), color: UIColor(white: 0.0, alpha: 0.4), backgroundColor: nil) // GHOST: square avatars
+                    self.updatingAvatarOverlay.image = generateFilledRoundedRectImage(size: CGSize(width: avatarSize, height: avatarSize), cornerRadius: wgAvatarRoundedRectRadius(avatarSize, upstream: avatarSize * 0.25), color: UIColor(white: 0.0, alpha: 0.4), backgroundColor: nil) // WRAITH: square avatars
                 default:
                     break
                 }

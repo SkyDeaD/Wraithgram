@@ -186,7 +186,7 @@ public extension MediaEditorScreenImpl {
                             defer {
                                 EngineTempBox.shared.dispose(tempFile)
                             }
-                            if let imageData = compressImageToJPEG(image, quality: GGOutgoingImageHooks.jpegQuality(0.7, hd: false), tempFilePath: tempFile.path) { // GHOST: photo quality setting (GGOutgoingImageHooks.parameters)
+                            if let imageData = compressImageToJPEG(image, quality: WGOutgoingImageHooks.jpegQuality(0.7, hd: false), tempFilePath: tempFile.path) { // WRAITH: photo quality setting (WGOutgoingImageHooks.parameters)
                                 update((context.engine.messages.editStory(peerId: peer.id, id: storyItem.id, media: .image(dimensions: dimensions, data: imageData, stickers: result.stickers), mediaAreas: result.mediaAreas, text: updatedText, entities: updatedEntities, privacy: nil)
                                 |> deliverOnMainQueue).startStrict(next: { result in
                                     switch result {

@@ -36,9 +36,9 @@ import GlassBarButtonComponent
 import GlassControls
 import AlertComponent
 import MultilineTextComponent
-// GHOST: SG-F5 (camera tile) and «Send as a round video» settings.
-import GGCore
-import GGCameraPipeline
+// WRAITH: SG-F5 (camera tile) and «Send as a round video» settings.
+import WGCore
+import WGCameraPipeline
 
 final class MediaPickerInteraction {
     let downloadManager: AssetDownloadManager
@@ -755,8 +755,8 @@ public final class MediaPickerScreenImpl: ViewController, MediaPickerScreen, Att
             var useLegacyCamera = false
             var useModernCamera = false
             if case .assets(nil, .default) = controller.subject {
-                // GHOST: SG-F5 — no camera tile at all: the picker never starts the camera.
-                useLegacyCamera = !GGGalleryCameraSettings.hideCamera.value
+                // WRAITH: SG-F5 — no camera tile at all: the picker never starts the camera.
+                useLegacyCamera = !WGGalleryCameraSettings.hideCamera.value
             } else if case .assets(nil, let mode) = controller.subject {
                 switch mode {
                 case .createSticker, .createAvatar:
@@ -767,8 +767,8 @@ public final class MediaPickerScreenImpl: ViewController, MediaPickerScreen, Att
             }
             
             if useLegacyCamera {
-                // GHOST: SG-F5 — the tile stays but shows no live feed until it is tapped.
-                let noLivePreview = GGGalleryCameraSettings.noLivePreview.value
+                // WRAITH: SG-F5 — the tile stays but shows no live feed until it is tapped.
+                let noLivePreview = WGGalleryCameraSettings.noLivePreview.value
                 let enableAnimations = (self.controller?.context.sharedContext.energyUsageSettings.fullTranslucency ?? true) && !noLivePreview
   
                 let cameraView = TGAttachmentCameraView(forSelfPortrait: false, videoModeByDefault: controller.bannedSendPhotos != nil && controller.bannedSendVideos == nil)!
@@ -957,8 +957,8 @@ public final class MediaPickerScreenImpl: ViewController, MediaPickerScreen, Att
         func updateIsCameraActive() {
             let isCameraActive = !self.isSuspended && !self.hasGallery && self.isCameraPreviewVisible
             if let cameraView = self.cameraView {
-                // GHOST: SG-F5 — a tile without a live feed never starts the camera by itself.
-                if isCameraActive && !GGGalleryCameraSettings.noLivePreview.value {
+                // WRAITH: SG-F5 — a tile without a live feed never starts the camera by itself.
+                if isCameraActive && !WGGalleryCameraSettings.noLivePreview.value {
                     cameraView.resumePreview()
                 } else {
                     cameraView.pausePreview()
@@ -1092,12 +1092,12 @@ public final class MediaPickerScreenImpl: ViewController, MediaPickerScreen, Att
                     }
                     #endif
                     
-                    // GHOST: SG-F5 — without the camera tile the attachment picker never asks for the camera.
-                    var ggCameraHidden = false
-                    if case .assets(_, .default) = controller.subject, GGGalleryCameraSettings.hideCamera.value {
-                        ggCameraHidden = true
+                    // WRAITH: SG-F5 — without the camera tile the attachment picker never asks for the camera.
+                    var wgCameraHidden = false
+                    if case .assets(_, .default) = controller.subject, WGGalleryCameraSettings.hideCamera.value {
+                        wgCameraHidden = true
                     }
-                    if !stories, !ggCameraHidden, case .notDetermined = cameraAccess, !self.requestedCameraAccess {
+                    if !stories, !wgCameraHidden, case .notDetermined = cameraAccess, !self.requestedCameraAccess {
                         self.requestedCameraAccess = true
                         self.mediaAssetsContext.requestCameraAccess()
                     }
@@ -3293,24 +3293,24 @@ public final class MediaPickerScreenImpl: ViewController, MediaPickerScreen, Att
                             self?.controllerNode.send(asFile: false, silently: false, scheduleTime: nil, animated: true, parameters: nil, completion: {})
                         })))
                     }
-                    // GHOST: «Send as a round video» for the chosen videos only: the assets are marked and
+                    // WRAITH: «Send as a round video» for the chosen videos only: the assets are marked and
                     // the outgoing pipeline relabels exactly these (other sends are untouched).
-                    if price == nil, !hasSpoilers, GGRoundVideoSettings.galleryMenuItem.value, !GGRoundVideoSettings.galleryVideosAsRound.value {
-                        var ggVideoIdentifiers: [String] = []
+                    if price == nil, !hasSpoilers, WGRoundVideoSettings.galleryMenuItem.value, !WGRoundVideoSettings.galleryVideosAsRound.value {
+                        var wgVideoIdentifiers: [String] = []
                         if let selectionContext = self.interaction?.selectionState {
                             for case let asset as TGMediaAsset in selectionContext.selectedItems() where asset.isVideo {
                                 if let identifier = asset.identifier {
-                                    ggVideoIdentifiers.append(identifier)
+                                    wgVideoIdentifiers.append(identifier)
                                 }
                             }
                         }
-                        if !ggVideoIdentifiers.isEmpty {
-                            items.append(.action(ContextMenuActionItem(text: GGStrings.CameraMasks.Round.sendAsRound, icon: { theme in
+                        if !wgVideoIdentifiers.isEmpty {
+                            items.append(.action(ContextMenuActionItem(text: WGStrings.CameraMasks.Round.sendAsRound, icon: { theme in
                                 return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Camera"), color: theme.contextMenu.primaryColor)
                             }, action: { [weak self] _, f in
                                 f(.default)
                                 
-                                GGRoundVideoImport.shared.mark(assetIdentifiers: ggVideoIdentifiers)
+                                WGRoundVideoImport.shared.mark(assetIdentifiers: wgVideoIdentifiers)
                                 self?.controllerNode.send(asFile: false, silently: false, scheduleTime: nil, animated: true, parameters: nil, completion: {})
                             })))
                         }

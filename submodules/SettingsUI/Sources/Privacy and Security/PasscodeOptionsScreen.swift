@@ -18,7 +18,7 @@ import ViewControllerComponent
 import MultilineTextComponent
 import ListSectionComponent
 import ListActionItemComponent
-import GGHooks // GHOST: extra auto-lock values (GGPasscodeUIHooks)
+import WGHooks // WRAITH: extra auto-lock values (WGPasscodeUIHooks)
 
 private struct PasscodeOptionsScreenData: Equatable {
     var accessChallenge: PostboxAccessChallengeData
@@ -55,7 +55,7 @@ private func passcodeOptionsAutolockString(strings: PresentationStrings, timeout
     case 5 * 60 * 60:
         return strings.PasscodeSettings_AutoLock_IfAwayFor_5hours
     default:
-        return GGPasscodeUIHooks.title(forAutolockTimeout: timeout) ?? "" // GHOST: titles of extra auto-lock values (GGPasscodeUIHooks.autolockTitle)
+        return WGPasscodeUIHooks.title(forAutolockTimeout: timeout) ?? "" // WRAITH: titles of extra auto-lock values (WGPasscodeUIHooks.autolockTitle)
     }
 }
 
@@ -608,7 +608,7 @@ private final class PasscodeOptionsScreenComponent: Component {
             values.append(10)
             values.sort()
             #endif
-            values = GGPasscodeUIHooks.transformAutolockValues(values) // GHOST: extra auto-lock values (GGPasscodeUIHooks.autolockValues)
+            values = WGPasscodeUIHooks.transformAutolockValues(values) // WRAITH: extra auto-lock values (WGPasscodeUIHooks.autolockValues)
 
             var items: [ContextMenuItem] = []
             for value in values {

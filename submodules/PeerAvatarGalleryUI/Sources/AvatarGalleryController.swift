@@ -15,7 +15,7 @@ import SaveToCameraRoll
 import OverlayStatusController
 import PresentationDataUtils
 import AppBundle
-import TelegramUIPreferences // GHOST: MediaDisplaySettings for tap navigation
+import TelegramUIPreferences // WRAITH: MediaDisplaySettings for tap navigation
 
 public enum AvatarGalleryEntryId: Hashable {
     case topImage
@@ -770,7 +770,7 @@ public class AvatarGalleryController: ViewController, StandalonePresentableContr
         }, currentItemNode: { [weak self] in
             return self?.galleryNode.pager.centralItemNode()
         })
-        self.displayNode = GalleryControllerNode(context: self.context, controllerInteraction: controllerInteraction, titleView: self.titleView, disableTapNavigation: !(self.context.sharedContext.currentMediaDisplaySettings.with { $0 }.showNextMediaOnTap)) // GHOST: «Show Next Media on Tap» applies to avatars too, as in the media gallery
+        self.displayNode = GalleryControllerNode(context: self.context, controllerInteraction: controllerInteraction, titleView: self.titleView, disableTapNavigation: !(self.context.sharedContext.currentMediaDisplaySettings.with { $0 }.showNextMediaOnTap)) // WRAITH: «Show Next Media on Tap» applies to avatars too, as in the media gallery
         self.displayNodeDidLoad()
         
         self.galleryNode.pager.updateOnReplacement = true

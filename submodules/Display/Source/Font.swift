@@ -161,8 +161,8 @@ public struct Font {
     
     public static func with(size: CGFloat, design: Design = .regular, weight: Weight = .regular, width: Width = .standard, traits: Traits = []) -> UIFont {
         let key = "\(size)_\(design.key)_\(weight.key)_\(width.key)_\(traits.rawValue)"
-        // GHOST: custom font family (GGFontHooks.font); nil = upstream font
-        if let font = GGFontHooks.substitute(GGFontRequest(kind: .composed, size: size, design: design, weight: weight, traits: traits)) { return font }
+        // WRAITH: custom font family (WGFontHooks.font); nil = upstream font
+        if let font = WGFontHooks.substitute(WGFontRequest(kind: .composed, size: size, design: design, weight: weight, traits: traits)) { return font }
         
         if let cachedFont = self.cache.get(key) {
             return cachedFont
@@ -291,26 +291,26 @@ public struct Font {
     }
     
     public static func regular(_ size: CGFloat) -> UIFont {
-        // GHOST: custom font family (GGFontHooks.font)
-        if let font = GGFontHooks.substitute(GGFontRequest(kind: .regular, size: size)) { return font }
+        // WRAITH: custom font family (WGFontHooks.font)
+        if let font = WGFontHooks.substitute(WGFontRequest(kind: .regular, size: size)) { return font }
         return UIFont.systemFont(ofSize: size)
     }
     
     public static func medium(_ size: CGFloat) -> UIFont {
-        // GHOST: custom font family (GGFontHooks.font)
-        if let font = GGFontHooks.substitute(GGFontRequest(kind: .medium, size: size)) { return font }
+        // WRAITH: custom font family (WGFontHooks.font)
+        if let font = WGFontHooks.substitute(WGFontRequest(kind: .medium, size: size)) { return font }
         return UIFont.systemFont(ofSize: size, weight: UIFont.Weight.medium)
     }
     
     public static func semibold(_ size: CGFloat) -> UIFont {
-        // GHOST: custom font family (GGFontHooks.font)
-        if let font = GGFontHooks.substitute(GGFontRequest(kind: .semibold, size: size)) { return font }
+        // WRAITH: custom font family (WGFontHooks.font)
+        if let font = WGFontHooks.substitute(WGFontRequest(kind: .semibold, size: size)) { return font }
         return UIFont.systemFont(ofSize: size, weight: UIFont.Weight.semibold)
     }
     
     public static func bold(_ size: CGFloat) -> UIFont {
-        // GHOST: custom font family (GGFontHooks.font)
-        if let font = GGFontHooks.substitute(GGFontRequest(kind: .bold, size: size)) { return font }
+        // WRAITH: custom font family (WGFontHooks.font)
+        if let font = WGFontHooks.substitute(WGFontRequest(kind: .bold, size: size)) { return font }
         if #available(iOS 8.2, *) {
             return UIFont.boldSystemFont(ofSize: size)
         } else {
@@ -323,14 +323,14 @@ public struct Font {
     }
     
     public static func light(_ size: CGFloat) -> UIFont {
-        // GHOST: custom font family (GGFontHooks.font)
-        if let font = GGFontHooks.substitute(GGFontRequest(kind: .light, size: size)) { return font }
+        // WRAITH: custom font family (WGFontHooks.font)
+        if let font = WGFontHooks.substitute(WGFontRequest(kind: .light, size: size)) { return font }
         return UIFont.systemFont(ofSize: size, weight: UIFont.Weight.light)
     }
     
     public static func semiboldItalic(_ size: CGFloat) -> UIFont {
-        // GHOST: custom font family (GGFontHooks.font)
-        if let font = GGFontHooks.substitute(GGFontRequest(kind: .semiboldItalic, size: size)) { return font }
+        // WRAITH: custom font family (WGFontHooks.font)
+        if let font = WGFontHooks.substitute(WGFontRequest(kind: .semiboldItalic, size: size)) { return font }
         if let descriptor = UIFont.systemFont(ofSize: size).fontDescriptor.withSymbolicTraits([.traitBold, .traitItalic]) {
             return UIFont(descriptor: descriptor, size: size)
         } else {
@@ -339,8 +339,8 @@ public struct Font {
     }
     
     public static func mediumItalic(_ size: CGFloat) -> UIFont {
-        // GHOST: custom font family (GGFontHooks.font)
-        if let font = GGFontHooks.substitute(GGFontRequest(kind: .mediumItalic, size: size)) { return font }
+        // WRAITH: custom font family (WGFontHooks.font)
+        if let font = WGFontHooks.substitute(WGFontRequest(kind: .mediumItalic, size: size)) { return font }
         if let descriptor = UIFont.systemFont(ofSize: size, weight: .medium).fontDescriptor.withSymbolicTraits([.traitItalic]) {
             return UIFont(descriptor: descriptor, size: size)
         } else {
@@ -365,8 +365,8 @@ public struct Font {
     }
     
     public static func italic(_ size: CGFloat) -> UIFont {
-        // GHOST: custom font family (GGFontHooks.font)
-        if let font = GGFontHooks.substitute(GGFontRequest(kind: .italic, size: size)) { return font }
+        // WRAITH: custom font family (WGFontHooks.font)
+        if let font = WGFontHooks.substitute(WGFontRequest(kind: .italic, size: size)) { return font }
         return UIFont.italicSystemFont(ofSize: size)
     }
 }

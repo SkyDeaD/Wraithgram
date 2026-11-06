@@ -60,7 +60,7 @@ import ChatInputContextPanelNode
 import RasterizedCompositionComponent
 import RichTextEditorUIKit
 import RichTextEditorCore
-import GGHooks // GHOST: input panel points
+import WGHooks // WRAITH: input panel points
 
 /// The chat composer's inline custom-emoji view already exposes `dynamicColor` (forwarding to its backing
 /// `InlineStickerItemLayer`), so it satisfies the editor's emoji-view contract as-is. Declared here (the one
@@ -86,11 +86,11 @@ private func calculateTextFieldRealInsets(presentationInterfaceState: ChatPresen
     return insets
 }
 
-// GHOST: where the room asked through GGInputPanelHooks.sendButtonSlotWidth goes in a layout: before the
+// WRAITH: where the room asked through WGInputPanelHooks.sendButtonSlotWidth goes in a layout: before the
 // send button while the text is one line (the accessory buttons move left for it), next to the
 // article-editor button when that shows (the text keeps clear of it), or nowhere (the top-right corner of
 // the text area is free past one line)
-private enum GGSendSlotMode {
+private enum WGSendSlotMode {
     case none
     case beforeSendButton
     case beforeCornerButton
@@ -282,7 +282,7 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
     
     private var isUpdating: Bool = false
     private var validLayout: (CGFloat, CGFloat, CGFloat, CGFloat, UIEdgeInsets, CGFloat, CGFloat, LayoutMetrics, Bool, Bool, DeviceMetrics)?
-    private var ggBottomAccessoryHeight: CGFloat = 0.0 // GHOST: the toolbar under the text field (GGInputBarHooks.bottomAccessory)
+    private var wgBottomAccessoryHeight: CGFloat = 0.0 // WRAITH: the toolbar under the text field (WGInputBarHooks.bottomAccessory)
     private var leftMenuInset: CGFloat = 0.0
     private var rightSlowModeInset: CGFloat = 0.0
     private var currentTextInputBackgroundWidthOffset: CGFloat = 0.0
@@ -1418,7 +1418,7 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
         return max(33.0, maxHeight - (textFieldInsets.top + textFieldInsets.bottom + self.textInputViewInternalInsets.top + self.textInputViewInternalInsets.bottom))
     }
     
-    private func calculateTextFieldMetrics(width: CGFloat, sendActionControlsWidth: CGFloat, maxHeight: CGFloat, metrics: LayoutMetrics, bottomInset: CGFloat, interfaceState: ChatPresentationInterfaceState) -> (accessoryButtonsWidth: CGFloat, textFieldHeight: CGFloat, isOverflow: Bool, ggSendSlot: (width: CGFloat, mode: GGSendSlotMode)) { // GHOST: + the room before the send button (GGSendSlotMode)
+    private func calculateTextFieldMetrics(width: CGFloat, sendActionControlsWidth: CGFloat, maxHeight: CGFloat, metrics: LayoutMetrics, bottomInset: CGFloat, interfaceState: ChatPresentationInterfaceState) -> (accessoryButtonsWidth: CGFloat, textFieldHeight: CGFloat, isOverflow: Bool, wgSendSlot: (width: CGFloat, mode: WGSendSlotMode)) { // WRAITH: + the room before the send button (WGSendSlotMode)
         let maxHeight = max(maxHeight, 40.0)
         
         let textFieldInsets = self.textFieldInsets(metrics: metrics, bottomInset: bottomInset)
@@ -1446,7 +1446,7 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
         if let presentationInterfaceState = self.presentationInterfaceState {
             textFieldMinHeight = calclulateTextFieldMinHeight(presentationInterfaceState, metrics: metrics)
         }
-        textFieldMinHeight += ggInputBarGeometry().heightPadding // GHOST: input bar geometry (GGInputBarHooks.geometry)
+        textFieldMinHeight += wgInputBarGeometry().heightPadding // WRAITH: input bar geometry (WGInputBarHooks.geometry)
         
         if let presentationInterfaceState = self.presentationInterfaceState {
             textInputViewRealInsets = calculateTextFieldRealInsets(presentationInterfaceState: presentationInterfaceState, accessoryButtonsWidth: accessoryButtonsWidth, actionControlsWidth: sendActionControlsWidth)
@@ -1464,28 +1464,28 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
         
         var textFieldHeight: CGFloat
         var isOverflow = false
-        var ggSendSlot: (width: CGFloat, mode: GGSendSlotMode) = (0.0, .none) // GHOST: see GGSendSlotMode
+        var wgSendSlot: (width: CGFloat, mode: WGSendSlotMode) = (0.0, .none) // WRAITH: see WGSendSlotMode
         if let richTextInputNode = self.richTextInputNode {
             let maxTextWidth = width - textFieldInsets.left - textFieldInsets.right - actualTextInputViewInternalInsets.left - actualTextInputViewInternalInsets.right
-            var measuredHeight = richTextInputNode.textHeightForWidth(maxTextWidth, rightInset: textInputViewRealInsets.right) // GHOST: var (GGSendSlotMode)
+            var measuredHeight = richTextInputNode.textHeightForWidth(maxTextWidth, rightInset: textInputViewRealInsets.right) // WRAITH: var (WGSendSlotMode)
             
             let maxNumberOfLines = max(1, min(12, (Int(fieldMaxHeight - 11.0) - 33) / 22))
             
             let updatedMaxHeight = (CGFloat(maxNumberOfLines) * (22.0 + 2.0) + 10.0)
             
-            // GHOST: room for a feature's mark (GGInputPanelHooks.sendButtonSlotWidth), only while the text row has the
+            // WRAITH: room for a feature's mark (WGInputPanelHooks.sendButtonSlotWidth), only while the text row has the
             // send button. One line or past one line is decided on the text without the room, so a layout never flips
             // back: text that wraps only because of the room keeps it before the send button until it wraps without it.
-            let ggSlotWidth = (interfaceState.inputTextPanelState.mediaRecordingState == nil && !self.extendedSearchLayout && self.rightSlowModeInset.isZero && !richTextInputNode.inputContentIsEmpty) ? GGInputPanelHooks.sendButtonSlotWidth(panel: self, context: self.context) : 0.0
-            if ggSlotWidth > 0.0 {
-                let ggIsOneLine = measuredHeight < calclulateTextFieldMinHeight(interfaceState, metrics: metrics) + chatTextInputBaseFontSize(for: interfaceState.fontSize) * 0.6
+            let wgSlotWidth = (interfaceState.inputTextPanelState.mediaRecordingState == nil && !self.extendedSearchLayout && self.rightSlowModeInset.isZero && !richTextInputNode.inputContentIsEmpty) ? WGInputPanelHooks.sendButtonSlotWidth(panel: self, context: self.context) : 0.0
+            if wgSlotWidth > 0.0 {
+                let wgIsOneLine = measuredHeight < calclulateTextFieldMinHeight(interfaceState, metrics: metrics) + chatTextInputBaseFontSize(for: interfaceState.fontSize) * 0.6
                 // The article-editor button shows on a field at least 70 pt high (see `expandButton` below).
-                let ggShowsCornerButton = !ggIsOneLine && self.enableRichTextInput && self.isAIEnabled && min(max(textFieldMinHeight, ceil(measuredHeight)), updatedMaxHeight) >= 70.0
-                if ggIsOneLine || ggShowsCornerButton {
-                    measuredHeight = richTextInputNode.textHeightForWidth(maxTextWidth, rightInset: textInputViewRealInsets.right + ggSlotWidth)
-                    accessoryButtonsWidth += ggSlotWidth
+                let wgShowsCornerButton = !wgIsOneLine && self.enableRichTextInput && self.isAIEnabled && min(max(textFieldMinHeight, ceil(measuredHeight)), updatedMaxHeight) >= 70.0
+                if wgIsOneLine || wgShowsCornerButton {
+                    measuredHeight = richTextInputNode.textHeightForWidth(maxTextWidth, rightInset: textInputViewRealInsets.right + wgSlotWidth)
+                    accessoryButtonsWidth += wgSlotWidth
                 }
-                ggSendSlot = (ggSlotWidth, ggIsOneLine ? .beforeSendButton : (ggShowsCornerButton ? .beforeCornerButton : .textCorner))
+                wgSendSlot = (wgSlotWidth, wgIsOneLine ? .beforeSendButton : (wgShowsCornerButton ? .beforeCornerButton : .textCorner))
             }
             
             let unboundTextFieldHeight = max(textFieldMinHeight, ceil(measuredHeight))
@@ -1497,7 +1497,7 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
             textFieldHeight = textFieldMinHeight
         }
         
-        return (accessoryButtonsWidth, textFieldHeight, isOverflow, ggSendSlot) // GHOST: see GGSendSlotMode
+        return (accessoryButtonsWidth, textFieldHeight, isOverflow, wgSendSlot) // WRAITH: see WGSendSlotMode
     }
     
     private func textFieldInsets(metrics: LayoutMetrics, bottomInset: CGFloat) -> UIEdgeInsets {
@@ -1694,9 +1694,9 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
         
         var leftInset = leftInset
         var rightInset = rightInset
-        // GHOST: input bar geometry (GGInputBarHooks.geometry): side margins, field height, lift, button offsets
-        let ggGeometry = ggInputBarGeometry()
-        leftInset += ggGeometry.leftMargin; rightInset += ggGeometry.rightMargin
+        // WRAITH: input bar geometry (WGInputBarHooks.geometry): side margins, field height, lift, button offsets
+        let wgGeometry = wgInputBarGeometry()
+        leftInset += wgGeometry.leftMargin; rightInset += wgGeometry.rightMargin
         
         let compactBottomSideInset = self.compactBottomSideInset(bottomInset: bottomInset, deviceMetrics: deviceMetrics)
         leftInset += compactBottomSideInset
@@ -2648,7 +2648,7 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
         }
         
         let baseWidth = width - leftInset - leftMenuInset - rightInset - rightSlowModeInset
-        let (accessoryButtonsWidth, textFieldHeight, isTextFieldOverflow, ggSendSlot) = self.calculateTextFieldMetrics(width: baseWidth, sendActionControlsWidth: sendActionButtonsSize.width, maxHeight: maxHeight, metrics: metrics, bottomInset: bottomInset, interfaceState: interfaceState) // GHOST: + the room before the send button (GGSendSlotMode)
+        let (accessoryButtonsWidth, textFieldHeight, isTextFieldOverflow, wgSendSlot) = self.calculateTextFieldMetrics(width: baseWidth, sendActionControlsWidth: sendActionButtonsSize.width, maxHeight: maxHeight, metrics: metrics, bottomInset: bottomInset, interfaceState: interfaceState) // WRAITH: + the room before the send button (WGSendSlotMode)
         var panelHeight = self.panelHeight(textFieldHeight: textFieldHeight, metrics: metrics, bottomInset: bottomInset)
         if displayBotStartButton {
             panelHeight += 27.0
@@ -2687,19 +2687,19 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
         if additionalSideInsets.right > 0.0 {
             textFieldInsets.right += additionalSideInsets.right / 3.0
         }
-        // GHOST: «Скрыть кнопку записи» (GGInputPanelHooks.hidesRecordButton): the field takes the record
+        // WRAITH: «Скрыть кнопку записи» (WGInputPanelHooks.hidesRecordButton): the field takes the record
         // button's place, as in Swiftgram — unless the slot shows something else (the media input's expand
         // button, the stop button of a streaming answer)
-        var ggRecordSlotIsEmpty = GGInputPanelHooks.hidesRecordButton(context: self.context) && !interfaceState.canStopIncomingStreamingMessage
+        var wgRecordSlotIsEmpty = WGInputPanelHooks.hidesRecordButton(context: self.context) && !interfaceState.canStopIncomingStreamingMessage
         if case .media = interfaceState.inputMode {
-            ggRecordSlotIsEmpty = false
+            wgRecordSlotIsEmpty = false
         }
         if inputHasText || self.extendedSearchLayout || hasMediaDraft || hasForward || hasSlowmodeButton || isEditingMedia {
         } else {
             if let customRightAction = self.customRightAction, case .empty = customRightAction {
                 textFieldInsets.right = 8.0
-            } else if ggRecordSlotIsEmpty && self.customRightAction == nil && self.customSecondaryRightAction == nil {
-                textFieldInsets.right = 8.0 // GHOST: see ggRecordSlotIsEmpty
+            } else if wgRecordSlotIsEmpty && self.customRightAction == nil && self.customSecondaryRightAction == nil {
+                textFieldInsets.right = 8.0 // WRAITH: see wgRecordSlotIsEmpty
             } else if let starReactionButtonSize, let liveMicrophoneButtonSize {
                 textFieldInsets.right = 14.0 + starReactionButtonSize.width + 6.0 + liveMicrophoneButtonSize.width
             } else if let starReactionButtonSize {
@@ -3348,14 +3348,14 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
         } else if hasSlowmodeButton {
         } else if inputHasText || hasMediaDraft || hasForward || isEditingMedia {
             nextButtonTopRight.x -= sendActionButtonsSize.width
-            if inputHasText, case .beforeSendButton = ggSendSlot.mode {
-                nextButtonTopRight.x -= ggSendSlot.width // GHOST: the room before the send button (GGSendSlotMode)
+            if inputHasText, case .beforeSendButton = wgSendSlot.mode {
+                nextButtonTopRight.x -= wgSendSlot.width // WRAITH: the room before the send button (WGSendSlotMode)
             }
         }
         for (item, button) in self.accessoryItemButtons.reversed() {
             let buttonSize = CGSize(width: button.buttonWidth, height: minimalInputHeight)
             button.updateLayout(item: item, size: buttonSize)
-            let buttonFrame = CGRect(origin: CGPoint(x: nextButtonTopRight.x - buttonSize.width, y: nextButtonTopRight.y + floor((minimalInputHeight - buttonSize.height) / 2.0)), size: buttonSize).offsetBy(dx: ggGeometry.accessoryOffset.x, dy: ggGeometry.accessoryOffset.y) // GHOST: see ggGeometry
+            let buttonFrame = CGRect(origin: CGPoint(x: nextButtonTopRight.x - buttonSize.width, y: nextButtonTopRight.y + floor((minimalInputHeight - buttonSize.height) / 2.0)), size: buttonSize).offsetBy(dx: wgGeometry.accessoryOffset.x, dy: wgGeometry.accessoryOffset.y) // WRAITH: see wgGeometry
             if button.superview == nil {
                 self.textInputContainerBackgroundView.contentView.addSubview(button)
                 button.frame = buttonFrame.offsetBy(dx: -additionalOffset, dy: 0.0)
@@ -3495,7 +3495,7 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
             }
         }
         
-        var mediaActionButtonsFrame = CGRect(origin: CGPoint(x: textInputContainerBackgroundFrame.maxX + 6.0, y: textInputContainerBackgroundFrame.maxY - mediaActionButtonsSize.height), size: mediaActionButtonsSize).offsetBy(dx: ggGeometry.sendOffset.x, dy: ggGeometry.sendOffset.y) // GHOST: see ggGeometry
+        var mediaActionButtonsFrame = CGRect(origin: CGPoint(x: textInputContainerBackgroundFrame.maxX + 6.0, y: textInputContainerBackgroundFrame.maxY - mediaActionButtonsSize.height), size: mediaActionButtonsSize).offsetBy(dx: wgGeometry.sendOffset.x, dy: wgGeometry.sendOffset.y) // WRAITH: see wgGeometry
         if inputHasText || self.extendedSearchLayout || hasMediaDraft || interfaceState.interfaceState.forwardMessageIds != nil || hasSlowmodeButton || isEditingMedia {
             mediaActionButtonsFrame.origin.x = width + 8.0
         }
@@ -3541,7 +3541,7 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
             transition.updateFrame(view: starReactionButtonView, frame: starReactionButtonFrame)
         }
         
-        var sendActionButtonsFrame = CGRect(origin: CGPoint(x: textInputContainerBackgroundFrame.maxX - sendActionButtonsSize.width, y: textInputContainerBackgroundFrame.maxY - sendActionButtonsSize.height), size: sendActionButtonsSize).offsetBy(dx: ggGeometry.sendOffset.x, dy: ggGeometry.sendOffset.y) // GHOST: see ggGeometry
+        var sendActionButtonsFrame = CGRect(origin: CGPoint(x: textInputContainerBackgroundFrame.maxX - sendActionButtonsSize.width, y: textInputContainerBackgroundFrame.maxY - sendActionButtonsSize.height), size: sendActionButtonsSize).offsetBy(dx: wgGeometry.sendOffset.x, dy: wgGeometry.sendOffset.y) // WRAITH: see wgGeometry
         
         let sendActionsScale: CGFloat
         if inputHasText || hasMediaDraft || hasForward || isEditingMedia {
@@ -3624,7 +3624,7 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
             }
         }
 
-        let attachmentButtonFrame = CGRect(origin: CGPoint(x: attachmentButtonX, y: textInputFrame.maxY - attachmentPillHeight), size: CGSize(width: 40.0, height: attachmentPillHeight)).offsetBy(dx: ggGeometry.attachOffset.x, dy: ggGeometry.attachOffset.y) // GHOST: see ggGeometry
+        let attachmentButtonFrame = CGRect(origin: CGPoint(x: attachmentButtonX, y: textInputFrame.maxY - attachmentPillHeight), size: CGSize(width: 40.0, height: attachmentPillHeight)).offsetBy(dx: wgGeometry.attachOffset.x, dy: wgGeometry.attachOffset.y) // WRAITH: see wgGeometry
         attachmentButtonX += 40.0 + 6.0
         self.attachmentButtonBackground.update(size: attachmentButtonFrame.size, cornerRadius: 40.0 * 0.5, isDark: interfaceState.theme.overallDarkAppearance, tintColor: defaultGlassTintColor, isInteractive: true, transition: ComponentTransition(transition))
 
@@ -3963,16 +3963,16 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
         transition.updateFrame(view: self.glassBackgroundContainer, frame: containerFrame)
         self.glassBackgroundContainer.update(size: containerFrame.size, isDark: interfaceState.theme.overallDarkAppearance, transition: ComponentTransition(transition))
         
-        // GHOST: geometry / decoration features adjust the laid-out panel (GGInputPanelHooks.didLayout)
-        GGInputPanelHooks.notifyDidLayout(panel: self, context: self.context, width: width, height: contentHeight, transition: transition, slot: self.ggResolvedSendSlot(ggSendSlot, inputHasText: inputHasText)) // GHOST: + where the room before the send button went
-        GGInputPanelHooks.applyReturnKeyType(self.richTextInputNode?.inputView, context: self.context) // GHOST: «Send» on the keyboard when Return sends (GGInputPanelHooks.sendOnReturn)
-        // GHOST: the formatting toolbar under the text field, between it and the keyboard; part of the panel (GGInputBarHooks.bottomAccessory)
-        self.ggBottomAccessoryHeight = ggInputBarBottomAccessoryHeight(GGInputBarAccessoryRequest(hostView: self.view, contentFrame: CGRect(x: leftInset, y: 0.0, width: max(0.0, width - leftInset - rightInset), height: contentHeight), isFocused: self.isFocused && !displayBotStartButton, theme: interfaceState.theme, transition: transition, allowsQuoteAndSpoiler: interfaceState.chatLocation.peerId?.namespace != Namespaces.Peer.SecretChat)) // GHOST: + no quote / spoiler in secret chats, as the Format menu
-        return contentHeight + self.ggBottomAccessoryHeight + ggGeometry.bottomOffset // GHOST: the panel is lifted by the input bar geometry
+        // WRAITH: geometry / decoration features adjust the laid-out panel (WGInputPanelHooks.didLayout)
+        WGInputPanelHooks.notifyDidLayout(panel: self, context: self.context, width: width, height: contentHeight, transition: transition, slot: self.wgResolvedSendSlot(wgSendSlot, inputHasText: inputHasText)) // WRAITH: + where the room before the send button went
+        WGInputPanelHooks.applyReturnKeyType(self.richTextInputNode?.inputView, context: self.context) // WRAITH: «Send» on the keyboard when Return sends (WGInputPanelHooks.sendOnReturn)
+        // WRAITH: the formatting toolbar under the text field, between it and the keyboard; part of the panel (WGInputBarHooks.bottomAccessory)
+        self.wgBottomAccessoryHeight = wgInputBarBottomAccessoryHeight(WGInputBarAccessoryRequest(hostView: self.view, contentFrame: CGRect(x: leftInset, y: 0.0, width: max(0.0, width - leftInset - rightInset), height: contentHeight), isFocused: self.isFocused && !displayBotStartButton, theme: interfaceState.theme, transition: transition, allowsQuoteAndSpoiler: interfaceState.chatLocation.peerId?.namespace != Namespaces.Peer.SecretChat)) // WRAITH: + no quote / spoiler in secret chats, as the Format menu
+        return contentHeight + self.wgBottomAccessoryHeight + wgGeometry.bottomOffset // WRAITH: the panel is lifted by the input bar geometry
     }
     
-    // GHOST: where the room of GGInputPanelHooks.sendButtonSlotWidth went in this layout, in the panel's coordinates
-    private func ggResolvedSendSlot(_ slot: (width: CGFloat, mode: GGSendSlotMode), inputHasText: Bool) -> GGInputPanelSlot {
+    // WRAITH: where the room of WGInputPanelHooks.sendButtonSlotWidth went in this layout, in the panel's coordinates
+    private func wgResolvedSendSlot(_ slot: (width: CGFloat, mode: WGSendSlotMode), inputHasText: Bool) -> WGInputPanelSlot {
         guard inputHasText, slot.width > 0.0 else {
             return .none
         }
@@ -4120,8 +4120,8 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
             self.interfaceInteraction?.updateTextInputStateAndMode({ _, inputMode in return (inputTextState, inputMode) })
             self.interfaceInteraction?.updateInputLanguage({ _ in return self.richTextInputNode?.primaryLanguage })
             self.updateTextNodeText(animated: true)
-            // GHOST: typing animation, counters (GGInputPanelHooks.textDidChange)
-            GGInputPanelHooks.notifyTextDidChange(panel: self, context: self.context)
+            // WRAITH: typing animation, counters (WGInputPanelHooks.textDidChange)
+            WGInputPanelHooks.notifyTextDidChange(panel: self, context: self.context)
         }
     }
     
@@ -4702,8 +4702,8 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
         
         var hideMicButton = false
         var hideMicButtonBackground = false
-        // GHOST: features may hide the record button (GGInputPanelHooks.hidesRecordButton)
-        if GGInputPanelHooks.hidesRecordButton(context: self.context) { hideMicButton = true }
+        // WRAITH: features may hide the record button (WGInputPanelHooks.hidesRecordButton)
+        if WGInputPanelHooks.hidesRecordButton(context: self.context) { hideMicButton = true }
         
         if self.customRightAction != nil {
             self.mediaActionButtons.isHidden = true
@@ -4905,15 +4905,15 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
         if let (width, leftInset, rightInset, bottomInset, additionalSideInsets, maxHeight, _, metrics, _, _, deviceMetrics) = self.validLayout, let interfaceState = self.presentationInterfaceState {
             var leftInset = leftInset
             var rightInset = rightInset
-            leftInset += ggInputBarGeometry().leftMargin; rightInset += ggInputBarGeometry().rightMargin // GHOST: input bar geometry, as in updateLayout
+            leftInset += wgInputBarGeometry().leftMargin; rightInset += wgInputBarGeometry().rightMargin // WRAITH: input bar geometry, as in updateLayout
             let compactBottomSideInset = self.compactBottomSideInset(bottomInset: bottomInset, deviceMetrics: deviceMetrics)
             leftInset += compactBottomSideInset
             rightInset += compactBottomSideInset
             
             let baseWidth = width - leftInset - self.leftMenuInset - rightInset - self.rightSlowModeInset + self.currentTextInputBackgroundWidthOffset - additionalSideInsets.right
-            let (_, textFieldHeight, _, _) = self.calculateTextFieldMetrics(width: baseWidth, sendActionControlsWidth: self.sendActionButtons.bounds.width, maxHeight: maxHeight, metrics: metrics, bottomInset: bottomInset, interfaceState: interfaceState) // GHOST: + the room before the send button (GGSendSlotMode)
+            let (_, textFieldHeight, _, _) = self.calculateTextFieldMetrics(width: baseWidth, sendActionControlsWidth: self.sendActionButtons.bounds.width, maxHeight: maxHeight, metrics: metrics, bottomInset: bottomInset, interfaceState: interfaceState) // WRAITH: + the room before the send button (WGSendSlotMode)
             let panelHeight = self.panelHeight(textFieldHeight: textFieldHeight, metrics: metrics, bottomInset: bottomInset)
-            if !self.bounds.size.height.isEqual(to: panelHeight + self.ggBottomAccessoryHeight + ggInputBarGeometry().bottomOffset) { // GHOST: the lift of the input bar geometry and the toolbar under the field are part of the height
+            if !self.bounds.size.height.isEqual(to: panelHeight + self.wgBottomAccessoryHeight + wgInputBarGeometry().bottomOffset) { // WRAITH: the lift of the input bar geometry and the toolbar under the field are part of the height
                 self.updateHeight(animated)
             } else {
                 if let richTextInputNode = self.richTextInputNode {
@@ -4956,8 +4956,8 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
                 }
             }
         }
-        // GHOST: features may change what Return does (GGInputPanelHooks.sendOnReturn)
-        shouldSendMessage = GGInputPanelHooks.sendOnReturn(shouldSendMessage, modifierFlags: modifierFlags, context: self.context)
+        // WRAITH: features may change what Return does (WGInputPanelHooks.sendOnReturn)
+        shouldSendMessage = WGInputPanelHooks.sendOnReturn(shouldSendMessage, modifierFlags: modifierFlags, context: self.context)
         if shouldSendMessage {
             self.sendButtonPressed()
             return false
@@ -5544,7 +5544,7 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
     }
     
     public func chatInputTextNode(shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if text == "\n", GGInputPanelHooks.sendsOnScreenReturn(context: self.context) { return self.chatInputTextNodeShouldReturn(modifierFlags: []) } // GHOST: Return of the on-screen keyboard sends (GGInputPanelHooks.sendOnReturn)
+        if text == "\n", WGInputPanelHooks.sendsOnScreenReturn(context: self.context) { return self.chatInputTextNodeShouldReturn(modifierFlags: []) } // WRAITH: Return of the on-screen keyboard sends (WGInputPanelHooks.sendOnReturn)
         guard let richTextInputNode = self.richTextInputNode, let context = self.context else {
             return false
         }

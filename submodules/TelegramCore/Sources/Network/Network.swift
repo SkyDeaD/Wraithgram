@@ -576,8 +576,8 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
             
             let useTempAuthKeys: Bool = true
             
-            // GHOST: features may change initConnection fields, e.g. the device model (GGNetworkHooks.initConnection)
-            apiEnvironment = ggApplyInitConnectionParameters(apiEnvironment, accountId: accountId, supplementary: supplementary, testingEnvironment: testingEnvironment)
+            // WRAITH: features may change initConnection fields, e.g. the device model (WGNetworkHooks.initConnection)
+            apiEnvironment = wgApplyInitConnectionParameters(apiEnvironment, accountId: accountId, supplementary: supplementary, testingEnvironment: testingEnvironment)
             let context = MTContext(serialization: serialization, encryptionProvider: arguments.encryptionProvider, apiEnvironment: apiEnvironment, isTestingEnvironment: testingEnvironment, useTempAuthKeys: useTempAuthKeys)
             context.refreshesTemporaryKeys = !supplementary
             

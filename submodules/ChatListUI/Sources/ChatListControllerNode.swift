@@ -30,8 +30,8 @@ import ChatListHeaderNoticeComponent
 import ChatListFilterTabContainerNode
 import GlassControls
 import SideColumnLayout
-import GGHooks // GHOST: chat list chrome points
-import ChatListTitleView // GHOST: folder strip and header style (GGChatListStyleHooks)
+import WGHooks // WRAITH: chat list chrome points
+import ChatListTitleView // WRAITH: folder strip and header style (WGChatListStyleHooks)
 
 public enum ChatListContainerNodeFilter: Equatable {
     case all
@@ -608,13 +608,13 @@ public final class ChatListContainerNode: ASDisplayNode, ASGestureRecognizerDele
         let filtersLimit = self.filtersLimit.flatMap({ $0 + 1 }) ?? Int32(self.availableFilters.count)
         let maxFilterIndex = min(Int(filtersLimit), self.availableFilters.count) - 1
 
-        // GHOST: features may turn off the story camera swipe (GGChatListChromeHooks.storyCameraSwipe) — last conjunct
+        // WRAITH: features may turn off the story camera swipe (WGChatListChromeHooks.storyCameraSwipe) — last conjunct
         let canOpenStoryCamera = self.validLayout?.0.metrics.widthClass == .compact
             && self.availableFilters.first?.id == self.selectedId
             && !recognizer.currentAllowedDirections.intersection(.right).isEmpty
             && self.controller?.isStoryPostingAvailable == true
             && !(self.context.sharedContext.callManager?.hasActiveCall ?? false)
-            && GGChatListChromeHooks.allowsStoryCameraSwipe(context: self.context) // GHOST: see above
+            && WGChatListChromeHooks.allowsStoryCameraSwipe(context: self.context) // WRAITH: see above
         let hasLiveStream = canOpenStoryCamera && self.controller?.chatListHeaderView()?.storyPeerListView()?.isLiveStreaming == true
         
         switch recognizer.state {
@@ -1184,7 +1184,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
     
     private var toolbar: ComponentView<Empty>?
     var toolbarData: Toolbar?
-    let ggBottomFolderStrip = GGChatListBottomFolderStrip() // GHOST: «Папки внизу» host (GGChatListFolderStrip.atBottom)
+    let wgBottomFolderStrip = WGChatListBottomFolderStrip() // WRAITH: «Папки внизу» host (WGChatListFolderStrip.atBottom)
     var toolbarActionSelected: ((ToolbarActionOption) -> Void)?
     
     private var isSearchDisplayControllerActive: ChatListNavigationBar.ActiveSearch?
@@ -1581,7 +1581,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
                 }
                 
                 let isEditing = self.isReorderingFilters || (self.mainContainerNode.currentItemNode.currentState.editing && !self.didBeginSelectingChatsWhileEditing)
-                let ggStrip = ggChatListFolderStrip(context: self.context) // GHOST: folder strip style (GGChatListStyleHooks.folderStrip)
+                let wgStrip = wgChatListFolderStrip(context: self.context) // WRAITH: folder strip style (WGChatListStyleHooks.folderStrip)
                 
                 tabs = AnyComponent(HorizontalTabsComponent(
                     context: self.context,
@@ -1594,7 +1594,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
                         switch entry {
                         case .all:
                             id = Int32.min
-                            title = HorizontalTabsComponent.Tab.Title(text: ggStrip.allChatsTitle ?? self.presentationData.strings.ChatList_Tabs_All, entities: [], enableAnimations: false) // GHOST: see ggStrip
+                            title = HorizontalTabsComponent.Tab.Title(text: wgStrip.allChatsTitle ?? self.presentationData.strings.ChatList_Tabs_All, entities: [], enableAnimations: false) // WRAITH: see wgStrip
                             isMainTab = true
                         case let .filter(idValue, text, unread):
                             id = AnyHashable(idValue)
@@ -1687,18 +1687,18 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
                     selectedTab: selectedTab,
                     isEditing: isEditing,
                     liftWhileSwitching: layout.deviceMetrics.type != .tablet,
-                    ggCompactSpacing: ggStrip.compactTabs // GHOST: see ggStrip
+                    wgCompactSpacing: wgStrip.compactTabs // WRAITH: see wgStrip
                 ))
             }
                 
-            // GHOST: «Папки внизу» — the tabs go to a strip above the tab bar (GGChatListFolderStrip.atBottom)
-            tabs = self.ggBottomFolderStrip.takeTabs(tabs, context: self.context, layout: layout, theme: self.presentationData.theme, parentView: self.view, aboveView: self.mainContainerNode.view,
+            // WRAITH: «Папки внизу» — the tabs go to a strip above the tab bar (WGChatListFolderStrip.atBottom)
+            tabs = self.wgBottomFolderStrip.takeTabs(tabs, context: self.context, layout: layout, theme: self.presentationData.theme, parentView: self.view, aboveView: self.mainContainerNode.view,
                 isHidden: self.isSearchDisplayControllerActive != nil || self.inlineStackContainerNode != nil, transition: transition)
             navigationHeaderPanels = AnyComponent(HeaderPanelContainerComponent(
                 theme: self.presentationData.theme,
                 tabs: tabs,
                 panels: panels,
-                ggTabsHeightOffset: tabs == nil ? 0.0 : ggChatListFolderStrip(context: self.context).heightOffset // GHOST: folder strip height (GGChatListStyleHooks.folderStrip)
+                wgTabsHeightOffset: tabs == nil ? 0.0 : wgChatListFolderStrip(context: self.context).heightOffset // WRAITH: folder strip height (WGChatListStyleHooks.folderStrip)
             ))
         }
         
@@ -1732,7 +1732,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
                 leftInset: layout.safeInsets.left,
                 rightInset: layout.safeInsets.right,
                 trailingButtonsInset: layout.navigationBarTrailingButtonsInset,
-                search: ggChatListHidesSearchField(context: self.context) ? nil : ChatListNavigationBar.Search(isEnabled: true), // GHOST: features may hide the search field (GGChatListStyleHooks.hidesSearchField)
+                search: wgChatListHidesSearchField(context: self.context) ? nil : ChatListNavigationBar.Search(isEnabled: true), // WRAITH: features may hide the search field (WGChatListStyleHooks.hidesSearchField)
                 activeSearch: self.isSearchDisplayControllerActive,
                 primaryContent: headerContent?.primaryContent,
                 secondaryContent: headerContent?.secondaryContent,
@@ -1911,7 +1911,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
         insets.top += navigationBarHeight
         insets.left += layout.safeInsets.left
         insets.right += layout.safeInsets.right
-        insets.bottom += self.ggBottomFolderStrip.reservedHeight // GHOST: the list ends above the folder strip («Папки внизу», laid out in updateNavigationBar)
+        insets.bottom += self.wgBottomFolderStrip.reservedHeight // WRAITH: the list ends above the folder strip («Папки внизу», laid out in updateNavigationBar)
         
         if let toolbarData = self.toolbarData {
             var panelsBottomInset: CGFloat = layout.insets(options: []).bottom
@@ -2079,8 +2079,8 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
             navigationBarComponentView.deferScrollApplication = false
             navigationBarComponentView.applyCurrentScroll(transition: ComponentTransition(transition))
         }
-        // GHOST: chat list chrome features adjust the laid-out screen (GGChatListChromeHooks.containerDidLayout)
-        GGChatListChromeHooks.notifyContainerDidLayout(context: self.context, node: self, layout: layout, navigationBarHeight: navigationBarHeight, transition: transition, bottomAccessoryHeight: self.ggBottomFolderStrip.reservedHeight, contentView: self.mainContainerNode.view) // GHOST: + the list's view (decorations go right above it, under the folder strip)
+        // WRAITH: chat list chrome features adjust the laid-out screen (WGChatListChromeHooks.containerDidLayout)
+        WGChatListChromeHooks.notifyContainerDidLayout(context: self.context, node: self, layout: layout, navigationBarHeight: navigationBarHeight, transition: transition, bottomAccessoryHeight: self.wgBottomFolderStrip.reservedHeight, contentView: self.mainContainerNode.view) // WRAITH: + the list's view (decorations go right above it, under the folder strip)
     }
     
     @MainActor

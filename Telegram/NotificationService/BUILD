@@ -8,13 +8,13 @@ swift_library(
     srcs = glob([
         "Sources/*.swift",
     ]) + [
-        # GHOST: Ghostgram launch and push-content point in the extension
-        "//Ghostgram/GGHooks:NotificationServiceHookSources",
+        # WRAITH: Wraithgram launch and push-content point in the extension
+        "//Wraithgram/WGHooks:NotificationServiceHookSources",
     ],
     deps = [
-        # GHOST: Ghostgram core and the light shared part of the features
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
+        # WRAITH: Wraithgram core and the light shared part of the features
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
         "//submodules/Postbox:Postbox",
         "//submodules/TelegramCore:TelegramCore",
         "//submodules/BuildConfig:BuildConfig",

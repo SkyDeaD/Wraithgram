@@ -115,19 +115,19 @@ public extension Message {
         return nil
     }
     
-    // GHOST: what the screens see. Self-destructing media that a feature shows as ordinary media
-    // (GGRestrictionHooks.secretMediaDisplay) has no timeout here; TelegramCore's own read/consume
-    // logic uses `ggRawMinAutoremoveOrClearTimeout`.
+    // WRAITH: what the screens see. Self-destructing media that a feature shows as ordinary media
+    // (WGRestrictionHooks.secretMediaDisplay) has no timeout here; TelegramCore's own read/consume
+    // logic uses `wgRawMinAutoremoveOrClearTimeout`.
     var minAutoremoveOrClearTimeout: Int32? {
-        let timeout = self.ggRawMinAutoremoveOrClearTimeout
-        if timeout != nil && ggShowsSecretMediaAsRegular(self) {
+        let timeout = self.wgRawMinAutoremoveOrClearTimeout
+        if timeout != nil && wgShowsSecretMediaAsRegular(self) {
             return nil
         }
         return timeout
     }
 
-    // GHOST: the message's own timeout (upstream `minAutoremoveOrClearTimeout`)
-    var ggRawMinAutoremoveOrClearTimeout: Int32? {
+    // WRAITH: the message's own timeout (upstream `minAutoremoveOrClearTimeout`)
+    var wgRawMinAutoremoveOrClearTimeout: Int32? {
         var timeout: Int32?
         for attribute in self.attributes {
             if let attribute = attribute as? AutoremoveTimeoutMessageAttribute {
@@ -153,17 +153,17 @@ public extension Message {
         return timeout
     }
     
-    // GHOST: what the screens see (blur, secret viewer, menus); see `minAutoremoveOrClearTimeout`
+    // WRAITH: what the screens see (blur, secret viewer, menus); see `minAutoremoveOrClearTimeout`
     var containsSecretMedia: Bool {
-        let isSecretMedia = self.ggRawContainsSecretMedia
-        return isSecretMedia && !ggShowsSecretMediaAsRegular(self, isSecretMedia: isSecretMedia)
+        let isSecretMedia = self.wgRawContainsSecretMedia
+        return isSecretMedia && !wgShowsSecretMediaAsRegular(self, isSecretMedia: isSecretMedia)
     }
 
-    // GHOST: the message's own answer (upstream `containsSecretMedia`): view once or a timer of a
+    // WRAITH: the message's own answer (upstream `containsSecretMedia`): view once or a timer of a
     // minute or less on a photo, video or voice. TelegramCore's read/consume logic and features
     // that keep such media use this one.
-    var ggRawContainsSecretMedia: Bool {
-        guard let timeout = self.ggRawMinAutoremoveOrClearTimeout else {
+    var wgRawContainsSecretMedia: Bool {
+        guard let timeout = self.wgRawMinAutoremoveOrClearTimeout else {
             return false
         }
         if timeout > 1 * 60 && timeout != viewOnceTimeout {

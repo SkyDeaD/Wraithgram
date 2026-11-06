@@ -8,7 +8,7 @@ import MonotonicTime
 import AccountContext
 import TelegramPresentationData
 import PasscodeUI
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 import TelegramUIPreferences
 import ImageBlur
 import FastBlur
@@ -154,9 +154,9 @@ public final class AppLockContextImpl: AppLockContext {
             self.currentStateValue = LockState()
         }
         self.autolockTimeout.set(self.currentStateValue.autolockTimeout)
-        // GHOST: optional lock on every cold start, in place before the first lock evaluation (GGPasscodeHooks.locksOnLaunch); persisted like `lock()`
-        if GGPasscodeHooks.shouldLockOnLaunch() && !self.currentStateValue.isManuallyLocked { self.currentStateValue.isManuallyLocked = true; let ggState = self.currentStateValue, ggPath = appLockStatePath(rootPath: rootPath)
-            self.syncQueue.async { if let data = try? JSONEncoder().encode(ggState) { let _ = try? data.write(to: URL(fileURLWithPath: ggPath), options: .atomic) } } }
+        // WRAITH: optional lock on every cold start, in place before the first lock evaluation (WGPasscodeHooks.locksOnLaunch); persisted like `lock()`
+        if WGPasscodeHooks.shouldLockOnLaunch() && !self.currentStateValue.isManuallyLocked { self.currentStateValue.isManuallyLocked = true; let wgState = self.currentStateValue, wgPath = appLockStatePath(rootPath: rootPath)
+            self.syncQueue.async { if let data = try? JSONEncoder().encode(wgState) { let _ = try? data.write(to: URL(fileURLWithPath: wgPath), options: .atomic) } } }
         
         self.disposable = (combineLatest(queue: .mainQueue(),
             accountManager.accessChallengeData(),
@@ -339,7 +339,7 @@ public final class AppLockContextImpl: AppLockContext {
     private func updateTimestampRenewTimer(shouldRun: Bool) {
         if shouldRun {
             if self.timestampRenewTimer == nil {
-                let timestampRenewTimer = SwiftSignalKit.Timer(timeout: GGExtrasPolicy.appLockActivityRenewInterval(autolockTimeout: self.currentStateValue.autolockTimeout), repeat: true, completion: { [weak self] in // GHOST: 2.5 s with the 5-second auto-lock (GGExtrasPolicy)
+                let timestampRenewTimer = SwiftSignalKit.Timer(timeout: WGExtrasPolicy.appLockActivityRenewInterval(autolockTimeout: self.currentStateValue.autolockTimeout), repeat: true, completion: { [weak self] in // WRAITH: 2.5 s with the 5-second auto-lock (WGExtrasPolicy)
                     guard let strongSelf = self else {
                         return
                     }

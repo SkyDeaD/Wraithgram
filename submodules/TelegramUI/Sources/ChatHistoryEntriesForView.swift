@@ -12,7 +12,7 @@ import TextFormat
 import Markdown
 import Display
 import TelegramStringFormatting
-import GGHooks // GHOST: chat screen points
+import WGHooks // WRAITH: chat screen points
 
 struct ChatHistoryEntriesForViewState {
     private var messageStableIdToLocalId: [UInt32: Int64] = [:]
@@ -154,8 +154,8 @@ func chatHistoryEntriesForView(
         if pendingRemovedMessages.contains(message.id) {
             continue
         }
-        // GHOST: features may hide messages, e.g. of blocked users (GGChatScreenHooks.hidesMessage)
-        if GGChatScreenHooks.hidesMessage(message, context: context, location: location) {
+        // WRAITH: features may hide messages, e.g. of blocked users (WGChatScreenHooks.hidesMessage)
+        if WGChatScreenHooks.hidesMessage(message, context: context, location: location) {
             continue
         }
         

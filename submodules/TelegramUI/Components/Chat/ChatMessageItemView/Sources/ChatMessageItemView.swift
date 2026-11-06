@@ -17,8 +17,8 @@ import ChatMessageItem
 import ChatMessageTransitionNode
 import AnimatedStickerNode
 import TelegramAnimatedStickerNode
-import GGHooks // GHOST: message decorations
-import GGCore // GHOST: hook points (GGHookPoint.isEmpty)
+import WGHooks // WRAITH: message decorations
+import WGCore // WRAITH: hook points (WGHookPoint.isEmpty)
 
 public func chatMessageItemLayoutConstants(_ constants: (ChatMessageItemLayoutConstants, ChatMessageItemLayoutConstants), params: ListViewItemLayoutParams, presentationData: ChatPresentationData) -> ChatMessageItemLayoutConstants {
     var result: ChatMessageItemLayoutConstants
@@ -34,8 +34,8 @@ public func chatMessageItemLayoutConstants(_ constants: (ChatMessageItemLayoutCo
     let radiusTransition = (presentationData.chatBubbleCorners.mainRadius - minRadius) / (maxRadius - minRadius)
     let minInset: CGFloat = result.text.bubbleInsets.left
     let maxInset: CGFloat = 11.0
-    // GHOST: features may set the text inset inside bubbles (GGMessageLayoutHooks.bubbleTextInset)
-    let textInset: CGFloat = GGMessageLayoutHooks.bubbleTextInset(min(maxInset, ceil(maxInset * radiusTransition + minInset * (1.0 - radiusTransition))))
+    // WRAITH: features may set the text inset inside bubbles (WGMessageLayoutHooks.bubbleTextInset)
+    let textInset: CGFloat = WGMessageLayoutHooks.bubbleTextInset(min(maxInset, ceil(maxInset * radiusTransition + minInset * (1.0 - radiusTransition))))
     result.text.bubbleInsets.left = textInset
     result.text.bubbleInsets.right = textInset
     result.instantVideo.dimensions = params.width > 320.0 ? constants.1.instantVideo.dimensions : constants.0.instantVideo.dimensions
@@ -694,8 +694,8 @@ open class ChatMessageItemView: ListViewItemNode, ChatMessageItemNodeProtocol {
     
     open func setupItem(_ item: ChatMessageItem, synchronousLoad: Bool) {
         self.item = item
-        // GHOST: per-message transparency, e.g. deleted or filtered messages (GGMessageDecorationHooks)
-        if !GGMessageDecorationHooks.decorations.isEmpty { self.alpha = GGMessageDecorationHooks.alpha(for: item.message, context: item.context) }
+        // WRAITH: per-message transparency, e.g. deleted or filtered messages (WGMessageDecorationHooks)
+        if !WGMessageDecorationHooks.decorations.isEmpty { self.alpha = WGMessageDecorationHooks.alpha(for: item.message, context: item.context) }
     }
     
     open func updateAccessibilityData(_ accessibilityData: ChatMessageAccessibilityData) {

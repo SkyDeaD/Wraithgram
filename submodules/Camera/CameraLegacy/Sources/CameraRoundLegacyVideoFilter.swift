@@ -25,14 +25,14 @@ final class CameraRoundLegacyVideoFilter {
     private(set) var inputFormatDescription: CMFormatDescription?
     
     private(set) var isPrepared = false
-    // GHOST: side of the square from the round video settings (upstream: videoMessageDimensions)
-    private let ggSide: Int
+    // WRAITH: side of the square from the round video settings (upstream: videoMessageDimensions)
+    private let wgSide: Int
     
-    init(ciContext: CIContext, colorSpace: CGColorSpace, simple: Bool, side: Int = Int(videoMessageDimensions.width)) { // GHOST: `side` — round video resolution
+    init(ciContext: CIContext, colorSpace: CGColorSpace, simple: Bool, side: Int = Int(videoMessageDimensions.width)) { // WRAITH: `side` — round video resolution
         self.ciContext = ciContext
         self.colorSpace = colorSpace
         self.simple = simple
-        self.ggSide = side // GHOST: see `ggSide`
+        self.wgSide = side // WRAITH: see `wgSide`
     }
     
     func prepare(with formatDescription: CMFormatDescription, outputRetainedBufferCountHint: Int) {
@@ -44,7 +44,7 @@ final class CameraRoundLegacyVideoFilter {
         }
         self.inputFormatDescription = formatDescription
         
-        let circleImage = generateImage(CGSize(width: self.ggSide, height: self.ggSide) /* GHOST: round video resolution */, opaque: false, scale: 1.0, rotatedContext: { size, context in
+        let circleImage = generateImage(CGSize(width: self.wgSide, height: self.wgSide) /* WRAITH: round video resolution */, opaque: false, scale: 1.0, rotatedContext: { size, context in
             let bounds = CGRect(origin: .zero, size: size)
             context.clear(bounds)
             context.setFillColor(UIColor.white.cgColor)
@@ -103,7 +103,7 @@ final class CameraRoundLegacyVideoFilter {
             sourceOrientation = additional ? .leftMirrored : .right
         }
         sourceImage = sourceImage.oriented(sourceOrientation)
-        let scale = CGFloat(self.ggSide) / min(sourceImage.extent.width, sourceImage.extent.height) // GHOST: round video resolution
+        let scale = CGFloat(self.wgSide) / min(sourceImage.extent.width, sourceImage.extent.height) // WRAITH: round video resolution
         
         if !self.simple {
             resizeFilter.setValue(sourceImage, forKey: kCIInputImageKey)
@@ -165,7 +165,7 @@ final class CameraRoundLegacyVideoFilter {
             return nil
         }
         
-        self.ciContext.render(finalImage, to: outputPixelBuffer, bounds: CGRect(origin: .zero, size: CGSize(width: self.ggSide, height: self.ggSide)) /* GHOST: round video resolution */, colorSpace: outputColorSpace)
+        self.ciContext.render(finalImage, to: outputPixelBuffer, bounds: CGRect(origin: .zero, size: CGSize(width: self.wgSide, height: self.wgSide)) /* WRAITH: round video resolution */, colorSpace: outputColorSpace)
         
         return outputPixelBuffer
     }

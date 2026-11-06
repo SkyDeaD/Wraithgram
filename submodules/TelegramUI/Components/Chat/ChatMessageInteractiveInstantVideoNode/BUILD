@@ -11,9 +11,9 @@ swift_library(
         #"-Xfrontend", "-debug-time-function-bodies"
     ],
     deps = [
-        # GHOST: Ghostgram hook points
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/GGHooks:GGHooks",
+        # WRAITH: Wraithgram hook points
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/WGHooks:WGHooks",
         "//submodules/AsyncDisplayKit",
         "//submodules/Display",
         "//submodules/SSignalKit/SwiftSignalKit",

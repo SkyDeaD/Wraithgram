@@ -12,7 +12,7 @@ import TelegramUIPreferences
 import AccountContext
 import CallKit
 import PhoneNumberFormat
-import GGCallsMediaHooks // GHOST: Force TCP (GGCallsMediaHooks.forceTcp)
+import WGCallsMediaHooks // WRAITH: Force TCP (WGCallsMediaHooks.forceTcp)
 
 private func callKitIntegrationIfEnabled(_ integration: CallKitIntegration?, settings: VoiceCallSettings?) -> CallKitIntegration?  {
     let enabled = settings?.enableSystemIntegration ?? true
@@ -361,7 +361,7 @@ public final class PresentationCallManagerImpl: PresentationCallManager {
                         startWithVideo: firstState.2.isVideo,
                         isVideoPossible: firstState.2.isVideoPossible,
                         enableStunMarking: shouldEnableStunMarking(appConfiguration: appConfiguration),
-                        enableTCP: experimentalSettings.enableVoipTcp || GGCallsMediaHooks.shouldForceTcp(), // GHOST: Force TCP (GGCallsMediaHooks.forceTcp)
+                        enableTCP: experimentalSettings.enableVoipTcp || WGCallsMediaHooks.shouldForceTcp(), // WRAITH: Force TCP (WGCallsMediaHooks.forceTcp)
                         preferredVideoCodec: nil
                     )
                     strongSelf.updateCurrentCall(call)
@@ -410,7 +410,7 @@ public final class PresentationCallManagerImpl: PresentationCallManager {
                         startWithVideo: firstState.2.isVideo,
                         isVideoPossible: firstState.2.isVideoPossible,
                         enableStunMarking: shouldEnableStunMarking(appConfiguration: appConfiguration),
-                        enableTCP: experimentalSettings.enableVoipTcp || GGCallsMediaHooks.shouldForceTcp(), // GHOST: Force TCP (GGCallsMediaHooks.forceTcp)
+                        enableTCP: experimentalSettings.enableVoipTcp || WGCallsMediaHooks.shouldForceTcp(), // WRAITH: Force TCP (WGCallsMediaHooks.forceTcp)
                         preferredVideoCodec: nil
                     )
                     strongSelf.updateCurrentCall(call)
@@ -692,7 +692,7 @@ public final class PresentationCallManagerImpl: PresentationCallManager {
                         startWithVideo: isVideo,
                         isVideoPossible: isVideoPossible,
                         enableStunMarking: shouldEnableStunMarking(appConfiguration: appConfiguration),
-                        enableTCP: experimentalSettings.enableVoipTcp || GGCallsMediaHooks.shouldForceTcp(), // GHOST: Force TCP (GGCallsMediaHooks.forceTcp)
+                        enableTCP: experimentalSettings.enableVoipTcp || WGCallsMediaHooks.shouldForceTcp(), // WRAITH: Force TCP (WGCallsMediaHooks.forceTcp)
                         preferredVideoCodec: nil
                     )
                     strongSelf.updateCurrentCall(call)

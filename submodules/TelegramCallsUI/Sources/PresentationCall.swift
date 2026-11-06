@@ -14,8 +14,8 @@ import AccountContext
 import DeviceProximity
 import PhoneNumberFormat
 import LiquidGlassShapes
-import GGCallsMediaHooks // GHOST: silent mute (GGCallsMediaHooks.silentMute)
-import GGCallCameraHooks // GHOST: virtual camera capturer (W3-2)
+import WGCallsMediaHooks // WRAITH: silent mute (WGCallsMediaHooks.silentMute)
+import WGCallCameraHooks // WRAITH: virtual camera capturer (W3-2)
 
 public final class PresentationCallImpl: PresentationCall {
     public let context: AccountContext
@@ -240,7 +240,7 @@ public final class PresentationCallImpl: PresentationCall {
         self.peer = peer
         self.isVideo = startWithVideo
         if self.isVideo {
-            self.videoCapturer = GGCallCameraHooks.makeCameraCapturer() ?? OngoingCallVideoCapturer() // GHOST: virtual camera (W3-2, GGCallCameraHooks)
+            self.videoCapturer = WGCallCameraHooks.makeCameraCapturer() ?? OngoingCallVideoCapturer() // WRAITH: virtual camera (W3-2, WGCallCameraHooks)
             self.statePromise.set(PresentationCallState(state: isOutgoing ? .waiting : .ringing, videoState: .active(isScreencast: self.isScreencastActive, endpointId: ""), remoteVideoState: .inactive, remoteAudioState: .active, remoteBatteryLevel: .normal, supportsConferenceCalls: self.supportsConferenceCalls))
         } else {
             self.statePromise.set(PresentationCallState(state: isOutgoing ? .waiting : .ringing, videoState: self.isVideoPossible ? .inactive : .notAvailable, remoteVideoState: .inactive, remoteAudioState: .active, remoteBatteryLevel: .normal, supportsConferenceCalls: self.supportsConferenceCalls))
@@ -1226,8 +1226,8 @@ public final class PresentationCallImpl: PresentationCall {
                             
                             let ongoingContext = OngoingCallContext(account: self.context.account, callSessionManager: self.callSessionManager, callId: id, internalId: self.internalId, proxyServer: proxyServer, initialNetworkType: self.currentNetworkType, updatedNetworkType: self.updatedNetworkType, serializedData: self.serializedData, dataSaving: dataSaving, key: key, isOutgoing: sessionState.isOutgoing, video: self.videoCapturer, connections: updatedConnections, maxLayer: maxLayer, version: version, customParameters: customParameters, allowP2P: allowsP2P, enableTCP: self.enableTCP, enableStunMarking: self.enableStunMarking, audioSessionActive: contextAudioSessionActive, logName: logName, preferredVideoCodec: self.preferredVideoCodec, audioDevice: self.sharedAudioContext?.audioDevice)
                             self.ongoingContext = ongoingContext
-                            // GHOST: a silent mute keeps the call unmuted and silences the device (GGCallsMediaHooks.silentMute)
-                            GGCallsMediaHooks.applyMute(self.isMutedValue, call: self, audioDevice: self.sharedAudioContext?.audioDevice, upstream: { ongoingContext.setIsMuted($0) })
+                            // WRAITH: a silent mute keeps the call unmuted and silences the device (WGCallsMediaHooks.silentMute)
+                            WGCallsMediaHooks.applyMute(self.isMutedValue, call: self, audioDevice: self.sharedAudioContext?.audioDevice, upstream: { ongoingContext.setIsMuted($0) })
                             if let requestedVideoAspect = self.requestedVideoAspect {
                                 ongoingContext.setRequestedVideoAspect(requestedVideoAspect)
                             }
@@ -1577,8 +1577,8 @@ public final class PresentationCallImpl: PresentationCall {
         if let conferenceCallContext = self.conferenceCallContext {
             conferenceCallContext.setIsMuted(action: value ? .muted(isPushToTalkActive: false) : .unmuted)
         } else {
-            // GHOST: a silent mute keeps the call unmuted and silences the device (GGCallsMediaHooks.silentMute)
-            GGCallsMediaHooks.applyMute(self.isMutedValue, call: self, audioDevice: self.sharedAudioContext?.audioDevice, upstream: { self.ongoingContext?.setIsMuted($0) })
+            // WRAITH: a silent mute keeps the call unmuted and silences the device (WGCallsMediaHooks.silentMute)
+            WGCallsMediaHooks.applyMute(self.isMutedValue, call: self, audioDevice: self.sharedAudioContext?.audioDevice, upstream: { self.ongoingContext?.setIsMuted($0) })
         }
     }
     
@@ -1587,7 +1587,7 @@ public final class PresentationCallImpl: PresentationCall {
             return
         }
         if self.videoCapturer == nil {
-            let videoCapturer = GGCallCameraHooks.makeCameraCapturer() ?? OngoingCallVideoCapturer() // GHOST: virtual camera (W3-2, GGCallCameraHooks)
+            let videoCapturer = WGCallCameraHooks.makeCameraCapturer() ?? OngoingCallVideoCapturer() // WRAITH: virtual camera (W3-2, WGCallCameraHooks)
             self.videoCapturer = videoCapturer
         }
         if let videoCapturer = self.videoCapturer {
@@ -1783,7 +1783,7 @@ public final class PresentationCallImpl: PresentationCall {
         return self.debugInfoValue.get()
     }
     
-    public func video(isIncoming: Bool) -> Signal<OngoingGroupCallContext.VideoFrameData, NoError>? { // GHOST: public for the call recording
+    public func video(isIncoming: Bool) -> Signal<OngoingGroupCallContext.VideoFrameData, NoError>? { // WRAITH: public for the call recording
         if self.isMovedToConference {
             return nil
         }
@@ -1808,7 +1808,7 @@ public final class PresentationCallImpl: PresentationCall {
             return
         }
         if self.videoCapturer == nil {
-            let videoCapturer = GGCallCameraHooks.makeCameraCapturer() ?? OngoingCallVideoCapturer() // GHOST: virtual camera (W3-2, GGCallCameraHooks)
+            let videoCapturer = WGCallCameraHooks.makeCameraCapturer() ?? OngoingCallVideoCapturer() // WRAITH: virtual camera (W3-2, WGCallCameraHooks)
             self.videoCapturer = videoCapturer
         }
         
@@ -1885,7 +1885,7 @@ public final class PresentationCallImpl: PresentationCall {
             return
         }
         self.useFrontCamera = !self.useFrontCamera
-        if let videoCapturer = self.videoCapturer, GGCallCameraHooks.switchCamera(capturer: videoCapturer, isFront: self.useFrontCamera) { return } // GHOST: virtual camera (W3-2, GGCallCameraHooks)
+        if let videoCapturer = self.videoCapturer, WGCallCameraHooks.switchCamera(capturer: videoCapturer, isFront: self.useFrontCamera) { return } // WRAITH: virtual camera (W3-2, WGCallCameraHooks)
         self.videoCapturer?.switchVideoInput(isFront: self.useFrontCamera)
     }
     

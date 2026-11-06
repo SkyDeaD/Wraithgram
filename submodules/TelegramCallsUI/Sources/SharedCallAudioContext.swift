@@ -4,12 +4,12 @@ import TelegramCore
 import TelegramVoip
 import TelegramAudio
 import DeviceProximity
-import GGCallAudio // GHOST: call audio effects reset on reuse
+import WGCallAudio // WRAITH: call audio effects reset on reuse
 
 public final class SharedCallAudioContext {
     private static weak var current: SharedCallAudioContext? 
 
-    public let audioDevice: OngoingCallContext.AudioDevice? // GHOST: public for Ghostgram call features (silent mute, soundboard, recording)
+    public let audioDevice: OngoingCallContext.AudioDevice? // WRAITH: public for Wraithgram call features (silent mute, soundboard, recording)
     let callKitIntegration: CallKitIntegration?
     
     /// What the owning call asked for: the loudspeaker unless a headset is connected.
@@ -89,7 +89,7 @@ public final class SharedCallAudioContext {
             // It now belongs to a live call again; the previous owner's termination must not let a
             // later context retire it.
             current.isCallFinished = false
-            current.audioDevice?.ggAudioEffects.reset() // GHOST: no silent mute, clip or recording left over from the previous call
+            current.audioDevice?.wgAudioEffects.reset() // WRAITH: no silent mute, clip or recording left over from the previous call
             return current
         }
         let previous = self.current

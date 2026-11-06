@@ -44,7 +44,7 @@ swift_library(
         "//submodules/TelegramUI/Components/PlainButtonComponent",
         "//submodules/TelegramUI/Components/GlassBackgroundComponent",
         "//submodules/TelegramUI/Components/Chat/ChatTextInputPanelNode",
-        # GHOST: formatting toolbar point (W2-5)
+        # WRAITH: formatting toolbar point (W2-5)
         "//submodules/TelegramUI/Components/Chat/ChatTextInputActionButtonsNode",
         "//submodules/TelegramUI/Components/Stories/LiveChat/StoryLiveChatMessageComponent",
     ],

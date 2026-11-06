@@ -9,7 +9,7 @@ import ChatHistoryEntry
 import ChatControllerInteraction
 import TelegramPresentationData
 import ChatMessageItemCommon
-import GGAppearanceSettings // GHOST: appearance snapshot
+import WGAppearanceSettings // WRAITH: appearance snapshot
 
 public enum ChatMessageItemContent: Sequence {
     case message(message: EngineRawMessage, read: Bool, selection: ChatHistoryMessageSelection, attributes: ChatMessageEntryAttributes, location: EngineMessageHistoryEntryLocation?)
@@ -143,8 +143,8 @@ public protocol ChatMessageItem: ListViewItem, ChatHistoryItemWithHeaders {
 }
 
 public func hasCommentButton(item: ChatMessageItem) -> Bool {
-    // GHOST: no comment buttons under channel posts (appearance.messages.hideChannelComments)
-    if GGAppearanceSnapshot.current.hideChannelComments {
+    // WRAITH: no comment buttons under channel posts (appearance.messages.hideChannelComments)
+    if WGAppearanceSnapshot.current.hideChannelComments {
         return false
     }
     let firstMessage = item.content.firstMessage

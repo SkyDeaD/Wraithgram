@@ -9,7 +9,7 @@ import TelegramUIPreferences
 import AvatarNode
 import AccountContext
 import ItemListUI
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 final class MentionChatInputPanelItem: ListViewItem {
     var neighborDescriptor: AnyEquatable {
@@ -21,7 +21,7 @@ final class MentionChatInputPanelItem: ListViewItem {
     fileprivate let revealed: Bool
     fileprivate let inverted: Bool
     fileprivate let peer: EnginePeer
-    fileprivate let peerSelected: (EnginePeer) -> Void // GHOST: fileprivate — the mention chain long press calls it (GGExtrasMentionChain)
+    fileprivate let peerSelected: (EnginePeer) -> Void // WRAITH: fileprivate — the mention chain long press calls it (WGExtrasMentionChain)
     fileprivate let setPeerIdRevealed: (EnginePeer.Id?) -> Void
     fileprivate let removeRequested: (EnginePeer.Id) -> Void
 
@@ -147,7 +147,7 @@ final class MentionChatInputPanelItemNode: ListViewItemNode {
         self.recognizer = recognizer
         recognizer.allowAnyDirection = false
         self.view.addGestureRecognizer(recognizer)
-        self.ggInstallMentionChainGesture() // GHOST: «Цепочка упоминаний» (GGExtrasMentionChain)
+        self.wgInstallMentionChainGesture() // WRAITH: «Цепочка упоминаний» (WGExtrasMentionChain)
     }
     
     override public func layoutForParams(_ params: ListViewItemLayoutParams, item: ListViewItem, neighbors: ListViewItemNeighbors) {
@@ -470,23 +470,23 @@ final class MentionChatInputPanelItemNode: ListViewItemNode {
     }
 }
 
-// GHOST: «Цепочка упоминаний» (W5-SG): a long press on a suggestion inserts the mention followed by
+// WRAITH: «Цепочка упоминаний» (W5-SG): a long press on a suggestion inserts the mention followed by
 // « @», so the next list opens at once. Installed only while the setting is on.
 extension MentionChatInputPanelItemNode {
-    fileprivate func ggInstallMentionChainGesture() {
-        if !GGExtrasSettings.mentionChain.value {
+    fileprivate func wgInstallMentionChainGesture() {
+        if !WGExtrasSettings.mentionChain.value {
             return
         }
-        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.ggMentionChainLongPress(_:)))
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.wgMentionChainLongPress(_:)))
         longPress.minimumPressDuration = 0.3
         self.view.addGestureRecognizer(longPress)
     }
 
-    @objc fileprivate func ggMentionChainLongPress(_ recognizer: UILongPressGestureRecognizer) {
+    @objc fileprivate func wgMentionChainLongPress(_ recognizer: UILongPressGestureRecognizer) {
         guard recognizer.state == .began, let item = self.item, !item.revealed else {
             return
         }
-        GGExtrasMentionChain.request()
+        WGExtrasMentionChain.request()
         item.peerSelected(item.peer)
     }
 }

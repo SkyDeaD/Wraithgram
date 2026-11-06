@@ -217,28 +217,28 @@ kernel void compositeRoundVideo(
         uniforms
     );
     float3 darkenedBlur = blurred.sample(textureSampler, outputCoordinate).rgb * 0.25;
-    // GHOST: the decoration is laid out for a 480 px frame; Ghostgram's round video resolution scales it (1 at 480: upstream exactly)
+    // WRAITH: the decoration is laid out for a 480 px frame; Wraithgram's round video resolution scales it (1 at 480: upstream exactly)
     float decorationScale = min(outputSize.x, outputSize.y) / 480.0;
     float circleRadius = 202.0 * decorationScale;
     float circleMask = 1.0 - smoothstep(circleRadius - 0.5, circleRadius + 0.5, distance(pixelCoordinate, outputSize * 0.5));
     float3 result = mix(darkenedBlur, sharp, circleMask);
 
-    float watermarkSize = 100.0 * decorationScale; // GHOST: see decorationScale
+    float watermarkSize = 100.0 * decorationScale; // WRAITH: see decorationScale
     float2 watermarkOrigin = outputSize - float2(watermarkSize);
     if (pixelCoordinate.x >= watermarkOrigin.x && pixelCoordinate.y >= watermarkOrigin.y) {
         float2 watermarkCoordinate = (pixelCoordinate - watermarkOrigin) / watermarkSize;
         result = sourceOver(watermark.sample(textureSampler, watermarkCoordinate), result);
     }
 
-    constexpr float planeCellSize = 68.0; // GHOST: one frame of the atlas, in atlas pixels
-    float planeSize = planeCellSize * decorationScale; // GHOST: see decorationScale
+    constexpr float planeCellSize = 68.0; // WRAITH: one frame of the atlas, in atlas pixels
+    float planeSize = planeCellSize * decorationScale; // WRAITH: see decorationScale
     float2 planeOrigin = float2(0.0, outputSize.y - planeSize);
     if (pixelCoordinate.x < planeSize && pixelCoordinate.y >= planeOrigin.y) {
         uint frameIndex = uint(uniforms.decoration.x + 0.5);
         uint columns = max(1u, uint(uniforms.decoration.y + 0.5));
         uint column = frameIndex % columns;
         uint row = frameIndex / columns;
-        float2 localCoordinate = (pixelCoordinate - planeOrigin) / decorationScale; // GHOST: see decorationScale
+        float2 localCoordinate = (pixelCoordinate - planeOrigin) / decorationScale; // WRAITH: see decorationScale
         float2 atlasPixel = float2(float(column), float(row)) * planeCellSize + localCoordinate;
         float2 atlasCoordinate = atlasPixel / float2(planeAtlas.get_width(), planeAtlas.get_height());
         result = sourceOver(planeAtlas.sample(textureSampler, atlasCoordinate), result);

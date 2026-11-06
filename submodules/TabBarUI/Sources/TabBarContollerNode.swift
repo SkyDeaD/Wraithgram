@@ -17,7 +17,7 @@ final class TabBarControllerNode: ASDisplayNode {
         let currentControllerSearchState: ViewController.TabBarSearchState?
         /// The side placement depends on it, and with it the bottom inset the tab gets.
         let itemCount: Int
-        let ggStyle: GGTabBarStyle // GHOST: tab bar organizer style (GGTabBarHooks.style)
+        let wgStyle: WGTabBarStyle // WRAITH: tab bar organizer style (WGTabBarHooks.style)
         
         init(
             layout: ContainerViewLayout,
@@ -25,14 +25,14 @@ final class TabBarControllerNode: ASDisplayNode {
             isTabBarHidden: Bool,
             currentControllerSearchState: ViewController.TabBarSearchState?,
             itemCount: Int,
-            ggStyle: GGTabBarStyle = .upstream // GHOST: see the property
+            wgStyle: WGTabBarStyle = .upstream // WRAITH: see the property
         ) {
             self.layout = layout
             self.toolbar = toolbar
             self.isTabBarHidden = isTabBarHidden
             self.currentControllerSearchState = currentControllerSearchState
             self.itemCount = itemCount
-            self.ggStyle = ggStyle // GHOST: see the property
+            self.wgStyle = wgStyle // WRAITH: see the property
         }
     }
     
@@ -186,9 +186,9 @@ final class TabBarControllerNode: ASDisplayNode {
         }
     }
     
-    // GHOST: «Скрыть панель вкладок» hides the bar on top of the app's own requests (GGTabBarHooks.style)
+    // WRAITH: «Скрыть панель вкладок» hides the bar on top of the app's own requests (WGTabBarHooks.style)
     var isTabBarEffectivelyHidden: Bool {
-        return self.tabBarHidden || ggTabBarStyle().hidesBar
+        return self.tabBarHidden || wgTabBarStyle().hidesBar
     }
     
     /// Where the bar goes in `layout` when it is vertical, nil for the horizontal bar. Every path that lays
@@ -199,8 +199,8 @@ final class TabBarControllerNode: ASDisplayNode {
     
     /// The bottom inset the current tab gets, or nil to leave the tab's own.
     func containerLayoutUpdated(_ layout: ContainerViewLayout, toolbar: Toolbar?, transition: ContainedViewLayoutTransition) -> CGFloat? {
-        let ggStyle = ggTabBarStyle() // GHOST: tab bar organizer style, one snapshot per layout
-        let params = Params(layout: layout, toolbar: toolbar, isTabBarHidden: self.tabBarHidden || ggStyle.hidesBar, currentControllerSearchState: self.currentController?.tabBarSearchState, itemCount: self.tabBarItems.count, ggStyle: ggStyle) // GHOST: see above
+        let wgStyle = wgTabBarStyle() // WRAITH: tab bar organizer style, one snapshot per layout
+        let params = Params(layout: layout, toolbar: toolbar, isTabBarHidden: self.tabBarHidden || wgStyle.hidesBar, currentControllerSearchState: self.currentController?.tabBarSearchState, itemCount: self.tabBarItems.count, wgStyle: wgStyle) // WRAITH: see above
         if let layoutResult = self.layoutResult, layoutResult.params == params {
             return layoutResult.bottomInset
         } else {
@@ -226,7 +226,7 @@ final class TabBarControllerNode: ASDisplayNode {
             panelsBottomInset = max(panelsBottomInset, 8.0)
         }
 
-        var tabBarBottomInset: CGFloat = panelsBottomInset + params.ggStyle.bottomOffset // GHOST: tab bar lift
+        var tabBarBottomInset: CGFloat = panelsBottomInset + params.wgStyle.bottomOffset // WRAITH: tab bar lift
         if let currentController = self.currentController {
             if let tabBarSearchState = currentController.tabBarSearchState, tabBarSearchState.isActive, let inputHeight = params.layout.inputHeight, inputHeight != 0.0 {
                 tabBarBottomInset = max(tabBarBottomInset, inputHeight + 8.0)
@@ -237,7 +237,7 @@ final class TabBarControllerNode: ASDisplayNode {
         if tabBarBottomInset <= 28.0 {
             sideInset = 20.0
         }
-        if params.ggStyle.isWide { // GHOST: wide tab bar
+        if params.wgStyle.isWide { // WRAITH: wide tab bar
             sideInset = 8.0
         }
         
@@ -334,16 +334,16 @@ final class TabBarControllerNode: ASDisplayNode {
                 outerInsets: UIEdgeInsets(top: 0.0, left: sideInset, bottom: tabBarBottomInset, right: sideInset),
                 axis: sidePlacement == nil ? .horizontal : .vertical,
                 isCompact: tabBarIsCompact(layout: params.layout, sidePlacement: sidePlacement),
-                ggStyle: params.ggStyle // GHOST: tab bar organizer style
+                wgStyle: params.wgStyle // WRAITH: tab bar organizer style
             )),
             environment: {},
             containerSize: sidePlacement?.frame.size ?? CGSize(width: params.layout.size.width - sideInset * 2.0, height: 100.0)
         )
         let tabBarFrame: CGRect
         if let sidePlacement {
-            tabBarFrame = params.isTabBarHidden ? sidePlacement.hiddenFrame(containerWidth: params.layout.size.width) : sidePlacement.frame // GHOST: effective hidden state (params)
+            tabBarFrame = params.isTabBarHidden ? sidePlacement.hiddenFrame(containerWidth: params.layout.size.width) : sidePlacement.frame // WRAITH: effective hidden state (params)
         } else {
-            tabBarFrame = CGRect(origin: CGPoint(x: floor((params.layout.size.width - tabBarSize.width) * 0.5), y: params.layout.size.height - (params.isTabBarHidden ? 0.0 : (tabBarSize.height + tabBarBottomInset))), size: tabBarSize) // GHOST: effective hidden state (params)
+            tabBarFrame = CGRect(origin: CGPoint(x: floor((params.layout.size.width - tabBarSize.width) * 0.5), y: params.layout.size.height - (params.isTabBarHidden ? 0.0 : (tabBarSize.height + tabBarBottomInset))), size: tabBarSize) // WRAITH: effective hidden state (params)
         }
         
         if let tabBarComponentView = self.tabBarView.view {

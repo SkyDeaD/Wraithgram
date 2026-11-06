@@ -39,7 +39,7 @@ import BundleIconComponent
 import VideoPlaybackControlsComponent
 import PhotoResources
 import GlassBackgroundComponent
-import GGHooks // GHOST: gallery points
+import WGHooks // WRAITH: gallery points
 
 public enum UniversalVideoGalleryItemContentInfo {
     case message(Message, GalleryMediaSubject?)
@@ -249,8 +249,8 @@ private final class UniversalVideoGalleryItemOverlayNode: GalleryOverlayContentN
             return
         }
         self.message = message
-        // GHOST: features may turn off sponsored messages in videos (GGChatScreenHooks.showsAdMessages)
-        if !GGChatScreenHooks.showsAdMessages(context: context, peerId: message.id.peerId) { return }
+        // WRAITH: features may turn off sponsored messages in videos (WGChatScreenHooks.showsAdMessages)
+        if !WGChatScreenHooks.showsAdMessages(context: context, peerId: message.id.peerId) { return }
         
         let adContext = context.engine.messages.adMessages(peerId: message.id.peerId, messageId: message.id)
         self.adContext = adContext
@@ -1375,8 +1375,8 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
             }
         }
                 
-        // GHOST: overlays over the video follow the layout and the controls, e.g. subtitles (GGGalleryHooks.videoItemDidLayout)
-        if !GGGalleryHooks.videoItemDidLayout.isEmpty { GGGalleryHooks.notifyVideoItemDidLayout(itemNode: self, size: layout.size, bottomInset: (self.areControlsVisible && !hideControls) ? max(self.footerContentNode.bounds.height, layout.intrinsicInsets.bottom) : layout.intrinsicInsets.bottom, transition: transition) }
+        // WRAITH: overlays over the video follow the layout and the controls, e.g. subtitles (WGGalleryHooks.videoItemDidLayout)
+        if !WGGalleryHooks.videoItemDidLayout.isEmpty { WGGalleryHooks.notifyVideoItemDidLayout(itemNode: self, size: layout.size, bottomInset: (self.areControlsVisible && !hideControls) ? max(self.footerContentNode.bounds.height, layout.intrinsicInsets.bottom) : layout.intrinsicInsets.bottom, transition: transition) }
 
         if dismiss {
             self.dismiss()
@@ -2045,8 +2045,8 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
         }
         
         self.item = item
-        // GHOST: features attach to the video item, e.g. subtitles (GGGalleryHooks.videoItemDidLoad)
-        if !GGGalleryHooks.videoItemDidLoad.isEmpty, let ggVideoNode = self.videoNode { let ggInfo = self.contentInfo(); GGGalleryHooks.notifyVideoItemDidLoad(context: item.context, message: ggInfo?.message, file: ggInfo?.file, itemNode: self, status: ggVideoNode.status) }
+        // WRAITH: features attach to the video item, e.g. subtitles (WGGalleryHooks.videoItemDidLoad)
+        if !WGGalleryHooks.videoItemDidLoad.isEmpty, let wgVideoNode = self.videoNode { let wgInfo = self.contentInfo(); WGGalleryHooks.notifyVideoItemDidLoad(context: item.context, message: wgInfo?.message, file: wgInfo?.file, itemNode: self, status: wgVideoNode.status) }
 
         if let _ = item.content as? NativeVideoContent {
             self.playbackRate = item.playbackRate()
@@ -2952,7 +2952,7 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
     }
     
     override func maybePerformActionForSwipeDismiss() -> Bool {
-        if !GGGalleryHooks.allowsSwipeToPictureInPicture(context: self.context) { return false } // GHOST: features may turn the swipe into a plain dismiss (GGGalleryHooks.swipeToPictureInPicture)
+        if !WGGalleryHooks.allowsSwipeToPictureInPicture(context: self.context) { return false } // WRAITH: features may turn the swipe into a plain dismiss (WGGalleryHooks.swipeToPictureInPicture)
         if let data = self.context.currentAppConfiguration.with({ $0 }).data {
             if let _ = data["ios_killswitch_disable_swipe_pip"] {
                 return false
@@ -3952,9 +3952,9 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
                 }
             }
 
-            // GHOST: features add gallery menu items (GGGalleryHooks.menuItems)
-            let ggMessage = strongSelf.contentInfo()?.message
-            items = GGGalleryHooks.appendMenuItems(items, context: strongSelf.context, message: ggMessage, kind: .video, isCopyProtected: (ggMessage?.isCopyProtected() ?? false) || item.peerIsCopyProtected || ggMessage?.paidContent != nil) // GHOST: + whether the media is protected, as for «Save»
+            // WRAITH: features add gallery menu items (WGGalleryHooks.menuItems)
+            let wgMessage = strongSelf.contentInfo()?.message
+            items = WGGalleryHooks.appendMenuItems(items, context: strongSelf.context, message: wgMessage, kind: .video, isCopyProtected: (wgMessage?.isCopyProtected() ?? false) || item.peerIsCopyProtected || wgMessage?.paidContent != nil) // WRAITH: + whether the media is protected, as for «Save»
             return (items, topItems)
         }
     }

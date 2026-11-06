@@ -6,8 +6,8 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: composer points of W2-5 (input bar geometry, formatting toolbar)
-        "//Ghostgram/Features/Interface:ChatTextInputActionButtonsNodePointSources",
+        # WRAITH: composer points of W2-5 (input bar geometry, formatting toolbar)
+        "//Wraithgram/Features/Interface:ChatTextInputActionButtonsNodePointSources",
     ],
     copts = [
         "-warnings-as-errors",
@@ -30,8 +30,8 @@ swift_library(
         "//submodules/AnimatedCountLabelNode",
         "//submodules/TelegramUI/Components/GlassBackgroundComponent",
         "//submodules/TelegramUI/Components/StarsParticleEffect",
-        # GHOST: hook points
-        "//Ghostgram/GGCore:GGCore",
+        # WRAITH: hook points
+        "//Wraithgram/WGCore:WGCore",
     ],
     visibility = [
         "//visibility:public",

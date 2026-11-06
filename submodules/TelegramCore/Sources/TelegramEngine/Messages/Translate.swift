@@ -30,8 +30,8 @@ public enum TranslationTone: String {
 }
 
 func _internal_translate(network: Network, text: String, toLang: String, entities: [MessageTextEntity] = [], tone: TranslationTone = .neutral, peer: Api.InputPeer? = nil, messageId: Int32? = nil) -> Signal<(String, [MessageTextEntity])?, TranslationError> {
-    // GHOST: features may translate with another service (GGTranslationHooks.translateTexts)
-    if let signal = ggTranslateText(text, entities: entities, toLang: toLang, tone: tone) { return signal }
+    // WRAITH: features may translate with another service (WGTranslationHooks.translateTexts)
+    if let signal = wgTranslateText(text, entities: entities, toLang: toLang, tone: tone) { return signal }
     var flags: Int32 = 0
 
     if tone != .neutral {
@@ -174,8 +174,8 @@ func _internal_composeRichMessageWithAI(account: Account, instantPage: InstantPa
 }
 
 func _internal_translateTexts(network: Network, texts: [(String, [MessageTextEntity])], toLang: String, tone: TranslationTone = .neutral) -> Signal<[(String, [MessageTextEntity])], TranslationError> {
-    // GHOST: features may translate with another service (GGTranslationHooks.translateTexts)
-    if let signal = ggTranslateTexts(texts, toLang: toLang, tone: tone) { return signal }
+    // WRAITH: features may translate with another service (WGTranslationHooks.translateTexts)
+    if let signal = wgTranslateTexts(texts, toLang: toLang, tone: tone) { return signal }
     var flags: Int32 = 0
     flags |= (1 << 1)
     
@@ -285,8 +285,8 @@ func _internal_translateRichMessages(account: Account, inputPeer: Api.InputPeer,
 }
 
 private func _internal_translateMessagesByPeerId(account: Account, peerId: EnginePeer.Id, messageIds: [EngineMessage.Id], fromLang: String?, toLang: String, enableLocalIfPossible: Bool, tone: TranslationTone = .neutral) -> Signal<Void, TranslationError> {
-    // GHOST: features may translate with another service (GGTranslationHooks.translateMessages)
-    if let signal = ggTranslateMessages(account: account, peerId: peerId, messageIds: messageIds, fromLang: fromLang, toLang: toLang) { return signal }
+    // WRAITH: features may translate with another service (WGTranslationHooks.translateMessages)
+    if let signal = wgTranslateMessages(account: account, peerId: peerId, messageIds: messageIds, fromLang: fromLang, toLang: toLang) { return signal }
     return account.postbox.transaction { transaction -> (Api.InputPeer?, [Message]) in
         return (transaction.getPeer(peerId).flatMap(apiInputPeer), messageIds.compactMap({ transaction.getMessage($0) }))
     }
@@ -859,8 +859,8 @@ public enum TelegramAIComposeMessageError {
 }
 
 func _internal_composeAIMessage(account: Account, text: ComposedRichMessage, mode: TelegramComposeAIMessageMode) -> Signal<TelegramAIComposeMessageResult, TelegramAIComposeMessageError> {
-    // GHOST: a plain translation of a message goes to the chosen translation service (GGTranslationHooks.translateTexts)
-    if let signal = ggComposeAITranslation(text: text, mode: mode) { return signal }
+    // WRAITH: a plain translation of a message goes to the chosen translation service (WGTranslationHooks.translateTexts)
+    if let signal = wgComposeAITranslation(text: text, mode: mode) { return signal }
     var flags: Int32 = 0
     var translateToLang: String?
     var changeTone: Api.InputAiComposeTone?

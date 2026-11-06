@@ -145,8 +145,8 @@ public extension TelegramEngine {
         }
 
         public func searchMessages(location: SearchMessagesLocation, query: String, state: SearchMessagesState?, centerId: MessageId? = nil, limit: Int32 = 100) -> Signal<(SearchMessagesResult, SearchMessagesState), NoError> {
-            // GHOST: «Искать часть слова» — an empty first page falls back to the messages on this device (GGExtrasCoreHooks.searchesPartialWords)
-            return ggExtrasWrapSearch(_internal_searchMessages(account: self.account, location: location, query: query, state: state, centerId: centerId, limit: limit), account: self.account, location: location, query: query, state: state)
+            // WRAITH: «Искать часть слова» — an empty first page falls back to the messages on this device (WGExtrasCoreHooks.searchesPartialWords)
+            return wgExtrasWrapSearch(_internal_searchMessages(account: self.account, location: location, query: query, state: state, centerId: centerId, limit: limit), account: self.account, location: location, query: query, state: state)
         }
         
         public func getSearchMessageCount(location: SearchMessagesLocation, query: String) -> Signal<Int?, NoError> {
@@ -1878,8 +1878,8 @@ public extension TelegramEngine {
         }
         
         public func reportPeerReadMetrics(peerId: EnginePeer.Id, metrics: [TelegramMessageReadMetric]) -> Signal<Never, NoError> {
-            // GHOST: features may keep read metrics on the device (GGPresenceHooks.sendReadReceipt)
-            if !ggShouldSendReadReceipt(peerId: peerId, kind: .messageContents(ids: metrics.map { $0.messageId }), accountPeerId: self.account.peerId) { return .complete() }
+            // WRAITH: features may keep read metrics on the device (WGPresenceHooks.sendReadReceipt)
+            if !wgShouldSendReadReceipt(peerId: peerId, kind: .messageContents(ids: metrics.map { $0.messageId }), accountPeerId: self.account.peerId) { return .complete() }
             return self.account.postbox.transaction { transaction -> Api.InputPeer? in
                 return transaction.getPeer(peerId).flatMap(apiInputPeer)
             }

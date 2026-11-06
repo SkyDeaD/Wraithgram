@@ -41,9 +41,9 @@ public final class ChatAvatarNavigationNode: ASDisplayNode {
     
     private var cachedDataDisposable = MetaDisposable()
     private var hierarchyTrackingLayer: HierarchyTrackingLayer?
-    // GHOST: the clip style the chat asked for (forums: rounded rect) — the ring, the video and the
+    // WRAITH: the clip style the chat asked for (forums: rounded rect) — the ring, the video and the
     // glass behind the button follow square avatars through it
-    private var ggClipStyle: AvatarNodeClipStyle = .round
+    private var wgClipStyle: AvatarNodeClipStyle = .round
     
     private var trackingIsInHierarchy: Bool = false {
         didSet {
@@ -141,7 +141,7 @@ public final class ChatAvatarNavigationNode: ASDisplayNode {
         }
         
         self.avatarNode.isHidden = false
-        self.ggClipStyle = clipStyle // GHOST: see the property
+        self.wgClipStyle = clipStyle // WRAITH: see the property
         self.avatarNode.setPeer(context: context, theme: theme, peer: peer, authorOfMessage: authorOfMessage, overrideImage: overrideImage, emptyColor: emptyColor, clipStyle: clipStyle, synchronousLoad: synchronousLoad, displayDimensions: displayDimensions, storeUnrounded: storeUnrounded)
         
         if let peer, case let .channel(channel) = peer, channel.linkedCommunityId != nil, !"".isEmpty {
@@ -331,8 +331,8 @@ public final class ChatAvatarNavigationNode: ASDisplayNode {
                     activeLineWidth: 1.0,
                     inactiveLineWidth: 1.0,
                     counters: nil,
-                    isRoundedRect: self.ggSquareAvatarCornerRadius() != nil, // GHOST: square avatars — not a circle
-                    roundedRectCornerFraction: ggAvatarRingCornerFraction()
+                    isRoundedRect: self.wgSquareAvatarCornerRadius() != nil, // WRAITH: square avatars — not a circle
+                    roundedRectCornerFraction: wgAvatarRingCornerFraction()
                 )),
                 environment: {},
                 containerSize: self.avatarNode.bounds.insetBy(dx: 2.0, dy: 2.0).size
@@ -409,26 +409,26 @@ public final class ChatAvatarNavigationNode: ASDisplayNode {
         self.avatarVideoNode?.updateVisibility(isVisible)
       
         if let videoNode = self.avatarVideoNode {
-            videoNode.updateLayout(size: self.avatarNode.frame.size, cornerRadius: self.ggSquareAvatarCornerRadius() ?? (self.avatarNode.frame.size.width / 2.0), transition: .immediate) // GHOST: square avatars
+            videoNode.updateLayout(size: self.avatarNode.frame.size, cornerRadius: self.wgSquareAvatarCornerRadius() ?? (self.avatarNode.frame.size.width / 2.0), transition: .immediate) // WRAITH: square avatars
             videoNode.frame = self.avatarNode.bounds
         }
     }
 
-    // GHOST: corner radius of the avatar when square avatars make it a rounded square, nil for
+    // WRAITH: corner radius of the avatar when square avatars make it a rounded square, nil for
     // Telegram's circle (and for the emoji status that replaces the avatar)
-    private func ggSquareAvatarCornerRadius() -> CGFloat? {
-        if self.avatarNode.isHidden || !GGAvatarHooks.currentShape().squareAvatars {
+    private func wgSquareAvatarCornerRadius() -> CGFloat? {
+        if self.avatarNode.isHidden || !WGAvatarHooks.currentShape().squareAvatars {
             return nil
         }
         let side = self.avatarNode.frame.width
-        return ggAvatarCornerRadius(side: side, isForum: self.ggClipStyle == .roundedRect, upstream: side * 0.5)
+        return wgAvatarCornerRadius(side: side, isForum: self.wgClipStyle == .roundedRect, upstream: side * 0.5)
     }
 }
 
-// GHOST: the navigation bar's glass around this button is concentric with a rounded-square avatar
-extension ChatAvatarNavigationNode: GGNavigationButtonGlassShape {
-    public func ggGlassCornerRadius(height: CGFloat) -> CGFloat? {
-        guard let avatarRadius = self.ggSquareAvatarCornerRadius() else {
+// WRAITH: the navigation bar's glass around this button is concentric with a rounded-square avatar
+extension ChatAvatarNavigationNode: WGNavigationButtonGlassShape {
+    public func wgGlassCornerRadius(height: CGFloat) -> CGFloat? {
+        guard let avatarRadius = self.wgSquareAvatarCornerRadius() else {
             return nil
         }
         return avatarRadius + max(0.0, (height - self.avatarNode.frame.height) * 0.5)

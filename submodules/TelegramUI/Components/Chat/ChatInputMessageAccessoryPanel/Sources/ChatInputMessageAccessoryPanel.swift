@@ -15,7 +15,7 @@ import PhotoResources
 import TextFormat
 import CompositeTextNode
 import ChatInterfaceState
-import GGFeaturesShared // GHOST: Ghostgram message settings (W2-3)
+import WGFeaturesShared // WRAITH: Wraithgram message settings (W2-3)
 
 private func generateCloseIcon() -> UIImage {
     return generateImage(CGSize(width: 12.0, height: 12.0), contextGenerator: { size, context in
@@ -503,7 +503,7 @@ public final class ChatInputMessageAccessoryPanel: Component {
                  }
                  self.previousMediaReference = updatedMediaReference*/
                 
-                let hasSpoiler = message.attributes.contains(where: { $0 is MediaSpoilerMessageAttribute }) && !GGMessagesPolicy.revealsSpoilers // GHOST: anti-spoiler
+                let hasSpoiler = message.attributes.contains(where: { $0 is MediaSpoilerMessageAttribute }) && !WGMessagesPolicy.revealsSpoilers // WRAITH: anti-spoiler
                 
                 var updateImageSignal: Signal<(TransformImageArguments) -> DrawingContext?, NoError>?
                 let _ = updateImageSignal
@@ -542,8 +542,8 @@ public final class ChatInputMessageAccessoryPanel: Component {
                 if isText, message.richText != nil {
                     messageText = styleInstantPagePreview(attributedText, font: textFont, italicFont: Font.italic(14.0), textColor: environment.theme.chat.inputPanel.primaryTextColor)
                 } else if isText {
-                    // GHOST: anti-spoiler (GGMessagesPolicy.visibleEntities)
-                    let entities = GGMessagesPolicy.visibleEntities(message._asMessage().textEntitiesAttribute?.entities ?? []).filter { entity in
+                    // WRAITH: anti-spoiler (WGMessagesPolicy.visibleEntities)
+                    let entities = WGMessagesPolicy.visibleEntities(message._asMessage().textEntitiesAttribute?.entities ?? []).filter { entity in
                         switch entity.type {
                         case .Spoiler, .CustomEmoji:
                             return true

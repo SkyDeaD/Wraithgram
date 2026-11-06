@@ -25,7 +25,7 @@ import Markdown
 import AppBundle
 import TextFormat
 import ChatbotSetupScreen
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 private func botRecipientsCategoryCount(_ categories: TelegramBusinessRecipients.Categories) -> Int {
     var count = 0
@@ -435,8 +435,8 @@ private final class RecentSessionSheetContent: CombinedComponent {
                 var appVersion = session.appVersion
                 appVersion = appVersion.replacingOccurrences(of: "APPSTORE", with: "").replacingOccurrences(of: "BETA", with: "Beta").trimmingTrailingSpaces()
                 applicationTitle = strings.AuthSessions_View_Application
-                applicationString = GGExtrasPolicy.sessionApplicationString("\(session.appName) \(appVersion)", apiId: session.apiId, isCurrent: session.isCurrent) // GHOST: «IP и api_id в сеансах» (GGExtrasPolicy)
-                ipString = GGExtrasPolicy.showsSessionDetails ? session.ip : nil // GHOST: see above
+                applicationString = WGExtrasPolicy.sessionApplicationString("\(session.appName) \(appVersion)", apiId: session.apiId, isCurrent: session.isCurrent) // WRAITH: «IP и api_id в сеансах» (WGExtrasPolicy)
+                ipString = WGExtrasPolicy.showsSessionDetails ? session.ip : nil // WRAITH: see above
                 dateString = nil
                 locationString = session.country
                 

@@ -17,7 +17,7 @@ import ChatInputContextPanelNode
 import ComponentFlow
 import ComponentDisplayAdapters
 import GlassBackgroundComponent
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 private struct MentionChatInputContextPanelEntry: Comparable, Identifiable {
     let index: Int
@@ -148,7 +148,7 @@ final class MentionChatInputContextPanelNode: ChatInputContextPanelNode {
                 strongSelf.updateResults(strongSelf.currentResults)
             }
         }, peerSelected: { [weak self] peer in
-            let ggSuffix = GGExtrasMentionChain.suffix() // GHOST: «Цепочка упоминаний» — « @» after a long-pressed mention (GGExtrasMentionChain)
+            let wgSuffix = WGExtrasMentionChain.suffix() // WRAITH: «Цепочка упоминаний» — « @» after a long-pressed mention (WGExtrasMentionChain)
             if let strongSelf = self, let interfaceInteraction = strongSelf.interfaceInteraction {
                 switch strongSelf.mode {
                     case .input:
@@ -163,11 +163,11 @@ final class MentionChatInputContextPanelNode: ChatInputContextPanelNode {
                             
                             if let range = mentionQueryRange {
                                 if let addressName = peer.addressName, !addressName.isEmpty {
-                                    return (textInputState.replacingFlatRange(range, with: addressName + ggSuffix), inputMode) // GHOST: see ggSuffix
+                                    return (textInputState.replacingFlatRange(range, with: addressName + wgSuffix), inputMode) // WRAITH: see wgSuffix
                                 } else if !peer.compactDisplayTitle.isEmpty {
                                     let replacementText = NSMutableAttributedString()
                                     replacementText.append(NSAttributedString(string: peer.compactDisplayTitle, attributes: [ChatTextInputAttributes.textMention: ChatTextInputTextMentionAttribute(peerId: peer.id)]))
-                                    replacementText.append(NSAttributedString(string: ggSuffix)) // GHOST: see ggSuffix
+                                    replacementText.append(NSAttributedString(string: wgSuffix)) // WRAITH: see wgSuffix
 
                                     // The widened range eats the leading "@" as well as the query.
                                     let updatedRange = NSRange(location: range.location - 1, length: range.length + 1)

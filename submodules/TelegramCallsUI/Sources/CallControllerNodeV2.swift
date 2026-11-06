@@ -18,7 +18,7 @@ import TelegramVoip
 import MetalEngine
 import DeviceAccess
 import LibYuvBinding
-import GGCallsMediaHooks // GHOST: Ghostgram call overlay (GGCallsMediaHooks.screenOverlay)
+import WGCallsMediaHooks // WRAITH: Wraithgram call overlay (WGCallsMediaHooks.screenOverlay)
 
 final class CallControllerNodeV2: ViewControllerTracingNode, CallControllerNodeProtocol {
     private struct PanGestureState {
@@ -93,7 +93,7 @@ final class CallControllerNodeV2: ViewControllerTracingNode, CallControllerNodeP
     private var panGestureState: PanGestureState?
     private var notifyDismissedInteractivelyOnPanGestureApply: Bool = false
     
-    private var ggOverlay: GGCallScreenOverlay? // GHOST: soundboard, stats, recording indicator, masks column
+    private var wgOverlay: WGCallScreenOverlay? // WRAITH: soundboard, stats, recording indicator, masks column
     
     private var signalQualityTimer: Foundation.Timer?
     
@@ -119,9 +119,9 @@ final class CallControllerNodeV2: ViewControllerTracingNode, CallControllerNodeP
         self.view.addSubview(self.containerView)
         self.containerView.addSubview(self.callScreen)
         
-        // GHOST: Ghostgram call overlay above the call screen (GGCallsMediaHooks.screenOverlay)
-        self.ggOverlay = GGCallsMediaHooks.makeScreenOverlay(GGCallScreen(context: call.context, call: call, groupCall: nil, audioDevice: (call as? PresentationCallImpl)?.sharedAudioContext?.audioDevice, present: { [weak self] controller in self?.present?(controller) }))
-        if let ggOverlay = self.ggOverlay { self.containerView.addSubview(ggOverlay.view) }
+        // WRAITH: Wraithgram call overlay above the call screen (WGCallsMediaHooks.screenOverlay)
+        self.wgOverlay = WGCallsMediaHooks.makeScreenOverlay(WGCallScreen(context: call.context, call: call, groupCall: nil, audioDevice: (call as? PresentationCallImpl)?.sharedAudioContext?.audioDevice, present: { [weak self] controller in self?.present?(controller) }))
+        if let wgOverlay = self.wgOverlay { self.containerView.addSubview(wgOverlay.view) }
         
         // UIKit posts orientation changes only while someone generates them; the camera capturer
         // does so only while the local camera is on, and the remote video must follow the phone
@@ -310,7 +310,7 @@ final class CallControllerNodeV2: ViewControllerTracingNode, CallControllerNodeP
         self.audioOutputCheckTimer?.invalidate()
         self.signalQualityTimer?.invalidate()
         self.applicationInForegroundDisposable?.dispose()
-        self.ggOverlay?.screenWillClose() // GHOST: see ggOverlay
+        self.wgOverlay?.screenWillClose() // WRAITH: see wgOverlay
     }
     
     func updateAudioOutputs(availableOutputs: [AudioSessionOutput], currentOutput: AudioSessionOutput?) {
@@ -859,12 +859,12 @@ final class CallControllerNodeV2: ViewControllerTracingNode, CallControllerNodeP
                 transition: ComponentTransition(transition)
             )
         }
-        // GHOST: see ggOverlay
-        if let ggOverlay = self.ggOverlay {
-            var ggIsTerminated = false
-            if let lifecycleState = self.callScreenState?.lifecycleState, case .terminated = lifecycleState { ggIsTerminated = true }
-            transition.updateFrame(view: ggOverlay.view, frame: CGRect(origin: CGPoint(), size: layout.size))
-            ggOverlay.update(size: layout.size, insets: layout.insets(options: [.statusBar]), state: GGCallScreenState(hasLocalVideo: self.callScreenState?.localVideo != nil, signalQuality: self.smoothSignalQuality.flatMap { Int(round($0)) }, activeSince: self.callStartTimestamp, isTerminated: ggIsTerminated), transition: transition)
+        // WRAITH: see wgOverlay
+        if let wgOverlay = self.wgOverlay {
+            var wgIsTerminated = false
+            if let lifecycleState = self.callScreenState?.lifecycleState, case .terminated = lifecycleState { wgIsTerminated = true }
+            transition.updateFrame(view: wgOverlay.view, frame: CGRect(origin: CGPoint(), size: layout.size))
+            wgOverlay.update(size: layout.size, insets: layout.insets(options: [.statusBar]), state: WGCallScreenState(hasLocalVideo: self.callScreenState?.localVideo != nil, signalQuality: self.smoothSignalQuality.flatMap { Int(round($0)) }, activeSince: self.callStartTimestamp, isTerminated: wgIsTerminated), transition: transition)
         }
     }
 }

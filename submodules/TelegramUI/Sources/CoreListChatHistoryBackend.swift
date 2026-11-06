@@ -9,7 +9,7 @@ import CoreListComponentHost
 import ChatMessageItem
 import ChatMessageItemImpl
 import ChatMessageItemView
-import TelegramCore // GHOST: Logger
+import TelegramCore // WRAITH: Logger
 
 // Shared by the chat's diamonds; their existing animation clocks advance this spring on demand.
 // All inputs are user-scroll deltas in screen coordinates, with downward content movement positive.
@@ -949,7 +949,7 @@ final class CoreListChatHistoryBackend: ASDisplayNode, ChatHistoryListViewBacken
                 updated.insert(entry, at: clamped)
             }
             // Updates: same index, keep the stable serial, swap the ListViewItem so content refreshes.
-            // GHOST: the stable id names the row, the index only says where it should be. An index taken from
+            // WRAITH: the stable id names the row, the index only says where it should be. An index taken from
             // an older list and written as is puts that message over its neighbour: two rows with one identity,
             // which `applyChanges` traps on.
             for update in updateIndicesAndItems {
@@ -964,7 +964,7 @@ final class CoreListChatHistoryBackend: ASDisplayNode, ChatHistoryListViewBacken
                 self.nextStableVersion += 1
                 updated[index] = CoreListEntryItem(stableId: update.stableId, stableVersion: stableVersion, listItem: update.item, backend: self, leftInset: self.currentInsets.left, rightInset: self.currentInsets.right)
             }
-            // GHOST: the last line against the same trap, whatever produced the repeat: here it costs a row, there
+            // WRAITH: the last line against the same trap, whatever produced the repeat: here it costs a row, there
             // it costs the app. Nothing should reach it, so it leaves a line in the log.
             var seenStableIds = Set<UInt64>()
             let rowCount = updated.count

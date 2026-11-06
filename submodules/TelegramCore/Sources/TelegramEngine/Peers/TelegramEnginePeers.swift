@@ -1402,8 +1402,8 @@ public extension TelegramEngine {
                     let limitsConfiguration = UserLimitsConfiguration(appConfiguration: appConfiguration, isPremium: accountPeer?.isPremium ?? false)
                     let limit = limitsConfiguration.maxPinnedSavedChatCount
                     
-                    // GHOST: features may allow more pins locally (GGPinnedChatsHooks.pinLimit)
-                    return (transaction.getPeerPinnedThreads(peerId: id), ggPinnedSavedChatsLimit(Int(limit), isPremium: accountPeer?.isPremium ?? false, accountPeerId: id))
+                    // WRAITH: features may allow more pins locally (WGPinnedChatsHooks.pinLimit)
+                    return (transaction.getPeerPinnedThreads(peerId: id), wgPinnedSavedChatsLimit(Int(limit), isPremium: accountPeer?.isPremium ?? false, accountPeerId: id))
                 } else {
                     var limit = 5
                     let appConfiguration: AppConfiguration = transaction.getPreferencesEntry(key: PreferencesKeys.appConfiguration)?.get(AppConfiguration.self) ?? AppConfiguration.defaultValue

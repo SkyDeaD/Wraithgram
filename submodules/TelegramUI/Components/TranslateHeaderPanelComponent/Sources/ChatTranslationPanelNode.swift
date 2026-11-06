@@ -21,7 +21,7 @@ import ComponentDisplayAdapters
 import LocalMediaResources
 import AppBundle
 import TranslationLanguagesContextMenuContent
-import GGFeaturesShared // GHOST: Ghostgram translation settings (W2-3)
+import WGFeaturesShared // WRAITH: Wraithgram translation settings (W2-3)
 
 final class ChatTranslationPanelNode: ASDisplayNode {
     private let context: AccountContext
@@ -180,7 +180,7 @@ final class ChatTranslationPanelNode: ASDisplayNode {
         let closeButtonSize = self.closeButton.measure(CGSize(width: 100.0, height: 100.0))
         self.closeButton.frame = CGRect(origin: CGPoint(x: width - contentRightInset - closeButtonSize.width, y: floorToScreenPixels((panelHeight - closeButtonSize.height) / 2.0)), size: closeButtonSize)
         
-        if info.isPremium || GGMessagesPolicy.translatesChatsWithoutPremium { // GHOST: translation without Premium (GGMessagesPolicy)
+        if info.isPremium || WGMessagesPolicy.translatesChatsWithoutPremium { // WRAITH: translation without Premium (WGMessagesPolicy)
             self.moreButton.isHidden = false
             self.closeButton.isHidden = true
         } else {
@@ -212,7 +212,7 @@ final class ChatTranslationPanelNode: ASDisplayNode {
         guard let info = self.currentInfo else {
             return
         }
-        let isPremium = info.isPremium || GGMessagesPolicy.translatesChatsWithoutPremium // GHOST: translation without Premium
+        let isPremium = info.isPremium || WGMessagesPolicy.translatesChatsWithoutPremium // WRAITH: translation without Premium
         
         var translationAvailable = isPremium
         if case let .channel(channel) = info.peer, channel.flags.contains(.autoTranslateEnabled) {
@@ -231,7 +231,7 @@ final class ChatTranslationPanelNode: ASDisplayNode {
             return
         }
         
-        let isPremium = info.isPremium || GGMessagesPolicy.translatesChatsWithoutPremium // GHOST: translation without Premium
+        let isPremium = info.isPremium || WGMessagesPolicy.translatesChatsWithoutPremium // WRAITH: translation without Premium
         
         var translationAvailable = isPremium
         if case let .channel(channel) = info.peer, channel.flags.contains(.autoTranslateEnabled) {

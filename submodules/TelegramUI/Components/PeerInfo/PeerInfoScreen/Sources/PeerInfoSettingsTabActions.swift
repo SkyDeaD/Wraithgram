@@ -13,7 +13,7 @@ import ComponentFlow
 import ComponentDisplayAdapters
 import EmojiStatusComponent
 import SettingsUI
-import GGHooks // GHOST: the account switch gate (GGAccountsHooks)
+import WGHooks // WRAITH: the account switch gate (WGAccountsHooks)
 
 extension PeerInfoScreenNode {
     func accountContextMenuItems(context: AccountContext, logout: @escaping () -> Void) -> Signal<[ContextMenuItem], NoError> {
@@ -56,9 +56,9 @@ extension PeerInfoScreenNode {
             let accountContext = self.context.sharedContext.makeTempAccountContext(account: selectedAccount)
             let chatListController = accountContext.sharedContext.makeChatListController(context: accountContext, location: .chatList(groupId: EngineChatList.Group(.root)), controlsHistoryPreload: false, hideNetworkActivityStatus: true, previewing: true, enableDebugActions: false)
                     
-            var ggSource: ContextContentSource = .controller(ContextControllerContentSourceImpl(controller: chatListController, sourceNode: node)) // GHOST: upstream's source, moved out of the call below
-            if GGAccountsHooks.hidesPreview(of: id), let controller = self.controller { ggSource = .reference(HeaderContextReferenceContentSource(controller: controller, sourceView: node.view)) } // GHOST: no preview of another account's chats before the switch gate (GGAccountsHooks.hidesAccountPreview)
-            let contextController = makeContextController(presentationData: self.presentationData, source: ggSource, items: accountContextMenuItems(context: accountContext, logout: { [weak self] in // GHOST: source above
+            var wgSource: ContextContentSource = .controller(ContextControllerContentSourceImpl(controller: chatListController, sourceNode: node)) // WRAITH: upstream's source, moved out of the call below
+            if WGAccountsHooks.hidesPreview(of: id), let controller = self.controller { wgSource = .reference(HeaderContextReferenceContentSource(controller: controller, sourceView: node.view)) } // WRAITH: no preview of another account's chats before the switch gate (WGAccountsHooks.hidesAccountPreview)
+            let contextController = makeContextController(presentationData: self.presentationData, source: wgSource, items: accountContextMenuItems(context: accountContext, logout: { [weak self] in // WRAITH: source above
                 self?.logoutAccount(id: id)
             }) |> map { ContextController.Items(content: .list($0)) }, gesture: gesture)
             self.controller?.presentInGlobalOverlay(contextController)
@@ -68,8 +68,8 @@ extension PeerInfoScreenNode {
     }
 
     func switchToAccount(id: AccountRecordId) {
-        // GHOST: the switch gate asks before the account list is detached, so a cancelled check leaves the list alive (GGAccountsHooks.switchGate)
-        if GGAccountsHooks.interceptSwitch(to: id, proceed: { [weak self] in self?.accountsAndPeers.set(.never()); self?.context.sharedContext.switchToAccount(id: id, fromSettingsController: nil, withChatListController: nil) }) { return }
+        // WRAITH: the switch gate asks before the account list is detached, so a cancelled check leaves the list alive (WGAccountsHooks.switchGate)
+        if WGAccountsHooks.interceptSwitch(to: id, proceed: { [weak self] in self?.accountsAndPeers.set(.never()); self?.context.sharedContext.switchToAccount(id: id, fromSettingsController: nil, withChatListController: nil) }) { return }
         self.accountsAndPeers.set(.never())
         self.context.sharedContext.switchToAccount(id: id, fromSettingsController: nil, withChatListController: nil)
     }

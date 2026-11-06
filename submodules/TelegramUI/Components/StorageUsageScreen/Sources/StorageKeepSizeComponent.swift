@@ -12,7 +12,7 @@ import TelegramCore
 import MultilineTextComponent
 import LegacyComponents
 import SliderComponent
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 private func stringForCacheSize(strings: PresentationStrings, size: Int32) -> String {
     if size > 100 {
@@ -84,7 +84,7 @@ final class StorageKeepSizeComponent: Component {
         private weak var state: EmptyComponentState?
         
         override init(frame: CGRect) {
-            self.titles = (0 ..< 5).map { _ in ComponentView<Empty>() } // GHOST: room for «1 ГБ» (GGExtrasPolicy.maximumCacheSizeValues)
+            self.titles = (0 ..< 5).map { _ in ComponentView<Empty>() } // WRAITH: room for «1 ГБ» (WGExtrasPolicy.maximumCacheSizeValues)
             self.slider = ComponentView<Empty>()
             
             super.init(frame: frame)
@@ -108,14 +108,14 @@ final class StorageKeepSizeComponent: Component {
             }
             
             let height: CGFloat = 96.0
-            let ggValues = Array(GGExtrasPolicy.maximumCacheSizeValues(maximumCacheSizeValues).prefix(self.titles.count)) // GHOST: «1 ГБ» with «Больше вариантов кэша» (GGExtrasPolicy)
-            for i in ggValues.count ..< self.titles.count { self.titles[i].view?.removeFromSuperview() } // GHOST: see ggValues
+            let wgValues = Array(WGExtrasPolicy.maximumCacheSizeValues(maximumCacheSizeValues).prefix(self.titles.count)) // WRAITH: «1 ГБ» with «Больше вариантов кэша» (WGExtrasPolicy)
+            for i in wgValues.count ..< self.titles.count { self.titles[i].view?.removeFromSuperview() } // WRAITH: see wgValues
             
             var titleSizes: [CGSize] = []
-            for i in 0 ..< ggValues.count { // GHOST: see ggValues
+            for i in 0 ..< wgValues.count { // WRAITH: see wgValues
                 let titleSize = self.titles[i].update(
                     transition: .immediate,
-                    component: AnyComponent(Text(text: stringForCacheSize(strings: component.strings, size: ggValues[i]), font: Font.regular(13.0), color: component.theme.list.itemSecondaryTextColor)), // GHOST: see ggValues
+                    component: AnyComponent(Text(text: stringForCacheSize(strings: component.strings, size: wgValues[i]), font: Font.regular(13.0), color: component.theme.list.itemSecondaryTextColor)), // WRAITH: see wgValues
                     environment: {},
                     containerSize: CGSize(width: 100.0, height: 100.0)
                 )
@@ -145,11 +145,11 @@ final class StorageKeepSizeComponent: Component {
                 component: AnyComponent(
                     SliderComponent(
                         content: .discrete(.init(
-                            valueCount: ggValues.count, // GHOST: see ggValues
-                            value: ggValues.firstIndex(where: { $0 == component.value }) ?? 0, // GHOST: see ggValues
+                            valueCount: wgValues.count, // WRAITH: see wgValues
+                            value: wgValues.firstIndex(where: { $0 == component.value }) ?? 0, // WRAITH: see wgValues
                             markPositions: true,
                             valueUpdated: { value in
-                                let sizeValue = ggValues[value] // GHOST: see ggValues
+                                let sizeValue = wgValues[value] // WRAITH: see wgValues
                                 component.updateValue(sizeValue)
                             }
                         )),

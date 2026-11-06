@@ -2391,8 +2391,8 @@ public extension TelegramEngine.EngineData.Item {
                 guard let peer = peerViewMainPeer(view) else {
                     return false
                 }
-                // GHOST: features may lift copy protection (GGRestrictionHooks.copyProtection)
-                if let value = ggCopyProtectionOverride(.peerData(peer.id)) { return value }
+                // WRAITH: features may lift copy protection (WGRestrictionHooks.copyProtection)
+                if let value = wgCopyProtectionOverride(.peerData(peer.id)) { return value }
                 if let cachedPeerData = view.cachedData as? CachedUserData {
                     return cachedPeerData.flags.contains(.copyProtectionEnabled)
                 } else if let group = peer as? TelegramGroup {

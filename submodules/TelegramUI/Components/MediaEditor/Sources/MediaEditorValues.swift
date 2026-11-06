@@ -4,8 +4,8 @@ import Display
 import TelegramCore
 import AVFoundation
 import VideoToolbox
-// GHOST: round video quality settings (side, bitrate, codec) for the `.videoMessage` preset.
-import GGCameraPipeline
+// WRAITH: round video quality settings (side, bitrate, codec) for the `.videoMessage` preset.
+import WGCameraPipeline
 
 public enum EditorToolKey: Int32, CaseIterable {
     case enhance
@@ -167,8 +167,8 @@ public enum MediaQualityPreset: Int32 {
         case .compressedVeryHigh:
             return 1920.0
         case .videoMessage:
-            // GHOST: side of the round video from its settings; upstream's by default.
-            return GGRoundVideoConfig.exportSide(VideoMessageExportSettings.maximumDimension)
+            // WRAITH: side of the round video from its settings; upstream's by default.
+            return WGRoundVideoConfig.exportSide(VideoMessageExportSettings.maximumDimension)
         case .profileLow:
             return 720.0
         case .profile, .profileHigh, .profileVeryHigh:
@@ -193,8 +193,8 @@ public enum MediaQualityPreset: Int32 {
         case .compressedVeryHigh:
             return 6600
         case .videoMessage:
-            // GHOST: bitrate of the round video from its settings; 1200 (upstream) by default.
-            return GGRoundVideoConfig.exportBitrate(1200)
+            // WRAITH: bitrate of the round video from its settings; 1200 (upstream) by default.
+            return WGRoundVideoConfig.exportBitrate(1200)
         case .profileLow:
             return 1100
         case .profile:
@@ -1926,7 +1926,7 @@ private struct VideoMessageExportSettings {
     let dimensions: CGSize
     let bitrateKbps: Int
 
-    init(sourceSize: CGSize, cropSize: CGSize, rotateSideward: Bool, maximumDimension: CGFloat = VideoMessageExportSettings.maximumDimension) { // GHOST: maximumDimension — round video side setting
+    init(sourceSize: CGSize, cropSize: CGSize, rotateSideward: Bool, maximumDimension: CGFloat = VideoMessageExportSettings.maximumDimension) { // WRAITH: maximumDimension — round video side setting
         // A quality ceiling must never enlarge a legacy recording or a smaller crop.
         let scale = min(
             1.0,
@@ -1993,10 +1993,10 @@ public func recommendedVideoExportConfiguration(values: MediaEditorValues, durat
         let rotateSideward = values.cropOrientation?.isSideward ?? false
         let resultSize: CGSize
         if qualityPreset == .videoMessage {
-            // GHOST: side and bitrate of the round video from its settings (GGRoundVideoConfig); upstream's by default
-            let settings = VideoMessageExportSettings(sourceSize: sourceSize, cropSize: cropSize, rotateSideward: rotateSideward, maximumDimension: GGRoundVideoConfig.exportSide(VideoMessageExportSettings.maximumDimension))
+            // WRAITH: side and bitrate of the round video from its settings (WGRoundVideoConfig); upstream's by default
+            let settings = VideoMessageExportSettings(sourceSize: sourceSize, cropSize: cropSize, rotateSideward: rotateSideward, maximumDimension: WGRoundVideoConfig.exportSide(VideoMessageExportSettings.maximumDimension))
             resultSize = settings.dimensions
-            videoBitrate = GGRoundVideoConfig.exportBitrate(settings.bitrateKbps)
+            videoBitrate = WGRoundVideoConfig.exportBitrate(settings.bitrateKbps)
         } else {
             let maxSize = CGSize(width: qualityPreset.maximumDimensions, height: qualityPreset.maximumDimensions)
             resultSize = targetSize(cropSize: cropSize.aspectFitted(maxSize), rotateSideward: rotateSideward)
@@ -2010,9 +2010,9 @@ public func recommendedVideoExportConfiguration(values: MediaEditorValues, durat
         audioNumberOfChannels = qualityPreset.audioChannelsCount
         
         useHEVC = false
-        // GHOST: a round video re-encoded here (trimmed, several takes, imported) keeps the codec
+        // WRAITH: a round video re-encoded here (trimmed, several takes, imported) keeps the codec
         // the user chose; upstream presets always encode H.264.
-        if qualityPreset == .videoMessage && GGRoundVideoConfig.exportUsesHEVC && hasHEVCHardwareEncoder {
+        if qualityPreset == .videoMessage && WGRoundVideoConfig.exportUsesHEVC && hasHEVCHardwareEncoder {
             useHEVC = true
         }
     } else {

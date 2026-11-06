@@ -16,7 +16,7 @@ import PhotoResources
 import PeerInfoPaneNode
 import WebUI
 import WalletContext
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 enum PeerInfoUpdatingAvatar {
     case none
@@ -1033,7 +1033,7 @@ func peerInfoScreenSettingsData(context: AccountContext, peerId: EnginePeer.Id, 
         if let appConfiguration, let data = appConfiguration.data, let enableQR = data["qr_login_camera"] as? Bool, enableQR {
             enableQRLogin = true
         }
-        if GGExtrasPolicy.alwaysShowsQRLogin { enableQRLogin = true } // GHOST: «Добавить устройство» in Settings too, like the «Устройства» screen (GGExtrasPolicy)
+        if WGExtrasPolicy.alwaysShowsQRLogin { enableQRLogin = true } // WRAITH: «Добавить устройство» in Settings too, like the «Устройства» screen (WGExtrasPolicy)
         
         var suggestPasswordSetup = false
         if suggestions.contains(.setupPassword), let hasPassword, !hasPassword {
@@ -1569,7 +1569,7 @@ func peerInfoScreenData(
             let forcedLinkedCommunityId = Atomic<EnginePeer.Id?>(value: nil)
             
             return combineLatest(
-                ggRepublishOnLocalGiftsChange(context.account.viewTracker.peerView(peerId, updateData: true), account: context.account, peerId: peerId), // GHOST: the «Gifts» tab follows local-only gifts at once (GGGiftHooks.invalidate)
+                wgRepublishOnLocalGiftsChange(context.account.viewTracker.peerView(peerId, updateData: true), account: context.account, peerId: peerId), // WRAITH: the «Gifts» tab follows local-only gifts at once (WGGiftHooks.invalidate)
                 peerInfoAvailableMediaPanes(context: context, peerId: peerId, chatLocation: chatLocation, isMyProfile: isMyProfile, chatLocationContextHolder: chatLocationContextHolder, sharedMediaFromForumTopic: sharedMediaFromForumTopic),
                 context.engine.data.subscribe(TelegramEngine.EngineData.Item.NotificationSettings.Global()),
                 secretChatKeyFingerprint,
@@ -1598,7 +1598,7 @@ func peerInfoScreenData(
                 if isMyProfile {
                     availablePanes?.insert(.stories, at: 0)
                     if availablePanes != nil, profileGiftsContext != nil, let cachedData = peerView.cachedData as? CachedUserData {
-                        if (cachedData.starGiftsCount ?? 0) > 0 || ggProfileHasLocalGifts(account: context.account, peerId: peerId) { // GHOST: local-only gifts show the tab too (GGGiftHooks.hasLocalGifts)
+                        if (cachedData.starGiftsCount ?? 0) > 0 || wgProfileHasLocalGifts(account: context.account, peerId: peerId) { // WRAITH: local-only gifts show the tab too (WGGiftHooks.hasLocalGifts)
                             availablePanes?.insert(.gifts, at: 1)
                         }
                     }
@@ -2479,7 +2479,7 @@ func peerInfoIsCopyProtected(data: PeerInfoScreenData, sharedMediaFromForumTopic
     }
     var isCopyProtected = false
     if let cachedUserData = data.cachedData as? CachedUserData, cachedUserData.flags.contains(.copyProtectionEnabled) || cachedUserData.flags.contains(.myCopyProtectionEnabled) {
-        isCopyProtected = data.peer.flatMap { GGRestrictionHooks.peerCopyProtectionApplies(true, peerId: $0.id) } ?? true // GHOST: features may lift a private chat's protection (GGRestrictionHooks.copyProtection)
+        isCopyProtected = data.peer.flatMap { WGRestrictionHooks.peerCopyProtectionApplies(true, peerId: $0.id) } ?? true // WRAITH: features may lift a private chat's protection (WGRestrictionHooks.copyProtection)
     } else if let peer = data.peer, peer.isCopyProtectionEnabled {
         isCopyProtected = true
     }
@@ -2745,7 +2745,7 @@ func peerInfoHeaderButtons(peer: EnginePeer?, cachedData: EngineCachedPeerData?,
                 result.append(.message)
             }
             result.append(.mute)
-            if case let .broadcast(info) = channel.info, info.flags.contains(.hasMonoforum), !channel.hasPermission(.manageDirect), !(hasDiscussion && GGExtrasPolicy.showsDiscussionWithDirectMessages) { // GHOST: «Обсуждение» next to «Сообщение» (GGExtrasPolicy.showsDiscussionWithDirectMessages)
+            if case let .broadcast(info) = channel.info, info.flags.contains(.hasMonoforum), !channel.hasPermission(.manageDirect), !(hasDiscussion && WGExtrasPolicy.showsDiscussionWithDirectMessages) { // WRAITH: «Обсуждение» next to «Сообщение» (WGExtrasPolicy.showsDiscussionWithDirectMessages)
             } else if hasDiscussion {
                 result.append(.discussion)
             }

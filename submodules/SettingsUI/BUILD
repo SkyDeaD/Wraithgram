@@ -12,13 +12,13 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: Ghostgram menu (search bridge, W1-3)
-        "//Ghostgram/GGSettingsUI:GGSettingsUI",
-        # GHOST: imported directly by SettingsUI files the features own (W2-3 translation, W2-5 icon names)
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
-        # GHOST: the own number as features show it on the change-number screen (W3-5)
-        "//Ghostgram/GGHooks:GGHooks",
+        # WRAITH: Wraithgram menu (search bridge, W1-3)
+        "//Wraithgram/WGSettingsUI:WGSettingsUI",
+        # WRAITH: imported directly by SettingsUI files the features own (W2-3 translation, W2-5 icon names)
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
+        # WRAITH: the own number as features show it on the change-number screen (W3-5)
+        "//Wraithgram/WGHooks:WGHooks",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/LottieSettings:LottieSettings",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",

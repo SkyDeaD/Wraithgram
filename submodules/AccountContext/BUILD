@@ -10,8 +10,8 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: name color saturation — W2-4
-        "//Ghostgram/Features/Appearance:GGAppearanceSettings",
+        # WRAITH: name color saturation — W2-4
+        "//Wraithgram/Features/Appearance:WGAppearanceSettings",
         "//submodules/TelegramAudio:TelegramAudio",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/TemporaryCachedPeerDataManager:TemporaryCachedPeerDataManager",

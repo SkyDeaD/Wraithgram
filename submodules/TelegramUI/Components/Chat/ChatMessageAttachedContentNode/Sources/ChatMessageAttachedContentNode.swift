@@ -33,7 +33,7 @@ import PlainButtonComponent
 import BundleIconComponent
 import AvatarNode
 import EmojiTextAttachmentView
-import GGFeaturesShared // GHOST: Ghostgram message settings (W2-3)
+import WGFeaturesShared // WRAITH: Wraithgram message settings (W2-3)
 
 public enum ChatMessageAttachedContentActionIcon {
     case instant
@@ -600,7 +600,7 @@ public final class ChatMessageAttachedContentNode: ASDisplayNode {
                             if isPreview {
                                 maximumNumberOfLines = mediaAndFlags != nil ? 4 : 6
                             }
-                            let textString = stringWithAppliedEntities(text, entities: GGMessagesPolicy.visibleEntities(entities ?? []) /* GHOST: anti-spoiler */, baseColor: messageTheme.primaryTextColor, linkColor: incoming ? mainColor : messageTheme.linkTextColor, baseFont: textFont, linkFont: textFont, boldFont: textBoldFont, italicFont: textItalicFont, boldItalicFont: textBoldItalicFont, fixedFont: textFixedFont, blockQuoteFont: textBlockQuoteFont, message: nil, adjustQuoteFontSize: true)
+                            let textString = stringWithAppliedEntities(text, entities: WGMessagesPolicy.visibleEntities(entities ?? []) /* WRAITH: anti-spoiler */, baseColor: messageTheme.primaryTextColor, linkColor: incoming ? mainColor : messageTheme.linkTextColor, baseFont: textFont, linkFont: textFont, boldFont: textBoldFont, italicFont: textItalicFont, boldItalicFont: textBoldItalicFont, fixedFont: textFixedFont, blockQuoteFont: textBlockQuoteFont, message: nil, adjustQuoteFontSize: true)
                             let textLayoutAndApplyValue = makeTextLayout(TextNodeLayoutArguments(attributedString: textString, backgroundColor: nil, maximumNumberOfLines: maximumNumberOfLines, truncationType: .end, constrainedSize: CGSize(width: maxContentsWidth, height: 10000.0), alignment: .natural, lineSpacing: textLineSpacing, cutout: cutout, insets: UIEdgeInsets()))
                             textLayoutAndApply = textLayoutAndApplyValue
                             

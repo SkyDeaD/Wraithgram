@@ -68,8 +68,8 @@ private func calculateMergingCircleShape(center: CGPoint, leftCenter: CGPoint?, 
         unseenCount = Int(CGFloat(unseenCount) / totalCountNorm)
     }
     
-    // GHOST: square avatars — one rounded-square ring, no segments and no merging (GGAvatarHooks.shape)
-    if let ringPath = ggAvatarRingPath(center: center, radius: radius) { return (isSeen ? unseenCount == 0 : unseenCount != 0) ? ringPath : CGMutablePath() }
+    // WRAITH: square avatars — one rounded-square ring, no segments and no merging (WGAvatarHooks.shape)
+    if let ringPath = wgAvatarRingPath(center: center, radius: radius) { return (isSeen ? unseenCount == 0 : unseenCount != 0) ? ringPath : CGMutablePath() }
     
     let leftAngles = leftCenter.flatMap { calculateCircleIntersection(center: center, otherCenter: $0, radius: radius) }
     let rightAngles = rightCenter.flatMap { calculateCircleIntersection(center: center, otherCenter: $0, radius: radius) }
@@ -149,8 +149,8 @@ private final class StoryProgressLayer: HierarchyTrackingLayer {
         var lineWidth: CGFloat
         var radius: CGFloat
         var value: Value
-        var ggRingCorner: CGFloat? // GHOST: square avatars — the corner of the rounded-square ring, nil = circle
-        var ggRingLength: CGFloat = 0.0 // GHOST: see ggRingCorner
+        var wgRingCorner: CGFloat? // WRAITH: square avatars — the corner of the rounded-square ring, nil = circle
+        var wgRingLength: CGFloat = 0.0 // WRAITH: see wgRingCorner
     }
     private var currentParams: Params?
 
@@ -159,11 +159,11 @@ private final class StoryProgressLayer: HierarchyTrackingLayer {
     private let indefiniteDashLayer = SimpleShapeLayer()
     private let indefiniteReplicatorLayer = CAReplicatorLayer()
 
-    // GHOST: square avatars — a rounded square can not be drawn by rotating copies of an arc: the
+    // WRAITH: square avatars — a rounded square can not be drawn by rotating copies of an arc: the
     // loading dashes run along the whole ring (lineDashPhase) and nothing rotates. Upstream look otherwise.
-    private func ggApplyRingMode(_ params: Params) {
-        if let _ = params.ggRingCorner {
-            let segment = max(1.0, params.ggRingLength / 30.0)
+    private func wgApplyRingMode(_ params: Params) {
+        if let _ = params.wgRingCorner {
+            let segment = max(1.0, params.wgRingLength / 30.0)
             self.indefiniteDashLayer.strokeStart = 0.0
             self.indefiniteDashLayer.strokeEnd = 1.0
             self.indefiniteDashLayer.lineDashPattern = [NSNumber(value: Double(segment * 0.5)), NSNumber(value: Double(segment * 0.5))]
@@ -176,7 +176,7 @@ private final class StoryProgressLayer: HierarchyTrackingLayer {
             self.uploadProgressLayer.removeAnimation(forKey: "rotation")
         } else {
             self.indefiniteDashLayer.lineDashPattern = nil
-            self.indefiniteDashLayer.removeAnimation(forKey: "ggDashPhase")
+            self.indefiniteDashLayer.removeAnimation(forKey: "wgDashPhase")
             self.indefiniteDashLayer.strokeStart = 0.0
             self.indefiniteDashLayer.strokeEnd = 0.0333
             let count = 1.0 / self.indefiniteDashLayer.strokeEnd
@@ -256,7 +256,7 @@ private final class StoryProgressLayer: HierarchyTrackingLayer {
                 }
             }
             transition.setShapeLayerStrokeEnd(layer: self.uploadProgressLayer, strokeEnd: CGFloat(progress))
-            if params.ggRingCorner == nil, self.uploadProgressLayer.animation(forKey: "rotation") == nil { // GHOST: a rounded-square ring fills from the top, it does not rotate
+            if params.wgRingCorner == nil, self.uploadProgressLayer.animation(forKey: "rotation") == nil { // WRAITH: a rounded-square ring fills from the top, it does not rotate
                 let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
                 rotationAnimation.duration = 2.0
                 rotationAnimation.fromValue = NSNumber(value: Float(0.0))
@@ -284,16 +284,16 @@ private final class StoryProgressLayer: HierarchyTrackingLayer {
                     self.indefiniteReplicatorLayer.animateAlpha(from: 0.0, to: 1.0, duration: 0.2)
                 }
             }
-            // GHOST: square avatars — the dashes run along the rounded square instead of rotating
-            if params.ggRingCorner != nil {
-                if self.indefiniteDashLayer.animation(forKey: "ggDashPhase") == nil {
+            // WRAITH: square avatars — the dashes run along the rounded square instead of rotating
+            if params.wgRingCorner != nil {
+                if self.indefiniteDashLayer.animation(forKey: "wgDashPhase") == nil {
                     let phaseAnimation = CABasicAnimation(keyPath: "lineDashPhase")
                     phaseAnimation.fromValue = NSNumber(value: 0.0)
-                    phaseAnimation.toValue = NSNumber(value: -Double(params.ggRingLength))
+                    phaseAnimation.toValue = NSNumber(value: -Double(params.wgRingLength))
                     phaseAnimation.duration = 4.0
                     phaseAnimation.repeatCount = Float.infinity
                     phaseAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
-                    self.indefiniteDashLayer.add(phaseAnimation, forKey: "ggDashPhase")
+                    self.indefiniteDashLayer.add(phaseAnimation, forKey: "wgDashPhase")
                 }
                 return
             }
@@ -324,24 +324,24 @@ private final class StoryProgressLayer: HierarchyTrackingLayer {
     }
     
     func update(size: CGSize, lineWidth: CGFloat, radius: CGFloat, value: Value, transition: ComponentTransition) {
-        let ggRing = ggAvatarRingPathFromTop(center: CGPoint(x: size.width * 0.5, y: size.height * 0.5), radius: radius) // GHOST: square avatars — the ring of the avatar's shape
+        let wgRing = wgAvatarRingPathFromTop(center: CGPoint(x: size.width * 0.5, y: size.height * 0.5), radius: radius) // WRAITH: square avatars — the ring of the avatar's shape
         let params = Params(
             size: size,
             lineWidth: lineWidth,
             radius: radius,
             value: value,
-            ggRingCorner: ggRing?.cornerRadius, // GHOST: see ggRing
-            ggRingLength: ggRing?.length ?? 0.0 // GHOST: see ggRing
+            wgRingCorner: wgRing?.cornerRadius, // WRAITH: see wgRing
+            wgRingLength: wgRing?.length ?? 0.0 // WRAITH: see wgRing
         )
         if self.currentParams == params {
             return
         }
-        if self.currentParams?.radius != params.radius || self.currentParams?.ggRingCorner != params.ggRingCorner { // GHOST: a shape change draws the ring again
+        if self.currentParams?.radius != params.radius || self.currentParams?.wgRingCorner != params.wgRingCorner { // WRAITH: a shape change draws the ring again
             self.uploadProgressLayer.path = nil
             self.indefiniteDashLayer.path = nil
         }
         self.currentParams = params
-        self.ggApplyRingMode(params) // GHOST: see ggRing
+        self.wgApplyRingMode(params) // WRAITH: see wgRing
 
         self.uploadProgressLayer.lineWidth = lineWidth
         self.indefiniteDashLayer.lineWidth = lineWidth
@@ -350,14 +350,14 @@ private final class StoryProgressLayer: HierarchyTrackingLayer {
         if self.uploadProgressLayer.path == nil {
             let path = CGMutablePath()
             path.addEllipse(in: CGRect(origin: CGPoint(x: (size.width - radius * 2.0) * 0.5, y: (size.height - radius * 2.0) * 0.5), size: CGSize(width: radius * 2.0, height: radius * 2.0)))
-            self.uploadProgressLayer.path = ggRing?.path ?? path // GHOST: square avatars
+            self.uploadProgressLayer.path = wgRing?.path ?? path // WRAITH: square avatars
             self.uploadProgressLayer.frame = bounds
         }
 
         if self.indefiniteDashLayer.path == nil {
             let path = CGMutablePath()
             path.addEllipse(in: CGRect(origin: CGPoint(x: (size.width - radius * 2.0) * 0.5, y: (size.height - radius * 2.0) * 0.5), size: CGSize(width: radius * 2.0, height: radius * 2.0)))
-            self.indefiniteDashLayer.path = ggRing?.path ?? path // GHOST: square avatars
+            self.indefiniteDashLayer.path = wgRing?.path ?? path // WRAITH: square avatars
             self.indefiniteReplicatorLayer.frame = bounds
             self.indefiniteDashLayer.frame = bounds
         }
@@ -984,10 +984,10 @@ public final class StoryPeerListItemComponent: Component {
             }
             
             let avatarPath = CGMutablePath()
-            // GHOST: square avatars — the mask follows the avatar's shape (GGAvatarHooks.shape)
-            if let clipPath = ggAvatarClipPath(in: CGRect(origin: CGPoint(), size: avatarSize).insetBy(dx: -1.0, dy: -1.0)) { avatarPath.addPath(clipPath) } else {
+            // WRAITH: square avatars — the mask follows the avatar's shape (WGAvatarHooks.shape)
+            if let clipPath = wgAvatarClipPath(in: CGRect(origin: CGPoint(), size: avatarSize).insetBy(dx: -1.0, dy: -1.0)) { avatarPath.addPath(clipPath) } else {
             avatarPath.addEllipse(in: CGRect(origin: CGPoint(), size: avatarSize).insetBy(dx: -1.0, dy: -1.0))
-            } // GHOST: end
+            } // WRAITH: end
             if let avatarLiveBadgeView = self.avatarLiveBadgeView {
                 let avatarLiveBadgeFrame = avatarLiveBadgeView.frame
                 if avatarLiveBadgeFrame.height > 4.0 {

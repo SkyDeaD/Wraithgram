@@ -463,12 +463,12 @@ private final class FetchImpl {
             if isStory {
                 self.defaultPartSize = 512 * 1024
             } else {
-                // GHOST: features may tune download parts (GGNetworkHooks.downloadParameters)
-                self.defaultPartSize = ggDownloadPartSize(128 * 1024, fileSize: size)
+                // WRAITH: features may tune download parts (WGNetworkHooks.downloadParameters)
+                self.defaultPartSize = wgDownloadPartSize(128 * 1024, fileSize: size)
             }
             self.cdnPartSize = 128 * 1024
-            // GHOST: features may tune download parts (GGNetworkHooks.downloadParameters)
-            self.masterPendingParts = ggDownloadPendingParts(self.fastDownloads ? fastDownloadMasterPendingParts : 6, fileSize: size)
+            // WRAITH: features may tune download parts (WGNetworkHooks.downloadParameters)
+            self.masterPendingParts = wgDownloadPendingParts(self.fastDownloads ? fastDownloadMasterPendingParts : 6, fileSize: size)
             self.cdnPendingParts = self.fastDownloads ? fastDownloadCdnPendingParts : 6
             
             // The resource id tells concurrent downloads apart; an Api value prints only its constructor name.

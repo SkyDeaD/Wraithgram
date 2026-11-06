@@ -233,8 +233,8 @@ API_AVAILABLE(ios(10))
     return [bundleSeedId stringByAppendingFormat:@".%@", baseAppBundleId];
 }
 
-// GHOST: app group resolution, see BuildConfig.h.
-static NSArray<NSString *> * _Nonnull ggProvisionedAppGroups(NSBundle * _Nonnull bundle) {
+// WRAITH: app group resolution, see BuildConfig.h.
+static NSArray<NSString *> * _Nonnull wgProvisionedAppGroups(NSBundle * _Nonnull bundle) {
     NSData *data = [NSData dataWithContentsOfFile:[bundle pathForResource:@"embedded" ofType:@"mobileprovision"]];
     if (data == nil) {
         return @[];
@@ -274,7 +274,7 @@ static NSArray<NSString *> * _Nonnull ggProvisionedAppGroups(NSBundle * _Nonnull
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSString *defaultName = [@"group." stringByAppendingString:baseAppBundleId];
-        NSString *configured = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"GGAppGroup"];
+        NSString *configured = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"WGAppGroup"];
         if ([configured isKindOfClass:[NSString class]] && configured.length > @"group.".length) {
             resolved = configured;
             return;
@@ -284,7 +284,7 @@ static NSArray<NSString *> * _Nonnull ggProvisionedAppGroups(NSBundle * _Nonnull
             resolved = defaultName;
             return;
         }
-        for (NSString *group in ggProvisionedAppGroups([NSBundle mainBundle])) {
+        for (NSString *group in wgProvisionedAppGroups([NSBundle mainBundle])) {
             if ([fileManager containerURLForSecurityApplicationGroupIdentifier:group] != nil) {
                 resolved = group;
                 return;

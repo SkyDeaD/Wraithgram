@@ -39,7 +39,7 @@ import ChatMessageBubbleItemNode
 import AdsInfoScreen
 import AdsReportScreen
 import WalletContext
-import GGHooks // GHOST: message menu points
+import WGHooks // WRAITH: message menu points
  
 private struct MessageContextMenuData {
     let starStatus: Bool?
@@ -664,7 +664,7 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
                             messageEntities = attribute.entities
                         }
                         if let attribute = attribute as? RestrictedContentMessageAttribute {
-                            restrictedText = attribute.platformText(platform: "ios", contentSettings: context.currentContentSettings.with { $0 }) ?? (GGRestrictionHooks.messageRestrictionApplies(message) ? "" : nil) // GHOST: a lifted restriction copies / shares the message itself (GGRestrictionHooks.messageRestriction)
+                            restrictedText = attribute.platformText(platform: "ios", contentSettings: context.currentContentSettings.with { $0 }) ?? (WGRestrictionHooks.messageRestrictionApplies(message) ? "" : nil) // WRAITH: a lifted restriction copies / shares the message itself (WGRestrictionHooks.messageRestriction)
                         }
                     }
                     
@@ -1379,7 +1379,7 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
                                             messageEntities = attribute.entities
                                         }
                                         if let attribute = attribute as? RestrictedContentMessageAttribute {
-                                            restrictedText = attribute.platformText(platform: "ios", contentSettings: context.currentContentSettings.with { $0 }) ?? (GGRestrictionHooks.messageRestrictionApplies(message) ? "" : nil) // GHOST: a lifted restriction copies / shares the message itself (GGRestrictionHooks.messageRestriction)
+                                            restrictedText = attribute.platformText(platform: "ios", contentSettings: context.currentContentSettings.with { $0 }) ?? (WGRestrictionHooks.messageRestrictionApplies(message) ? "" : nil) // WRAITH: a lifted restriction copies / shares the message itself (WGRestrictionHooks.messageRestriction)
                                         }
                                         if let attribute = attribute as? AudioTranscriptionMessageAttribute {
                                             messageText = attribute.text
@@ -2370,7 +2370,7 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
                                 messageEntities = attribute.entities
                             }
                             if let attribute = attribute as? RestrictedContentMessageAttribute {
-                                restrictedText = attribute.platformText(platform: "ios", contentSettings: context.currentContentSettings.with { $0 }) ?? (GGRestrictionHooks.messageRestrictionApplies(message) ? "" : nil) // GHOST: a lifted restriction copies / shares the message itself (GGRestrictionHooks.messageRestriction)
+                                restrictedText = attribute.platformText(platform: "ios", contentSettings: context.currentContentSettings.with { $0 }) ?? (WGRestrictionHooks.messageRestrictionApplies(message) ? "" : nil) // WRAITH: a lifted restriction copies / shares the message itself (WGRestrictionHooks.messageRestriction)
                             }
                         }
                         
@@ -2480,8 +2480,8 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
             }
         }
         
-        // GHOST: features add and filter message menu items (GGMessageMenuHooks)
-        if !GGMessageMenuHooks.isEmpty { actions = GGMessageMenuHooks.apply(actions, context: GGMessageMenuContext(context: context, chatLocation: chatPresentationInterfaceState.chatLocation, messages: messages, presentationData: context.sharedContext.currentPresentationData.with { $0 }, isCopyProtectionEnabled: chatPresentationInterfaceState.copyProtectionEnabled)) } // GHOST: + the chat's copy protection
+        // WRAITH: features add and filter message menu items (WGMessageMenuHooks)
+        if !WGMessageMenuHooks.isEmpty { actions = WGMessageMenuHooks.apply(actions, context: WGMessageMenuContext(context: context, chatLocation: chatPresentationInterfaceState.chatLocation, messages: messages, presentationData: context.sharedContext.currentPresentationData.with { $0 }, isCopyProtectionEnabled: chatPresentationInterfaceState.copyProtectionEnabled)) } // WRAITH: + the chat's copy protection
         return ContextController.Items(content: .list(actions), tip: nil)
     }
 }

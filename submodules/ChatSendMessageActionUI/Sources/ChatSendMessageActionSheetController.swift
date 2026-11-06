@@ -25,7 +25,7 @@ public enum SendMessageActionSheetControllerParams {
         public let hasTimers: Bool
         public let sendPaidMessageStars: StarsAmount?
         public let isMonoforum: Bool
-        // GHOST: extra items at the end of the send menu (translation to the chat's language, W2-3)
+        // WRAITH: extra items at the end of the send menu (translation to the chat's language, W2-3)
         public let additionalItems: [ContextMenuItem]
         
         public init(
@@ -41,7 +41,7 @@ public enum SendMessageActionSheetControllerParams {
             hasTimers: Bool,
             sendPaidMessageStars: StarsAmount?,
             isMonoforum: Bool,
-            additionalItems: [ContextMenuItem] = [] // GHOST: see above
+            additionalItems: [ContextMenuItem] = [] // WRAITH: see above
         ) {
             self.isScheduledMessages = isScheduledMessages
             self.mediaPreview = mediaPreview
@@ -55,7 +55,7 @@ public enum SendMessageActionSheetControllerParams {
             self.hasTimers = hasTimers
             self.sendPaidMessageStars = sendPaidMessageStars
             self.isMonoforum = isMonoforum
-            self.additionalItems = additionalItems // GHOST: see above
+            self.additionalItems = additionalItems // WRAITH: see above
         }
     }
     

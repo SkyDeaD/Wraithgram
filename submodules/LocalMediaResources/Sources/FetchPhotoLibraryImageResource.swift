@@ -121,9 +121,9 @@ public func fetchPhotoLibraryResource(localIdentifier: String, width: Int32?, he
             if let width, let height {
                 size = CGSize(width: CGFloat(width), height: CGFloat(height))
             } else {
-                // GHOST: features may change outgoing photo size (GGOutgoingImageHooks.parameters)
-                let ggMaxSide = GGOutgoingImageHooks.maxSide(hd ? 2560.0 : 1280.0, hd: hd)
-                size = CGSize(width: ggMaxSide, height: ggMaxSide)
+                // WRAITH: features may change outgoing photo size (WGOutgoingImageHooks.parameters)
+                let wgMaxSide = WGOutgoingImageHooks.maxSide(hd ? 2560.0 : 1280.0, hd: hd)
+                size = CGSize(width: wgMaxSide, height: wgMaxSide)
             }
             
             var targetSize = PHImageManagerMaximumSize
@@ -168,8 +168,8 @@ public func fetchPhotoLibraryResource(localIdentifier: String, width: Int32?, he
                                 
                                 let scale = min(1.0, min(size.width / max(1.0, image.size.width), size.height / max(1.0, image.size.height)))
                                 let scaledSize = CGSize(width: floor(image.size.width * scale), height: floor(image.size.height * scale))
-                                // GHOST: features may change outgoing photo pixels, e.g. a watermark (GGOutgoingImageHooks.image)
-                                let scaledImage = resizedImage(image, for: scaledSize).map { GGOutgoingImageHooks.transform($0, hd: hd) }
+                                // WRAITH: features may change outgoing photo pixels, e.g. a watermark (WGOutgoingImageHooks.image)
+                                let scaledImage = resizedImage(image, for: scaledSize).map { WGOutgoingImageHooks.transform($0, hd: hd) }
                                 
 #if DEBUG
                                 print("scaled completion \((CACurrentMediaTime() - startTime) * 1000.0) ms")
@@ -181,8 +181,8 @@ public func fetchPhotoLibraryResource(localIdentifier: String, width: Int32?, he
                                     defer {
                                         EngineTempBox.shared.dispose(tempFile)
                                     }
-                                    // GHOST: features may change outgoing photo quality (GGOutgoingImageHooks.parameters)
-                                    if let scaledImage = scaledImage, let data = compressImageToJPEG(scaledImage, quality: GGOutgoingImageHooks.jpegQuality(0.6, hd: hd), tempFilePath: tempFile.path) {
+                                    // WRAITH: features may change outgoing photo quality (WGOutgoingImageHooks.parameters)
+                                    if let scaledImage = scaledImage, let data = compressImageToJPEG(scaledImage, quality: WGOutgoingImageHooks.jpegQuality(0.6, hd: hd), tempFilePath: tempFile.path) {
     #if DEBUG
                                         print("compression completion \((CACurrentMediaTime() - startTime) * 1000.0) ms")
     #endif

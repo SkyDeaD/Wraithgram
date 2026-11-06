@@ -423,7 +423,7 @@ extension NavigationBarComponent.View {
         capsule.tintColor = tintColor
         let glassTransition = tintByHand ? .immediate : NavigationBarGlassSettings.uikitTransition(for: isNew ? NavigationBarGlassSettings.materialize : NavigationBarGlassSettings.inPlaceTint)
         let currentFrame = capsule.frame(at: self.inPlaceTime)
-        container.update(size: currentFrame.size, cornerRadius: ggNavigationGlassCornerRadius(container, size: currentFrame.size, upstream: currentFrame.height * 0.5) /* GHOST: square avatars keep their glass */, isDark: isDark, tintColor: capsule.glassTint(at: self.inPlaceTime), isInteractive: true, isVisible: true, transition: glassTransition)
+        container.update(size: currentFrame.size, cornerRadius: wgNavigationGlassCornerRadius(container, size: currentFrame.size, upstream: currentFrame.height * 0.5) /* WRAITH: square avatars keep their glass */, isDark: isDark, tintColor: capsule.glassTint(at: self.inPlaceTime), isInteractive: true, isVisible: true, transition: glassTransition)
 
         self.applyInPlace(capsule)
         self.startInPlaceLinkIfNeeded()
@@ -464,7 +464,7 @@ extension NavigationBarComponent.View {
         capsule.maxScale = self.inPlaceMotion.materializeScale(size: capsule.targetFrame.size)
         capsule.dematerialization.animate(to: 1.0, spring: NavigationBarGlassSettings.materialize)
         let currentFrame = capsule.frame(at: self.inPlaceTime)
-        container.update(size: currentFrame.size, cornerRadius: ggNavigationGlassCornerRadius(container, size: currentFrame.size, upstream: currentFrame.height * 0.5) /* GHOST: square avatars keep their glass */, isDark: capsule.isDark, tintColor: capsule.tintColor, isInteractive: true, isVisible: false, transition: NavigationBarGlassSettings.uikitTransition(for: NavigationBarGlassSettings.materialize))
+        container.update(size: currentFrame.size, cornerRadius: wgNavigationGlassCornerRadius(container, size: currentFrame.size, upstream: currentFrame.height * 0.5) /* WRAITH: square avatars keep their glass */, isDark: capsule.isDark, tintColor: capsule.tintColor, isInteractive: true, isVisible: false, transition: NavigationBarGlassSettings.uikitTransition(for: NavigationBarGlassSettings.materialize))
 
         self.applyInPlace(capsule)
         self.startInPlaceLinkIfNeeded()
@@ -495,7 +495,7 @@ extension NavigationBarComponent.View {
             capsule.tintColor = tintColor
             capsule.isDark = isDark
             let currentFrame = capsule.frame(at: self.inPlaceTime)
-            capsule.container.update(size: currentFrame.size, cornerRadius: ggNavigationGlassCornerRadius(capsule.container, size: currentFrame.size, upstream: currentFrame.height * 0.5) /* GHOST: square avatars keep their glass */, isDark: isDark, tintColor: capsule.glassTint(at: self.inPlaceTime), isInteractive: true, isVisible: !capsule.isRemoved, transition: (transition.animation.isImmediate || tintByHand) ? .immediate : NavigationBarGlassSettings.uikitTransition(for: NavigationBarGlassSettings.inPlaceTint))
+            capsule.container.update(size: currentFrame.size, cornerRadius: wgNavigationGlassCornerRadius(capsule.container, size: currentFrame.size, upstream: currentFrame.height * 0.5) /* WRAITH: square avatars keep their glass */, isDark: isDark, tintColor: capsule.glassTint(at: self.inPlaceTime), isInteractive: true, isVisible: !capsule.isRemoved, transition: (transition.animation.isImmediate || tintByHand) ? .immediate : NavigationBarGlassSettings.uikitTransition(for: NavigationBarGlassSettings.inPlaceTint))
         }
         self.applyInPlace(capsule)
     }
@@ -583,11 +583,11 @@ extension NavigationBarComponent.View {
                 capsule.tintFade = nil
             }
             capsule.tintColor = partnerTintColor
-            container.update(size: current.size, cornerRadius: ggNavigationGlassCornerRadius(container, size: current.size, upstream: current.height * 0.5) /* GHOST: square avatars keep their glass */, isDark: isDark, tintColor: capsule.glassTint(at: time), isInteractive: true, isVisible: merges, transition: merges ? .immediate : NavigationBarGlassSettings.uikitTransition(for: NavigationBarGlassSettings.materialize))
+            container.update(size: current.size, cornerRadius: wgNavigationGlassCornerRadius(container, size: current.size, upstream: current.height * 0.5) /* WRAITH: square avatars keep their glass */, isDark: isDark, tintColor: capsule.glassTint(at: time), isInteractive: true, isVisible: merges, transition: merges ? .immediate : NavigationBarGlassSettings.uikitTransition(for: NavigationBarGlassSettings.materialize))
         } else {
             if insertionSource == nil {
                 // A new pill starts as part of its partner: in the partner's tint, its glass already there when merging.
-                container.update(size: current.size, cornerRadius: ggNavigationGlassCornerRadius(container, size: current.size, upstream: current.height * 0.5) /* GHOST: square avatars keep their glass */, isDark: isDark, tintColor: partnerTintColor, isInteractive: true, isVisible: merges, transition: .immediate)
+                container.update(size: current.size, cornerRadius: wgNavigationGlassCornerRadius(container, size: current.size, upstream: current.height * 0.5) /* WRAITH: square avatars keep their glass */, isDark: isDark, tintColor: partnerTintColor, isInteractive: true, isVisible: merges, transition: .immediate)
             }
             if merges {
                 self.startInPlaceTintFade(capsule, to: tintColor)
@@ -595,7 +595,7 @@ extension NavigationBarComponent.View {
                 capsule.tintFade = nil
             }
             capsule.tintColor = tintColor
-            container.update(size: current.size, cornerRadius: ggNavigationGlassCornerRadius(container, size: current.size, upstream: current.height * 0.5) /* GHOST: square avatars keep their glass */, isDark: isDark, tintColor: capsule.glassTint(at: time), isInteractive: true, isVisible: true, transition: merges ? .immediate : NavigationBarGlassSettings.uikitTransition(for: NavigationBarGlassSettings.materialize))
+            container.update(size: current.size, cornerRadius: wgNavigationGlassCornerRadius(container, size: current.size, upstream: current.height * 0.5) /* WRAITH: square avatars keep their glass */, isDark: isDark, tintColor: capsule.glassTint(at: time), isInteractive: true, isVisible: true, transition: merges ? .immediate : NavigationBarGlassSettings.uikitTransition(for: NavigationBarGlassSettings.materialize))
         }
         self.applyInPlace(capsule)
         self.applyInPlace(partnerCapsule)
@@ -717,7 +717,7 @@ extension NavigationBarComponent.View {
         let frame = capsule.targetFrame
         capsule.container.transform = .identity
         capsule.container.frame = frame
-        capsule.container.update(size: frame.size, cornerRadius: ggNavigationGlassCornerRadius(capsule.container, size: frame.size, upstream: frame.height * 0.5) /* GHOST: square avatars keep their glass */, isDark: capsule.isDark, tintColor: capsule.tintColor, isInteractive: true, isVisible: true, transition: .immediate)
+        capsule.container.update(size: frame.size, cornerRadius: wgNavigationGlassCornerRadius(capsule.container, size: frame.size, upstream: frame.height * 0.5) /* WRAITH: square avatars keep their glass */, isDark: capsule.isDark, tintColor: capsule.tintColor, isInteractive: true, isVisible: true, transition: .immediate)
         if let items = capsule.items {
             Self.resetInPlaceItems(items.view, size: frame.size)
         }
@@ -769,7 +769,7 @@ extension NavigationBarComponent.View {
         }
         // A merging pill that goes keeps its glass (it shrinks into its partner's); one in its own container fades.
         let isVisible = !capsule.isRemoved || (capsule.matched != nil && capsule.lentGlass != nil)
-        container.update(size: shapeSize, cornerRadius: ggNavigationGlassCornerRadius(container, size: shapeSize, upstream: min(shapeSize.width, shapeSize.height) * 0.5) /* GHOST: square avatars keep their glass */, isDark: capsule.isDark, tintColor: capsule.glassTint(at: time), isInteractive: true, isVisible: isVisible, transition: .immediate)
+        container.update(size: shapeSize, cornerRadius: wgNavigationGlassCornerRadius(container, size: shapeSize, upstream: min(shapeSize.width, shapeSize.height) * 0.5) /* WRAITH: square avatars keep their glass */, isDark: capsule.isDark, tintColor: capsule.glassTint(at: time), isInteractive: true, isVisible: isVisible, transition: .immediate)
         var allItems = capsule.leaving
         if let items = capsule.items {
             allItems.append(items)

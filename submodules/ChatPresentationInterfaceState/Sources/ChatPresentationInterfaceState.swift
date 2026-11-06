@@ -9,7 +9,7 @@ import AccountContext
 import ChatInterfaceState
 import ChatContextQuery
 import AudioWaveform
-import GGFeaturesShared // GHOST: Ghostgram message settings (W2-3)
+import WGFeaturesShared // WRAITH: Wraithgram message settings (W2-3)
 
 public enum ChatMediaInputMode {
     case gif
@@ -853,9 +853,9 @@ public final class ChatPresentationInterfaceState: Equatable {
         self.reportReason = reportReason
         self.showCommands = showCommands
         self.hasBotCommands = hasBotCommands
-        // GHOST: «Скрыть "Отправить как"» (GGMessagesPolicy.hidesSendAsButton)
-        self.showSendAsPeers = showSendAsPeers && !GGMessagesPolicy.hidesSendAsButton
-        self.sendAsPeers = GGMessagesPolicy.hidesSendAsButton ? nil : sendAsPeers
+        // WRAITH: «Скрыть "Отправить как"» (WGMessagesPolicy.hidesSendAsButton)
+        self.showSendAsPeers = showSendAsPeers && !WGMessagesPolicy.hidesSendAsButton
+        self.sendAsPeers = WGMessagesPolicy.hidesSendAsButton ? nil : sendAsPeers
         self.botMenuButton = botMenuButton
         self.showWebView = showWebView
         self.currentSendAsPeerId = currentSendAsPeerId

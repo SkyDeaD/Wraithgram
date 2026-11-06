@@ -39,21 +39,21 @@ public final class HeaderPanelContainerComponent: Component {
     public let preferClearGlass: Bool
     public let tabs: AnyComponent<Empty>?
     public let panels: [Panel]
-    // GHOST: extra height of the tabs row (chat list folder strip, W2-5); 0 = upstream
-    public let ggTabsHeightOffset: CGFloat
+    // WRAITH: extra height of the tabs row (chat list folder strip, W2-5); 0 = upstream
+    public let wgTabsHeightOffset: CGFloat
     
     public init(
         theme: PresentationTheme,
         preferClearGlass: Bool = false,
         tabs: AnyComponent<Empty>?,
         panels: [Panel],
-        ggTabsHeightOffset: CGFloat = 0.0 // GHOST: see the property
+        wgTabsHeightOffset: CGFloat = 0.0 // WRAITH: see the property
     ) {
         self.theme = theme
         self.preferClearGlass = preferClearGlass
         self.tabs = tabs
         self.panels = panels
-        self.ggTabsHeightOffset = ggTabsHeightOffset // GHOST: see the property
+        self.wgTabsHeightOffset = wgTabsHeightOffset // WRAITH: see the property
     }
     
     public static func ==(lhs: HeaderPanelContainerComponent, rhs: HeaderPanelContainerComponent) -> Bool {
@@ -69,7 +69,7 @@ public final class HeaderPanelContainerComponent: Component {
         if lhs.panels != rhs.panels {
             return false
         }
-        if lhs.ggTabsHeightOffset != rhs.ggTabsHeightOffset { // GHOST: see the property
+        if lhs.wgTabsHeightOffset != rhs.wgTabsHeightOffset { // WRAITH: see the property
             return false
         }
         return true
@@ -156,8 +156,8 @@ public final class HeaderPanelContainerComponent: Component {
                     environment: {},
                     containerSize: CGSize(width: availableSize.width - sideInset * 2.0, height: 40.0)
                 )
-                let ggTabsOffset = max(-floor(tabsSize.height * 0.5), component.ggTabsHeightOffset) // GHOST: see ggTabsHeightOffset
-                let tabsFrame = CGRect(origin: CGPoint(x: 0.0, y: size.height + floor(ggTabsOffset * 0.5)), size: tabsSize) // GHOST: centered in the taller row
+                let wgTabsOffset = max(-floor(tabsSize.height * 0.5), component.wgTabsHeightOffset) // WRAITH: see wgTabsHeightOffset
+                let tabsFrame = CGRect(origin: CGPoint(x: 0.0, y: size.height + floor(wgTabsOffset * 0.5)), size: tabsSize) // WRAITH: centered in the taller row
                 if let tabsComponentView = tabsView.view {
                     if tabsComponentView.superview == nil {
                         self.contentContainer.addSubview(tabsComponentView)
@@ -168,7 +168,7 @@ public final class HeaderPanelContainerComponent: Component {
                     }
                     tabsTransition.setFrame(view: tabsComponentView, frame: tabsFrame)
                 }
-                size.height += tabsSize.height + ggTabsOffset // GHOST: see ggTabsHeightOffset
+                size.height += tabsSize.height + wgTabsOffset // WRAITH: see wgTabsHeightOffset
                 isFirstPanel = false
             } else if let tabsView = self.tabsView {
                 self.tabsView = nil

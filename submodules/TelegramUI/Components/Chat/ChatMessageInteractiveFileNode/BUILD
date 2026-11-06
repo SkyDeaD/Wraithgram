@@ -6,8 +6,8 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: the transcription quote (W3-1)
-        "//Ghostgram/Features/Voice:ChatMessageInteractiveFileNodeSources",
+        # WRAITH: the transcription quote (W3-1)
+        "//Wraithgram/Features/Voice:ChatMessageInteractiveFileNodeSources",
     ],
     copts = [
         "-warnings-as-errors",
@@ -47,7 +47,7 @@ swift_library(
         "//submodules/AnimatedCountLabelNode",
         "//submodules/AudioWaveform",
         "//submodules/DeviceProximity",
-        # GHOST: the transcription quote (W3-1)
+        # WRAITH: the transcription quote (W3-1)
         "//submodules/TextFormat:TextFormat",
         "//submodules/LocalizedPeerData:LocalizedPeerData",
     ],

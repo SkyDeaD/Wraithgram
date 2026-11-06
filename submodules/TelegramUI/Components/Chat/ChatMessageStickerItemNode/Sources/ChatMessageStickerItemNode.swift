@@ -28,7 +28,7 @@ import ChatMessageActionButtonsNode
 import ChatMessageReactionsFooterContentNode
 import ChatSwipeToReplyRecognizer
 import ChatMessageSuggestedPostInfoNode
-import GGHooks // GHOST: message decorations
+import WGHooks // WRAITH: message decorations
 
 private let nameFont = Font.medium(14.0)
 private let inlineBotPrefixFont = Font.regular(14.0)
@@ -426,16 +426,16 @@ public class ChatMessageStickerItemNode: ChatMessageItemView {
                     imageSize = thumbnailSize.cgSize.aspectFitted(displaySize)
                 }
             }
-            // GHOST: features may resize stickers and hide their time (GGMessageLayoutHooks.sticker)
-            let ggSticker = GGMessageLayoutHooks.stickerLayout(message: item.message, context: item.context)
-            if ggSticker.scale != 1.0 { imageSize = ggSticker.scaledSize(imageSize, maxWidth: params.width - params.leftInset - params.rightInset - 100.0) } // GHOST: bigger stickers stay within the chat's width
+            // WRAITH: features may resize stickers and hide their time (WGMessageLayoutHooks.sticker)
+            let wgSticker = WGMessageLayoutHooks.stickerLayout(message: item.message, context: item.context)
+            if wgSticker.scale != 1.0 { imageSize = wgSticker.scaledSize(imageSize, maxWidth: params.width - params.leftInset - params.rightInset - 100.0) } // WRAITH: bigger stickers stay within the chat's width
             
             var textLayoutAndApply: (TextNodeLayout, () -> TextNode)?
             var isEmoji = false
             if item.presentationData.largeEmoji && messageIsEligibleForLargeEmoji(EngineMessage(item.message)) {
-                let emojiFont = ggSticker.scale != 1.0 ? item.presentationData.messageEmojiFont.withSize(floor(item.presentationData.messageEmojiFont.pointSize * ggSticker.scale)) : item.presentationData.messageEmojiFont // GHOST: see ggSticker; emoji drawn as text scale by their font
+                let emojiFont = wgSticker.scale != 1.0 ? item.presentationData.messageEmojiFont.withSize(floor(item.presentationData.messageEmojiFont.pointSize * wgSticker.scale)) : item.presentationData.messageEmojiFont // WRAITH: see wgSticker; emoji drawn as text scale by their font
                 let attributedText = NSAttributedString(string: item.message.text, font: emojiFont, textColor: .black)
-                textLayoutAndApply = textLayout(TextNodeLayoutArguments(attributedString: attributedText, backgroundColor: nil, maximumNumberOfLines: 0, truncationType: .end, constrainedSize: CGSize(width: params.width, height: floor(90.0 * max(1.0, ggSticker.scale))), alignment: .natural))
+                textLayoutAndApply = textLayout(TextNodeLayoutArguments(attributedString: attributedText, backgroundColor: nil, maximumNumberOfLines: 0, truncationType: .end, constrainedSize: CGSize(width: params.width, height: floor(90.0 * max(1.0, wgSticker.scale))), alignment: .natural))
                 
                 imageSize = CGSize(width: textLayoutAndApply!.0.size.width, height: textLayoutAndApply!.0.size.height)
                 isEmoji = true
@@ -690,8 +690,8 @@ public class ChatMessageStickerItemNode: ChatMessageItemView {
             var replyStory: EngineStoryId?
             var inlineBotNameString: String?
             for attribute in item.message.attributes {
-                // GHOST: features may hide "via @bot" (GGMessageDecorationHooks)
-                if let attribute = attribute as? InlineBotMessageAttribute, !GGMessageDecorationHooks.hidesViaBot(item.message, context: item.context) {
+                // WRAITH: features may hide "via @bot" (WGMessageDecorationHooks)
+                if let attribute = attribute as? InlineBotMessageAttribute, !WGMessageDecorationHooks.hidesViaBot(item.message, context: item.context) {
                     if let peerId = attribute.peerId, let bot = item.message.peers[peerId] as? TelegramUser {
                         inlineBotNameString = bot.addressName
                     } else {
@@ -1074,7 +1074,7 @@ public class ChatMessageStickerItemNode: ChatMessageItemView {
                     
                     animation.animator.updateFrame(layer: strongSelf.dateAndStatusNode.layer, frame: dateAndStatusFrame, completion: nil)
                     dateAndStatusApply(animation)
-                    if GGMessageLayoutHooks.adjustsStickers { strongSelf.dateAndStatusNode.isHidden = !ggSticker.showsTime } // GHOST: see ggSticker
+                    if WGMessageLayoutHooks.adjustsStickers { strongSelf.dateAndStatusNode.isHidden = !wgSticker.showsTime } // WRAITH: see wgSticker
                     if case .customChatContents = item.associatedData.subject {
                         strongSelf.dateAndStatusNode.isHidden = true
                     }

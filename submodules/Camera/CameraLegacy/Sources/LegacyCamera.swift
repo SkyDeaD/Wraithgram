@@ -6,8 +6,8 @@ import CoreImage
 import TelegramCore
 import DeviceModel
 import Camera
-// GHOST: Ghostgram round video settings and frame processor (masks)
-import GGCameraPipeline
+// WRAITH: Wraithgram round video settings and frame processor (masks)
+import WGCameraPipeline
 
 final class CameraSession {
     private let singleSession: AVCaptureSession?
@@ -55,19 +55,19 @@ final class CameraDeviceContext {
     let input = CameraInput()
     let output: CameraOutput
         
-    // GHOST: round video settings of this session (snapshot)
-    private let ggRecording: GGRoundVideoRecordingConfig
+    // WRAITH: round video settings of this session (snapshot)
+    private let wgRecording: WGRoundVideoRecordingConfig
         
-    init(session: CameraSession, exclusive: Bool, additional: Bool, ciContext: CIContext, colorSpace: CGColorSpace, isRoundVideo: Bool = false, frameProcessor: GGCameraFrameProcessor? = nil) {
+    init(session: CameraSession, exclusive: Bool, additional: Bool, ciContext: CIContext, colorSpace: CGColorSpace, isRoundVideo: Bool = false, frameProcessor: WGCameraFrameProcessor? = nil) {
         self.session = session
         self.exclusive = exclusive
         self.additional = additional
         self.isRoundVideo = isRoundVideo
         self.output = CameraOutput(exclusive: exclusive, ciContext: ciContext, colorSpace: colorSpace, use32BGRA: isRoundVideo)
-        // GHOST: see `ggRecording`; the processor applies masks to the frames of this camera
-        self.ggRecording = isRoundVideo ? GGRoundVideoConfig.recording() : .standard
-        self.output.ggRecording = self.ggRecording
-        self.output.ggFrameProcessor = frameProcessor
+        // WRAITH: see `wgRecording`; the processor applies masks to the frames of this camera
+        self.wgRecording = isRoundVideo ? WGRoundVideoConfig.recording() : .standard
+        self.output.wgRecording = self.wgRecording
+        self.output.wgFrameProcessor = frameProcessor
     }
     
     func configure(position: Camera.Position, previewView: LegacyCameraSimplePreviewView?, audio: Bool, photo: Bool, metadata: Bool, preferWide: Bool = false, preferLowerFramerate: Bool = false, switchAudio: Bool = true) {
@@ -97,8 +97,8 @@ final class CameraDeviceContext {
     
     private func maxDimensions(additional: Bool, preferWide: Bool) -> CMVideoDimensions {
         if self.isRoundVideo && self.exclusive {
-            // GHOST: a square above 480 needs the 1280×720 format
-            if self.ggRecording.needsHighResolutionCapture(defaultSide: Int(videoMessageDimensions.width)) {
+            // WRAITH: a square above 480 needs the 1280×720 format
+            if self.wgRecording.needsHighResolutionCapture(defaultSide: Int(videoMessageDimensions.width)) {
                 return CMVideoDimensions(width: 1280, height: 720)
             }
             return CMVideoDimensions(width: 640, height: 480)
@@ -112,8 +112,8 @@ final class CameraDeviceContext {
     }
     
     private func preferredMaxFrameRate(useLower: Bool) -> Double {
-        // GHOST: 60 fps round videos (one camera only)
-        if self.isRoundVideo && self.exclusive && self.ggRecording.frameRate == 60 {
+        // WRAITH: 60 fps round videos (one camera only)
+        if self.isRoundVideo && self.exclusive && self.wgRecording.frameRate == 60 {
             return 60.0
         }
         if !self.exclusive || self.isRoundVideo || useLower {
@@ -349,10 +349,10 @@ private final class CameraContext {
         if enabled {
             self.configure {
                 self.mainDeviceContext?.invalidate()
-                self.mainDeviceContext = CameraDeviceContext(session: self.session, exclusive: false, additional: false, ciContext: self.ciContext, colorSpace: self.colorSpace, isRoundVideo: self.initialConfiguration.isRoundVideo, frameProcessor: self.initialConfiguration.frameProcessor /* GHOST: masks */)
+                self.mainDeviceContext = CameraDeviceContext(session: self.session, exclusive: false, additional: false, ciContext: self.ciContext, colorSpace: self.colorSpace, isRoundVideo: self.initialConfiguration.isRoundVideo, frameProcessor: self.initialConfiguration.frameProcessor /* WRAITH: masks */)
                 self.mainDeviceContext?.configure(position: .back, previewView: self.simplePreviewView, audio: self.initialConfiguration.audio, photo: self.initialConfiguration.photo, metadata: self.initialConfiguration.metadata)
             
-                self.additionalDeviceContext = CameraDeviceContext(session: self.session, exclusive: false, additional: true, ciContext: self.ciContext, colorSpace: self.colorSpace, isRoundVideo: self.initialConfiguration.isRoundVideo, frameProcessor: self.initialConfiguration.frameProcessor /* GHOST: masks */)
+                self.additionalDeviceContext = CameraDeviceContext(session: self.session, exclusive: false, additional: true, ciContext: self.ciContext, colorSpace: self.colorSpace, isRoundVideo: self.initialConfiguration.isRoundVideo, frameProcessor: self.initialConfiguration.frameProcessor /* WRAITH: masks */)
                 self.additionalDeviceContext?.configure(position: .front, previewView: self.secondaryPreviewView, audio: false, photo: true, metadata: false)
             }
             self.mainDeviceContext?.output.processSampleBuffer = { [weak self] sampleBuffer, pixelBuffer, connection in
@@ -400,7 +400,7 @@ private final class CameraContext {
                 let preferWide = self.initialConfiguration.preferWide || self.initialConfiguration.isRoundVideo
                 let preferLowerFramerate = self.initialConfiguration.preferLowerFramerate || self.initialConfiguration.isRoundVideo
                 
-                self.mainDeviceContext = CameraDeviceContext(session: self.session, exclusive: true, additional: false, ciContext: self.ciContext, colorSpace: self.colorSpace, isRoundVideo: self.initialConfiguration.isRoundVideo, frameProcessor: self.initialConfiguration.frameProcessor /* GHOST: masks */)
+                self.mainDeviceContext = CameraDeviceContext(session: self.session, exclusive: true, additional: false, ciContext: self.ciContext, colorSpace: self.colorSpace, isRoundVideo: self.initialConfiguration.isRoundVideo, frameProcessor: self.initialConfiguration.frameProcessor /* WRAITH: masks */)
                 self.mainDeviceContext?.configure(position: self.positionValue, previewView: self.simplePreviewView, audio: self.initialConfiguration.audio, photo: self.initialConfiguration.photo, metadata: self.initialConfiguration.metadata, preferWide: preferWide, preferLowerFramerate: preferLowerFramerate)
             }
             self.mainDeviceContext?.output.processSampleBuffer = { [weak self] sampleBuffer, pixelBuffer, connection in

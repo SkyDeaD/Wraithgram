@@ -536,8 +536,8 @@ public extension Message {
     }
     
     func isCopyProtected() -> Bool {
-        // GHOST: features may lift copy protection (GGRestrictionHooks.copyProtection)
-        if let value = ggCopyProtectionOverride(.message(self)) { return value }
+        // WRAITH: features may lift copy protection (WGRestrictionHooks.copyProtection)
+        if let value = wgCopyProtectionOverride(.message(self)) { return value }
         if self.flags.contains(.CopyProtected) {
             return true
         } else if let group = self.peers[self.id.peerId] as? TelegramGroup, group.flags.contains(.copyProtectionEnabled) {

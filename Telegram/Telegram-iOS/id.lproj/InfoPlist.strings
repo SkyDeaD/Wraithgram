@@ -1,9 +1,9 @@
 /* Localized versions of Info.plist keys */
 
-"NSContactsUsageDescription" = "Telegram akan terus mengunggah kontak Anda ke penyimpanan awan yang dienkripsi penuh, sehingga Anda dapat terhubung dengan teman Anda di semua perangkat Anda."; /* GHOST: Telegram's cloud, the name stays */
-"NSLocationWhenInUseUsageDescription" = "Ketika Anda mengirim lokasi untuk teman, Ghostgram membutuhkan akses untuk berbagi peta."; /* GHOST: app name */
-"NSLocationAlwaysAndWhenInUseUsageDescription" = "Jika Anda memilih untuk membagikan Live Location dengan teman dalam obrolan, Ghostgram memerlukan akses latar belakang ke lokasi Anda agar lokasi tetap diperbarui selama lokasi langsung dibagikan."; /* GHOST: app name */
-"NSLocationAlwaysUsageDescription" = "Jika Anda ingin berbagi Live Location dengan teman dalam chat, Ghostgram perlu akses latar belakang ke lokasi Anda agar lokasi tetap diperbarui selama lokasi langsung dibagikan. Hal yang sama perlu dilakukan untuk berbagi lokasi dari Apple Watch."; /* GHOST: app name */
+"NSContactsUsageDescription" = "Telegram akan terus mengunggah kontak Anda ke penyimpanan awan yang dienkripsi penuh, sehingga Anda dapat terhubung dengan teman Anda di semua perangkat Anda."; /* WRAITH: Telegram's cloud, the name stays */
+"NSLocationWhenInUseUsageDescription" = "Ketika Anda mengirim lokasi untuk teman, Wraithgram membutuhkan akses untuk berbagi peta."; /* WRAITH: app name */
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Jika Anda memilih untuk membagikan Live Location dengan teman dalam obrolan, Wraithgram memerlukan akses latar belakang ke lokasi Anda agar lokasi tetap diperbarui selama lokasi langsung dibagikan."; /* WRAITH: app name */
+"NSLocationAlwaysUsageDescription" = "Jika Anda ingin berbagi Live Location dengan teman dalam chat, Wraithgram perlu akses latar belakang ke lokasi Anda agar lokasi tetap diperbarui selama lokasi langsung dibagikan. Hal yang sama perlu dilakukan untuk berbagi lokasi dari Apple Watch."; /* WRAITH: app name */
 "NSCameraUsageDescription" = "Kami membutuhkan hal ini agar Anda dapat mengambil dan membagikan foto dan video.";
 "NSPhotoLibraryUsageDescription" = "Kami membutuhkan hal ini agar Anda dapat berbagi foto dan video dari galeri foto Anda.";
 "NSPhotoLibraryAddUsageDescription" = "Kami membutuhkan hal ini agar Anda dapat menyimpan foto dan video ke galeri foto.";

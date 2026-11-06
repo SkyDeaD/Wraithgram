@@ -78,7 +78,7 @@ import PremiumUI
 import ImageTransparency
 import StickerPackPreviewUI
 import TextNodeWithEntities
-import GGHooks // GHOST: chat screen points
+import WGHooks // WRAITH: chat screen points
 import EntityKeyboard
 import ChatTitleView
 import EmojiStatusComponent
@@ -1594,8 +1594,8 @@ extension ChatControllerImpl {
                 completion(.immediate, {})
                 return
             }
-            // GHOST: features may adjust the reply, e.g. quote the text (GGChatScreenHooks.replySubject)
-            let innerSubject = GGChatScreenHooks.transformReply(innerSubject, messageId: messageId, context: strongSelf.context, chatLocation: strongSelf.chatLocation)
+            // WRAITH: features may adjust the reply, e.g. quote the text (WGChatScreenHooks.replySubject)
+            let innerSubject = WGChatScreenHooks.transformReply(innerSubject, messageId: messageId, context: strongSelf.context, chatLocation: strongSelf.chatLocation)
             
             if let messageId = messageId {
                 let intrinsicCanSendMessagesHere = canSendMessagesToChat(strongSelf.presentationInterfaceState)
@@ -1613,7 +1613,7 @@ extension ChatControllerImpl {
                             strongSelf.updateChatPresentationInterfaceState(animated: true, interactive: true, { $0.updatedInterfaceState({
                                 $0.withUpdatedReplyMessageSubject(ChatInterfaceState.ReplyMessageSubject(
                                     messageId: message.id,
-                                    quote: GGChatScreenHooks.defaultReplyQuote(message, messageId: message.id, context: strongSelf.context, chatLocation: strongSelf.chatLocation), // GHOST: features may start the reply with a quote (GGChatScreenHooks.replyQuote)
+                                    quote: WGChatScreenHooks.defaultReplyQuote(message, messageId: message.id, context: strongSelf.context, chatLocation: strongSelf.chatLocation), // WRAITH: features may start the reply with a quote (WGChatScreenHooks.replyQuote)
                                     innerSubject: innerSubject
                                 ))
                             }).updatedReplyMessage(message).updatedSearch(nil).updatedShowCommands(false) }, completion: { t in
@@ -1637,7 +1637,7 @@ extension ChatControllerImpl {
                 } else {
                     let replySubject = ChatInterfaceState.ReplyMessageSubject(
                         messageId: messageId,
-                        quote: GGChatScreenHooks.defaultReplyQuote(strongSelf.chatDisplayNode.historyNode.messageInCurrentHistoryView(messageId)?._asMessage(), messageId: messageId, context: strongSelf.context, chatLocation: strongSelf.chatLocation), // GHOST: see GGChatScreenHooks.replyQuote
+                        quote: WGChatScreenHooks.defaultReplyQuote(strongSelf.chatDisplayNode.historyNode.messageInCurrentHistoryView(messageId)?._asMessage(), messageId: messageId, context: strongSelf.context, chatLocation: strongSelf.chatLocation), // WRAITH: see WGChatScreenHooks.replyQuote
                         innerSubject: innerSubject
                     )
                     

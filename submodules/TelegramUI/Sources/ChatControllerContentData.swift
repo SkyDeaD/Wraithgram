@@ -15,7 +15,7 @@ import EmojiStatusComponent
 import TelegramUIPreferences
 import TranslateUI
 import TelegramNotices
-import GGFeaturesShared // GHOST: Ghostgram message settings (W2-3)
+import WGFeaturesShared // WRAITH: Wraithgram message settings (W2-3)
 
 extension ChatControllerImpl {
     final class ContentData {
@@ -969,7 +969,7 @@ extension ChatControllerImpl {
                             }
                         }
                         if let cachedUserData = peerView.cachedData as? CachedUserData {
-                            copyProtectionEnabled = GGRestrictionHooks.peerCopyProtectionApplies(cachedUserData.flags.contains(.copyProtectionEnabled) || cachedUserData.flags.contains(.myCopyProtectionEnabled), peerId: peer.id) // GHOST: features may lift a private chat's protection, as for groups (GGRestrictionHooks.copyProtection)
+                            copyProtectionEnabled = WGRestrictionHooks.peerCopyProtectionApplies(cachedUserData.flags.contains(.copyProtectionEnabled) || cachedUserData.flags.contains(.myCopyProtectionEnabled), peerId: peer.id) // WRAITH: features may lift a private chat's protection, as for groups (WGRestrictionHooks.copyProtection)
                             myCopyProtectionEnabled = cachedUserData.flags.contains(.myCopyProtectionEnabled)
                         } else {
                             copyProtectionEnabled = peer.isCopyProtectionEnabled
@@ -1118,8 +1118,8 @@ extension ChatControllerImpl {
                         } else {
                             isRegularChat = true
                         }
-                        // GHOST: «Без перехода к следующему каналу» (GGMessagesPolicy.allowsScrollToNextChannel)
-                        if GGMessagesPolicy.allowsScrollToNextChannel, strongSelf.nextChannelToReadDisposable == nil, let peerId = chatLocation.peerId, let customChatNavigationStack {
+                        // WRAITH: «Без перехода к следующему каналу» (WGMessagesPolicy.allowsScrollToNextChannel)
+                        if WGMessagesPolicy.allowsScrollToNextChannel, strongSelf.nextChannelToReadDisposable == nil, let peerId = chatLocation.peerId, let customChatNavigationStack {
                             if let index = customChatNavigationStack.firstIndex(of: peerId), index != customChatNavigationStack.count - 1 {
                                 let nextPeerId = customChatNavigationStack[index + 1]
                                 strongSelf.nextChannelToReadDisposable = (combineLatest(queue: .mainQueue(),
@@ -1163,7 +1163,7 @@ extension ChatControllerImpl {
                                     }
                                 })
                             }
-                        } else if isRegularChat, GGMessagesPolicy.allowsScrollToNextChannel, strongSelf.nextChannelToReadDisposable == nil { // GHOST: see above
+                        } else if isRegularChat, WGMessagesPolicy.allowsScrollToNextChannel, strongSelf.nextChannelToReadDisposable == nil { // WRAITH: see above
                             //TODO:loc optimize
                             let accountPeerId = context.account.peerId
                             strongSelf.nextChannelToReadDisposable = (combineLatest(queue: .mainQueue(),
@@ -1817,8 +1817,8 @@ extension ChatControllerImpl {
                         strongSelf.state.alwaysShowGiftButton = alwaysShowGiftButton
                         strongSelf.state.disallowedGifts = disallowedGifts
                         
-                        // GHOST: «Без перехода к следующей теме» (GGMessagesPolicy.allowsScrollToNextTopic)
-                        if let replyThreadId, let channel = renderedPeer?.peer as? TelegramChannel, channel.isForumOrMonoForum, GGMessagesPolicy.allowsScrollToNextTopic, strongSelf.nextChannelToReadDisposable == nil {
+                        // WRAITH: «Без перехода к следующей теме» (WGMessagesPolicy.allowsScrollToNextTopic)
+                        if let replyThreadId, let channel = renderedPeer?.peer as? TelegramChannel, channel.isForumOrMonoForum, WGMessagesPolicy.allowsScrollToNextTopic, strongSelf.nextChannelToReadDisposable == nil {
                             strongSelf.nextChannelToReadDisposable = (combineLatest(queue: .mainQueue(),
                             context.engine.peers.getNextUnreadForumTopic(peerId: channel.id, topicId: Int32(clamping: replyThreadId)),
                                 ApplicationSpecificNotice.getNextChatSuggestionTip(accountManager: context.sharedContext.accountManager)
@@ -2237,7 +2237,7 @@ extension ChatControllerImpl {
                         if counterAndTimestamp.0 >= 3 {
                             maybeSuggestPremium = true
                         }
-                        if (isPremium || maybeSuggestPremium || hasAutoTranslate || GGMessagesPolicy.translatesChatsWithoutPremium) && !isHidden { // GHOST: the translation bar without Premium (GGMessagesPolicy)
+                        if (isPremium || maybeSuggestPremium || hasAutoTranslate || WGMessagesPolicy.translatesChatsWithoutPremium) && !isHidden { // WRAITH: the translation bar without Premium (WGMessagesPolicy)
                             return chatTranslationState(context: context, peerId: peerId, threadId: chatLocation.threadId)
                             |> map { translationState -> ChatPresentationTranslationState? in
                                 if let translationState, !translationState.fromLang.isEmpty && (translationState.fromLang != baseLanguageCode || translationState.isEnabled) {

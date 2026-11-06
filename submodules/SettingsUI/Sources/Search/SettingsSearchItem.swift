@@ -15,8 +15,8 @@ import ChatListSearchItemHeader
 import EdgeEffect
 import ComponentFlow
 import ComponentDisplayAdapters
-// GHOST: Ghostgram tile for Ghostgram search results
-import GGSettingsUI
+// WRAITH: Wraithgram tile for Wraithgram search results
+import WGSettingsUI
 
 extension SettingsSearchableItemIcon {
     func image() -> UIImage? {
@@ -73,9 +73,9 @@ extension SettingsSearchableItemIcon {
                 return PresentationResourcesSettings.premiumGift
             case .powerSaving:
                 return PresentationResourcesSettings.powerSaving
-            case .ghostgram:
-                // GHOST: the «Ghostgram» tile from GGSettingsUI
-                return ggSettingsTileIcon()
+            case .wraithgram:
+                // WRAITH: the «Wraithgram» tile from WGSettingsUI
+                return wgSettingsTileIcon()
         }
     }
 }

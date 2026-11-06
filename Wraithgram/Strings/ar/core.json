@@ -1,0 +1,8 @@
+{
+  "core.import.invalidFormat": "هذا ليس ملف إعدادات Wraithgram، أو أن الملف تالف.",
+  "core.import.unsupportedVersion": "أُنشئ هذا الملف بإصدار أحدث من Wraithgram (التنسيق {version}). حدِّث التطبيق لاستيراده.",
+  "core.language.followTelegram": "كما في Telegram",
+  "core.languageNativeName": "العربية",
+  "core.requiresRestart": "يلزم إعادة التشغيل",
+  "core.requiresRestartFooter": "سيُطبَّق التغيير بعد إعادة تشغيل Wraithgram."
+}

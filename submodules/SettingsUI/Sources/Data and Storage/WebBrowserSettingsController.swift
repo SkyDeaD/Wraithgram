@@ -13,8 +13,8 @@ import ItemListPeerActionItem
 import UndoUI
 import WebKit
 import PersistentStringHash
-import GGCore // GHOST: Ghostgram strings (W5-SG)
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGCore // WRAITH: Wraithgram strings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 private final class WebBrowserSettingsControllerArguments {
     let context: AccountContext
@@ -338,10 +338,10 @@ private func webBrowserSettingsControllerEntries(context: AccountContext, presen
         entries.append(.browser(presentationData.theme, option.title, option.application, option.identifier, accountSettings.openExternalBrowser && option.identifier == defaultExternalBrowser, index))
         index += 1
     }
-    // GHOST: «Больше браузеров» — Safari inside the app and the system's default browser (GGExtrasPolicy.allowsMoreBrowsers)
-    if GGExtrasPolicy.allowsMoreBrowsers {
-        entries.append(.browser(presentationData.theme, GGStrings.Extras.Browser.inAppSafari, .safari, GGExtrasPolicy.inAppSafariBrowserIdentifier, accountSettings.openExternalBrowser && localSettings.defaultWebBrowser == GGExtrasPolicy.inAppSafariBrowserIdentifier, 90))
-        entries.append(.browser(presentationData.theme, GGStrings.Extras.Browser.system, nil, GGExtrasPolicy.systemBrowserIdentifier, accountSettings.openExternalBrowser && localSettings.defaultWebBrowser == GGExtrasPolicy.systemBrowserIdentifier, 91))
+    // WRAITH: «Больше браузеров» — Safari inside the app and the system's default browser (WGExtrasPolicy.allowsMoreBrowsers)
+    if WGExtrasPolicy.allowsMoreBrowsers {
+        entries.append(.browser(presentationData.theme, WGStrings.Extras.Browser.inAppSafari, .safari, WGExtrasPolicy.inAppSafariBrowserIdentifier, accountSettings.openExternalBrowser && localSettings.defaultWebBrowser == WGExtrasPolicy.inAppSafariBrowserIdentifier, 90))
+        entries.append(.browser(presentationData.theme, WGStrings.Extras.Browser.system, nil, WGExtrasPolicy.systemBrowserIdentifier, accountSettings.openExternalBrowser && localSettings.defaultWebBrowser == WGExtrasPolicy.systemBrowserIdentifier, 91))
     }
     
     entries.append(.browserInfo(presentationData.theme, presentationData.strings.WebBrowser_OpenLinksInfo))

@@ -287,7 +287,7 @@ func _internal_renderStorageUsageStatsMessages(account: Account, stats: StorageU
                     }
                     
                     if let message = existingMessages[id] {
-                        if message.ggRawMinAutoremoveOrClearTimeout != nil { // GHOST: raw `isSelfExpiring`, see GGRestrictionHooks.secretMediaDisplay
+                        if message.wgRawMinAutoremoveOrClearTimeout != nil { // WRAITH: raw `isSelfExpiring`, see WGRestrictionHooks.secretMediaDisplay
                             messageIsHidden[id] = true
                         } else {
                             messageIsHidden[id] = false
@@ -308,7 +308,7 @@ func _internal_renderStorageUsageStatsMessages(account: Account, stats: StorageU
                         }
                         
                         if matches, let message = transaction.getMessage(id) {
-                            if message.ggRawMinAutoremoveOrClearTimeout != nil { // GHOST: raw `isSelfExpiring`, see GGRestrictionHooks.secretMediaDisplay
+                            if message.wgRawMinAutoremoveOrClearTimeout != nil { // WRAITH: raw `isSelfExpiring`, see WGRestrictionHooks.secretMediaDisplay
                                 messageIsHidden[id] = true
                             } else {
                                 messageIsHidden[id] = false

@@ -7,7 +7,7 @@ import SwiftSignalKit
 import TelegramCore
 import AppBundle
 import TextFieldComponent
-import ChatTextInputActionButtonsNode // GHOST: formatting toolbar point
+import ChatTextInputActionButtonsNode // WRAITH: formatting toolbar point
 import BundleIconComponent
 import AccountContext
 import TelegramPresentationData
@@ -916,7 +916,7 @@ public final class MessageInputPanelComponent: Component {
         }
         
         override public func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-            if let result = ggFormattingToolbarHitTest(self, point: point, event: event) { // GHOST: the formatting toolbar over the top edge (GGInputBarHooks.toolbarHitTest)
+            if let result = wgFormattingToolbarHitTest(self, point: point, event: event) { // WRAITH: the formatting toolbar over the top edge (WGInputBarHooks.toolbarHitTest)
                 return result
             }
             let result = super.hitTest(point, with: event)
@@ -3127,8 +3127,8 @@ public final class MessageInputPanelComponent: Component {
                 }
             }
             
-            // GHOST: the formatting toolbar above the composer, its subview over the top edge (GGInputBarHooks.formattingToolbar, SG-F11)
-            ggUpdateFormattingToolbar(GGFormattingToolbarRequest(hostView: self, panelFrame: CGRect(origin: CGPoint(), size: size), isFocused: (self.textField.view as? TextFieldComponent.View)?.hasFirstResponder() ?? false, theme: component.theme, transition: .immediate))
+            // WRAITH: the formatting toolbar above the composer, its subview over the top edge (WGInputBarHooks.formattingToolbar, SG-F11)
+            wgUpdateFormattingToolbar(WGFormattingToolbarRequest(hostView: self, panelFrame: CGRect(origin: CGPoint(), size: size), isFocused: (self.textField.view as? TextFieldComponent.View)?.hasFirstResponder() ?? false, theme: component.theme, transition: .immediate))
             
             return size
         }

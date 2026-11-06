@@ -25,7 +25,7 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
             
             let languagesCategory = "ios"
             
-            let appGroupName = BuildConfig.appGroupName(baseAppBundleId: baseAppBundleId) // GHOST: app group of a re-signed app (BuildConfig.h)
+            let appGroupName = BuildConfig.appGroupName(baseAppBundleId: baseAppBundleId) // WRAITH: app group of a re-signed app (BuildConfig.h)
             try! PasscodeEnvironment.shared.configure(PasscodeConfiguration(appGroupIdentifier: appGroupName, processRole: .appExtension))
             let maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
             

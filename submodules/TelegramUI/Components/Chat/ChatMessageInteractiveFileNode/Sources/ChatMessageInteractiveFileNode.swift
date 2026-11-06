@@ -2056,14 +2056,14 @@ public final class ChatMessageInteractiveFileNode: ASDisplayNode {
                     guard let strongSelf = self, let item = strongSelf.arguments else {
                         return
                     }
-                    // GHOST: «Цитировать» puts the selected words of the transcription into the input as a block quote
+                    // WRAITH: «Цитировать» puts the selected words of the transcription into the input as a block quote
                     if case .quote = action {
-                        ggInsertTranscriptionQuote(controllerInteraction: item.controllerInteraction, message: item.message, text: text.string)
+                        wgInsertTranscriptionQuote(controllerInteraction: item.controllerInteraction, message: item.message, text: text.string)
                         return
                     }
                     item.controllerInteraction.performTextSelectionAction(item.message, true, text, nil, action)
                 })
-                textSelectionNode.enableQuote = true // GHOST: quote the transcription (upstream: false)
+                textSelectionNode.enableQuote = true // WRAITH: quote the transcription (upstream: false)
                 self.textSelectionNode = textSelectionNode
                 self.textClippingNode.addSubnode(textSelectionNode)
                 self.textClippingNode.insertSubnode(textSelectionNode.highlightAreaNode, belowSubnode: self.textNode)

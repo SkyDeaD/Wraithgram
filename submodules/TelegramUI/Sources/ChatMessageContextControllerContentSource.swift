@@ -12,7 +12,7 @@ import TelegramPresentationData
 import DustEffect
 import TooltipUI
 import TelegramNotices
-import GGAppearanceSettings // GHOST: no background blur under the message menu
+import WGAppearanceSettings // WRAITH: no background blur under the message menu
  
 final class ChatMessageContextLocationContentSource: ContextLocationContentSource {
     private let controller: ViewController
@@ -31,9 +31,9 @@ final class ChatMessageContextLocationContentSource: ContextLocationContentSourc
 final class ChatMessageContextExtractedContentSource: ContextExtractedContentSource {
     let keepInPlace: Bool = false
     let ignoreContentTouches: Bool = false
-    // GHOST: no background blur under the message menu (appearance.messages.noSelectionBlur)
+    // WRAITH: no background blur under the message menu (appearance.messages.noSelectionBlur)
     var blurBackground: Bool {
-        return !GGAppearanceSnapshot.current.noSelectionBlur
+        return !WGAppearanceSnapshot.current.noSelectionBlur
     }
     let centerVertically: Bool
     let keepDefaultContentTouches: Bool
@@ -436,9 +436,9 @@ final class ChatViewOnceMessageContextExtractedContentSource: ContextExtractedCo
 final class ChatMessageReactionContextExtractedContentSource: ContextExtractedContentSource {
     let keepInPlace: Bool = false
     let ignoreContentTouches: Bool = true
-    // GHOST: no background blur under the message menu (appearance.messages.noSelectionBlur)
+    // WRAITH: no background blur under the message menu (appearance.messages.noSelectionBlur)
     var blurBackground: Bool {
-        return !GGAppearanceSnapshot.current.noSelectionBlur
+        return !WGAppearanceSnapshot.current.noSelectionBlur
     }
     let actionsHorizontalAlignment: ContextActionsHorizontalAlignment = .center
     

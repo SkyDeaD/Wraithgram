@@ -25,7 +25,7 @@ import ChatControllerInteraction
 import LegacyChatHeaderPanelComponent
 import UIKitRuntimeUtils
 import ShimmerEffect
-import GGHooks // GHOST: message decorations
+import WGHooks // WRAITH: message decorations
 
 private enum PinnedMessageAnimation {
     case slideToTop
@@ -864,10 +864,10 @@ final class ChatPinnedMessageTitlePanelNode: ChatTitleAccessoryPanelNode {
                     }
                 }
             }
-            // GHOST: local text and revealed spoilers in the pinned bar too (GGMessageDecorationHooks)
-            var ggEntities: [MessageTextEntity]? = messageEntities
-            GGMessageDecorationHooks.applyText(&text, entities: &ggEntities, message: message, context: context)
-            messageEntities = ggEntities ?? []
+            // WRAITH: local text and revealed spoilers in the pinned bar too (WGMessageDecorationHooks)
+            var wgEntities: [MessageTextEntity]? = messageEntities
+            WGMessageDecorationHooks.applyText(&text, entities: &wgEntities, message: message, context: context)
+            messageEntities = wgEntities ?? []
             
             let entities = messageEntities.filter { entity in
                 switch entity.type {

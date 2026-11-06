@@ -144,13 +144,13 @@ public func messageBubbleArguments(maxCornerRadius: CGFloat, minCornerRadius: CG
 }
 
 public func messageBubbleImage(maxCornerRadius: CGFloat, minCornerRadius: CGFloat, incoming: Bool, fillColor: UIColor, strokeColor: UIColor, neighbors: MessageBubbleImageNeighbors, shadow: PresentationThemeBubbleShadow?, wallpaper: TelegramWallpaper, knockout knockoutValue: Bool, mask: Bool = false, extendedEdges: Bool = false, onlyOutline: Bool = false, onlyShadow: Bool = false, alwaysFillColor: Bool = false) -> UIImage {
-    // GHOST: features may change the bubble shape — radii, tails (GGThemeHooks.bubbleShape)
-    let (maxCornerRadius, minCornerRadius, neighbors, ggDrawsTail) = ggBubbleShape(maxCornerRadius: maxCornerRadius, minCornerRadius: minCornerRadius, incoming: incoming, neighbors: neighbors)
+    // WRAITH: features may change the bubble shape — radii, tails (WGThemeHooks.bubbleShape)
+    let (maxCornerRadius, minCornerRadius, neighbors, wgDrawsTail) = wgBubbleShape(maxCornerRadius: maxCornerRadius, minCornerRadius: minCornerRadius, incoming: incoming, neighbors: neighbors)
     let topLeftRadius: CGFloat
     let topRightRadius: CGFloat
     let bottomLeftRadius: CGFloat
     let bottomRightRadius: CGFloat
-    var drawTail: Bool // GHOST: a feature may turn the tail off below (GGBubbleShape.drawsTail)
+    var drawTail: Bool // WRAITH: a feature may turn the tail off below (WGBubbleShape.drawsTail)
     
     switch neighbors {
     case .none:
@@ -190,7 +190,7 @@ public func messageBubbleImage(maxCornerRadius: CGFloat, minCornerRadius: CGFloa
         bottomRightRadius = maxCornerRadius
         drawTail = false
     }
-    if let ggDrawsTail { drawTail = ggDrawsTail } // GHOST: see GGBubbleShape.drawsTail
+    if let wgDrawsTail { drawTail = wgDrawsTail } // WRAITH: see WGBubbleShape.drawsTail
     
     let fixedMainDiameter: CGFloat = 33.0
     let innerSize = CGSize(width: fixedMainDiameter + 6.0, height: fixedMainDiameter)

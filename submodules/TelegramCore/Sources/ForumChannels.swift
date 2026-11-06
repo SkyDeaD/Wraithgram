@@ -492,8 +492,8 @@ func _internal_setForumChannelPinnedTopics(account: Account, id: EnginePeer.Id, 
         return account.postbox.transaction { transaction -> [Api.InputDialogPeer] in
             transaction.setPeerPinnedThreads(peerId: id, threadIds: threadIds)
             
-            // GHOST: only the server's part of the Saved Messages pins goes to the server (GGPinnedChatsHooks.listToServer)
-            return ggPinnedSavedThreadIdsToServer(threadIds, accountPeerId: id, transaction: transaction).compactMap { transaction.getPeer(PeerId($0)).flatMap(apiInputPeer).flatMap({ .inputDialogPeer(.init(peer: $0)) }) }
+            // WRAITH: only the server's part of the Saved Messages pins goes to the server (WGPinnedChatsHooks.listToServer)
+            return wgPinnedSavedThreadIdsToServer(threadIds, accountPeerId: id, transaction: transaction).compactMap { transaction.getPeer(PeerId($0)).flatMap(apiInputPeer).flatMap({ .inputDialogPeer(.init(peer: $0)) }) }
         }
         |> castError(SetForumChannelTopicPinnedError.self)
         |> mapToSignal { inputPeers -> Signal<Never, SetForumChannelTopicPinnedError> in
@@ -1307,8 +1307,8 @@ func applyLoadMessageHistoryThreadsResults(accountPeerId: PeerId, transaction: T
         }
         
         if let pinnedThreadIds = result.pinnedThreadIds {
-            // GHOST: features keep a local tail of Saved Messages pins (GGPinnedChatsHooks.listFromServer)
-            transaction.setPeerPinnedThreads(peerId: result.peerId, threadIds: ggPinnedSavedThreadIdsFromServer(pinnedThreadIds, peerId: result.peerId, accountPeerId: accountPeerId, transaction: transaction))
+            // WRAITH: features keep a local tail of Saved Messages pins (WGPinnedChatsHooks.listFromServer)
+            transaction.setPeerPinnedThreads(peerId: result.peerId, threadIds: wgPinnedSavedThreadIdsFromServer(pinnedThreadIds, peerId: result.peerId, accountPeerId: accountPeerId, transaction: transaction))
         }
         
         if let entry = StoredPeerThreadCombinedState(result.combinedState) {

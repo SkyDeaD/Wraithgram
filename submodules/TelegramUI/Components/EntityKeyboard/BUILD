@@ -6,15 +6,15 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: emoji keyboard point of W2-5 (SG-G9)
-        "//Ghostgram/Features/Interface:EntityKeyboardPointSources",
+        # WRAITH: emoji keyboard point of W2-5 (SG-G9)
+        "//Wraithgram/Features/Interface:EntityKeyboardPointSources",
     ],
     copts = [
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: hook points
-        "//Ghostgram/GGCore:GGCore",
+        # WRAITH: hook points
+        "//Wraithgram/WGCore:WGCore",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/Display:Display",
         "//submodules/ComponentFlow:ComponentFlow",

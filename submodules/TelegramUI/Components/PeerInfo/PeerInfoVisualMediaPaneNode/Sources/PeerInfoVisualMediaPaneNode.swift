@@ -29,7 +29,7 @@ import MediaPickerUI
 import ChatControllerInteraction
 import UIKitRuntimeUtils
 import PeerInfoPaneNode
-import GGFeaturesShared // GHOST: Ghostgram message settings (W2-3)
+import WGFeaturesShared // WRAITH: Wraithgram message settings (W2-3)
 
 private final class FrameSequenceThumbnailNode: ASDisplayNode {
     private let context: AccountContext
@@ -892,7 +892,7 @@ private final class SparseItemGridBindingImpl: SparseItemGridBinding, ListShimme
                 }
 
                 let message = item.message._asMessage()
-                var hasSpoiler = message.attributes.contains(where: { $0 is MediaSpoilerMessageAttribute }) && !self.revealedSpoilerMessageIds.contains(message.id) && !GGMessagesPolicy.revealsSpoilers // GHOST: anti-spoiler
+                var hasSpoiler = message.attributes.contains(where: { $0 is MediaSpoilerMessageAttribute }) && !self.revealedSpoilerMessageIds.contains(message.id) && !WGMessagesPolicy.revealsSpoilers // WRAITH: anti-spoiler
                 if message.isSensitiveContent(platform: "ios") {
                     hasSpoiler = true
                 }

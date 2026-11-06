@@ -1,0 +1,23 @@
+{
+  "fill" : "system-light",
+  "groups" : [
+    {
+      "layers" : [
+        { "name" : "Eyes", "image-name" : "Eyes.svg", "glass" : false },
+        { "name" : "Opening", "image-name" : "Opening.svg", "glass" : false,
+          "fill-specializations" : [ { "appearance" : "dark", "value" : { "solid" : "srgb:0.04314,0.04314,0.05098,1.00000" } } ] },
+        { "name" : "Rim", "image-name" : "Rim.svg", "glass" : false,
+          "fill-specializations" : [ { "appearance" : "dark", "value" : { "solid" : "srgb:0.55000,0.55000,0.58000,1.00000" } } ] },
+        { "name" : "Cloak", "image-name" : "Cloak.svg", "glass" : true,
+          "fill-specializations" : [ { "appearance" : "dark", "value" : { "solid" : "srgb:0.84000,0.84000,0.86000,1.00000" } } ] }
+      ],
+      "lighting" : "individual",
+      "shadow" : { "kind" : "neutral", "opacity" : 0.5 },
+      "specular" : true,
+      "translucency" : { "enabled" : false, "value" : 0.5 }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : "shared"
+  }
+}

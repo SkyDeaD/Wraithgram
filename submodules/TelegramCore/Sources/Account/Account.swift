@@ -233,8 +233,8 @@ public class UnauthorizedAccount {
         
         self.stateManager.reset()
 
-        // GHOST: re-read the proxy when its policy changes (GGNetworkHooks.proxyPolicyDidChange)
-        self.proxySettingsDisposable.set((ggWithProxyPolicyUpdates(accountManager.sharedData(keys: [SharedDataKeys.proxySettings]))
+        // WRAITH: re-read the proxy when its policy changes (WGNetworkHooks.proxyPolicyDidChange)
+        self.proxySettingsDisposable.set((wgWithProxyPolicyUpdates(accountManager.sharedData(keys: [SharedDataKeys.proxySettings]))
         |> map { sharedData -> ProxyServerSettings? in
             return sharedData.entries[SharedDataKeys.proxySettings]?.get(ProxySettings.self)?.effectiveActiveServer
         }
@@ -1321,8 +1321,8 @@ public class Account {
     public let hiddenStorySubscriptionsContext: StorySubscriptionsContext?
     
     public init(accountManager: AccountManager<TelegramAccountManagerTypes>, id: AccountRecordId, basePath: String, testingEnvironment: Bool, postbox: Postbox, network: Network, networkArguments: NetworkInitializationArguments, peerId: PeerId, auxiliaryMethods: AccountAuxiliaryMethods, supplementary: Bool, isSupportUser: Bool) {
-        // GHOST: load the account's Ghostgram settings before its managers start (GGAccountHooks.accountWillStart)
-        ggAccountWillStart(id: id, basePath: basePath, peerId: peerId, supplementary: supplementary, postbox: postbox, network: network)
+        // WRAITH: load the account's Wraithgram settings before its managers start (WGAccountHooks.accountWillStart)
+        wgAccountWillStart(id: id, basePath: basePath, peerId: peerId, supplementary: supplementary, postbox: postbox, network: network)
         self.accountManager = accountManager
         self.id = id
         self.basePath = basePath
@@ -1376,8 +1376,8 @@ public class Account {
         
         self.contactSyncManager = ContactSyncManager(postbox: postbox, network: network, accountPeerId: peerId, stateManager: self.stateManager)
         self.localInputActivityManager = PeerInputActivityManager()
-        // GHOST: features may override the online status (GGPresenceHooks.onlinePresence)
-        self.accountPresenceManager = AccountPresenceManager(shouldKeepOnlinePresence: ggOnlinePresenceSignal(self.shouldKeepOnlinePresence.get(), accountId: id, accountPeerId: peerId), network: network)
+        // WRAITH: features may override the online status (WGPresenceHooks.onlinePresence)
+        self.accountPresenceManager = AccountPresenceManager(shouldKeepOnlinePresence: wgOnlinePresenceSignal(self.shouldKeepOnlinePresence.get(), accountId: id, accountPeerId: peerId), network: network)
         #if os(iOS)
         // iOS only for now: the Rust engine is the macOS default, and its online keepalive cadence
         // (pings every 1-2 s while the account is in front) has not been measured there.
@@ -1583,8 +1583,8 @@ public class Account {
                 strongSelf._importantTasksRunning.set(value)
             }
         }))
-        // GHOST: re-read the proxy when its policy changes (GGNetworkHooks.proxyPolicyDidChange)
-        self.managedOperationsDisposable.add((ggWithProxyPolicyUpdates(accountManager.sharedData(keys: [SharedDataKeys.proxySettings]))
+        // WRAITH: re-read the proxy when its policy changes (WGNetworkHooks.proxyPolicyDidChange)
+        self.managedOperationsDisposable.add((wgWithProxyPolicyUpdates(accountManager.sharedData(keys: [SharedDataKeys.proxySettings]))
         |> map { sharedData -> ProxyServerSettings? in
             if let settings = sharedData.entries[SharedDataKeys.proxySettings]?.get(ProxySettings.self) {
                 return settings.effectiveActiveServer
@@ -1866,8 +1866,8 @@ public func standaloneStateManager(
                             return .single(nil)
                         case let authorizedState as AuthorizedAccountState:
                             Logger.shared.log("StandaloneStateManager", "state is valid")
-                            // GHOST: load the account's Ghostgram settings in the extension, before its network starts (GGAccountHooks)
-                            ggStandaloneAccountWillStart(id: id, basePath: path, peerId: authorizedState.peerId)
+                            // WRAITH: load the account's Wraithgram settings in the extension, before its network starts (WGAccountHooks)
+                            wgStandaloneAccountWillStart(id: id, basePath: path, peerId: authorizedState.peerId)
                             
                             return postbox.transaction { transaction -> String? in
                                 return (transaction.getPeer(authorizedState.peerId) as? TelegramUser)?.phone

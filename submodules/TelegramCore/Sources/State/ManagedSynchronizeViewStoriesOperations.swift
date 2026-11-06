@@ -119,8 +119,8 @@ func managedSynchronizeViewStoriesOperations(postbox: Postbox, network: Network,
 }
 
 private func pushStoriesAreSeen(postbox: Postbox, network: Network, stateManager: AccountStateManager, peer: Peer, operation: SynchronizeViewStoriesOperation) -> Signal<Void, NoError> {
-    // GHOST: features may keep story views on the device (GGPresenceHooks.sendReadReceipt)
-    if !ggShouldSendReadReceipt(peerId: peer.id, kind: .stories(maxId: operation.storyId), accountPeerId: stateManager.accountPeerId) { return .complete() }
+    // WRAITH: features may keep story views on the device (WGPresenceHooks.sendReadReceipt)
+    if !wgShouldSendReadReceipt(peerId: peer.id, kind: .stories(maxId: operation.storyId), accountPeerId: stateManager.accountPeerId) { return .complete() }
     guard let inputPeer = apiInputPeer(peer) else {
         return .complete()
     }

@@ -2086,8 +2086,8 @@ func _internal_markStoryAsSeen(account: Account, peerId: PeerId, id: Int32, asPi
             }
             #endif
             
-            // GHOST: features may keep a story view on the device (GGPresenceHooks.sendReadReceipt)
-            if !ggShouldSendReadReceipt(peerId: peerId, kind: .storyView(id: id), accountPeerId: account.peerId) { return .complete() }
+            // WRAITH: features may keep a story view on the device (WGPresenceHooks.sendReadReceipt)
+            if !wgShouldSendReadReceipt(peerId: peerId, kind: .storyView(id: id), accountPeerId: account.peerId) { return .complete() }
             return account.network.request(Api.functions.stories.incrementStoryViews(peer: inputPeer, id: [id]))
             |> `catch` { _ -> Signal<Api.Bool, NoError> in
                 return .single(.boolFalse)

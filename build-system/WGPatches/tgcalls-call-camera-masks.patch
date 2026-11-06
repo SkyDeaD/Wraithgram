@@ -1,0 +1,41 @@
+diff --git a/tgcalls/platform/darwin/VideoCameraCapturer.mm b/tgcalls/platform/darwin/VideoCameraCapturer.mm
+index 68af2e6..3fc0bf0 100644
+--- a/tgcalls/platform/darwin/VideoCameraCapturer.mm
++++ b/tgcalls/platform/darwin/VideoCameraCapturer.mm
+@@ -26,6 +26,12 @@
+ 
+ #include "VideoCaptureView.h"
+ 
++// WRAITH: Wraithgram call masks — the one hook into the capturer (WGCallFrameBridge, W3-2)
++#if __has_include(<WGCallFrameBridge/WGCallFrameBridge.h>)
++#import <WGCallFrameBridge/WGCallFrameBridge.h>
++#define WG_CALL_FRAME_BRIDGE 1
++#endif
++
+ namespace {
+ 
+ static const int64_t kNanosecondsPerSecond = 1000000000;
+@@ -577,9 +583,23 @@ - (void)captureOutput:(AVCaptureOutput *)captureOutput
+         }
+     }
+     
++#ifdef WG_CALL_FRAME_BRIDGE
++    // WRAITH: the processed frame (call masks) replaces the camera frame before the crop, so the sent
++    // video and the local preview get the same single pass
++    CVPixelBufferRef wgProcessedPixelBuffer = [WGCallFrameBridge hasProcessor] ? [WGCallFrameBridge copyProcessedPixelBuffer:pixelBuffer isFrontCamera:usingFrontCamera rotation:(int)_rotation] : NULL;
++    if (wgProcessedPixelBuffer != NULL) {
++        pixelBuffer = wgProcessedPixelBuffer;
++    }
++#endif
+     TGRTCCVPixelBuffer *rtcPixelBuffer = [[TGRTCCVPixelBuffer alloc] initWithPixelBuffer:pixelBuffer];
+     rtcPixelBuffer.shouldBeMirrored = usingFrontCamera;
+     rtcPixelBuffer.deviceRelativeVideoRotation = deviceRelativeVideoRotation;
++#ifdef WG_CALL_FRAME_BRIDGE
++    // WRAITH: rtcPixelBuffer retains the processed buffer for the rest of this frame
++    if (wgProcessedPixelBuffer != NULL) {
++        CVPixelBufferRelease(wgProcessedPixelBuffer);
++    }
++#endif
+     
+     TGRTCCVPixelBuffer *uncroppedRtcPixelBuffer = rtcPixelBuffer;
+ 

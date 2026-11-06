@@ -1,5 +1,5 @@
 import Foundation
-import BuildConfig // GHOST: app group of a re-signed app
+import BuildConfig // WRAITH: app group of a re-signed app
 
 public enum WidgetCodingError: Error {
     case generic
@@ -360,7 +360,7 @@ public struct WidgetPresentationData: Codable, Equatable {
         }
         let baseAppBundleId = String(appBundleIdentifier[..<lastDotRange.lowerBound])
         
-        let appGroupName = BuildConfig.appGroupName(baseAppBundleId: baseAppBundleId) // GHOST: app group of a re-signed app (BuildConfig.h)
+        let appGroupName = BuildConfig.appGroupName(baseAppBundleId: baseAppBundleId) // WRAITH: app group of a re-signed app (BuildConfig.h)
         let maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
         
         guard let appGroupUrl = maybeAppGroupUrl else {

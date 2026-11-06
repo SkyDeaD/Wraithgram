@@ -106,13 +106,13 @@
         <key>UIPrerenderedIcon</key>
         <true/>
     </dict>
-    <!-- GHOST: Ghostgram app icon (W2-5; the duck removed by the owner, 2026-10-28) -->
+    <!-- WRAITH: Wraithgram app icon (W2-5; the duck removed by the owner, 2026-10-28) -->
     <key>Ghost</key>
     <dict>
         <key>CFBundleIconFiles</key>
         <array>
-            <string>GhostgramIcon</string>
-            <string>GhostgramNotificationIcon</string>
+            <string>WraithgramIcon</string>
+            <string>WraithgramNotificationIcon</string>
         </array>
         <key>UIPrerenderedIcon</key>
         <true/>

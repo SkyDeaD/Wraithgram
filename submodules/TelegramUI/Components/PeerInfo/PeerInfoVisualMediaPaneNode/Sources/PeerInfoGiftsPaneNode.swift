@@ -365,7 +365,7 @@ public final class PeerInfoGiftsPaneNode: ASDisplayNode, PeerInfoPaneNode, UIScr
     }
     
     private func displayUnpinScreen(gift: ProfileGiftsContext.State.StarGift, completion: (() -> Void)? = nil) {
-        guard let pinnedGifts = self.profileGifts.currentState?.gifts.filter({ $0.pinnedToTop && !ggIsLocalProfileGift($0.reference, account: self.context.account) }), let presentationData = self.currentParams?.presentationData else { // GHOST: only gifts that take a server pin slot are offered for unpinning (GGGiftHooks.isLocalGift)
+        guard let pinnedGifts = self.profileGifts.currentState?.gifts.filter({ $0.pinnedToTop && !wgIsLocalProfileGift($0.reference, account: self.context.account) }), let presentationData = self.currentParams?.presentationData else { // WRAITH: only gifts that take a server pin slot are offered for unpinning (WGGiftHooks.isLocalGift)
             return
         }
         let controller = GiftUnpinScreen(
@@ -1108,7 +1108,7 @@ public final class PeerInfoGiftsPaneNode: ASDisplayNode, PeerInfoPaneNode, UIScr
                             return
                         }
                         
-                        if pinnedToTop && !ggIsLocalProfileGift(reference, account: self.context.account) && ggServerPinnedCount(self.giftsListView.pinnedReferences, account: self.context.account) >= self.giftsListView.maxPinnedCount { // GHOST: fake gifts take no server pin slot (GGGiftHooks.isLocalGift)
+                        if pinnedToTop && !wgIsLocalProfileGift(reference, account: self.context.account) && wgServerPinnedCount(self.giftsListView.pinnedReferences, account: self.context.account) >= self.giftsListView.maxPinnedCount { // WRAITH: fake gifts take no server pin slot (WGGiftHooks.isLocalGift)
                             self.displayUnpinScreen(gift: gift)
                             return
                         }

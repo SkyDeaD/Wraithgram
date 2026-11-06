@@ -303,8 +303,8 @@ class BazelCommandLine:
         if self.disable_provisioning_profiles:
             combined_arguments += ['--//Telegram:disableProvisioningProfiles']
 
-        # GHOST: an app without extensions, for a purchased certificate with a single App ID (docs/ios/codesigning.md)
-        if getattr(self, 'gg_disable_extensions', False):
+        # WRAITH: an app without extensions, for a purchased certificate with a single App ID (docs/ios/codesigning.md)
+        if getattr(self, 'wg_disable_extensions', False):
             combined_arguments += ['--//Telegram:disableExtensions']
 
         combined_arguments += self.common_args
@@ -656,7 +656,7 @@ def build(bazel, arguments):
     bazel_command_line.set_profile_swift(arguments.profileSwift)
 
     bazel_command_line.set_split_swiftmodules(arguments.enableParallelSwiftmoduleGeneration)
-    bazel_command_line.gg_disable_extensions = arguments.disableExtensions # GHOST: see invoke_build
+    bazel_command_line.wg_disable_extensions = arguments.disableExtensions # WRAITH: see invoke_build
 
     bazel_command_line.invoke_build()
 
@@ -1030,7 +1030,7 @@ if __name__ == '__main__':
         metavar='number'
     )
     add_project_and_build_common_arguments(buildParser)
-    # GHOST: build the app without its extensions (a purchased certificate covers one App ID)
+    # WRAITH: build the app without its extensions (a purchased certificate covers one App ID)
     buildParser.add_argument(
         '--disableExtensions',
         action='store_true',

@@ -19,7 +19,7 @@ import TooltipUI
 import ChatEntityKeyboardInputNode
 import notify
 import TelegramNotices
-import GGHooks // GHOST: warning before stories are viewed (GGStoryHooks.openGate)
+import WGHooks // WRAITH: warning before stories are viewed (WGStoryHooks.openGate)
 
 func hasFirstResponder(_ view: UIView) -> Bool {
     if view.isFirstResponder {
@@ -436,9 +436,9 @@ private final class StoryContainerScreenComponent: Component {
         private var isDisplayingInteractionGuide: Bool = false
         private var displayInteractionGuideDisposable: Disposable?
         
-        // GHOST: warning before stories are viewed (SG-D1): playback waits, views are held until the answer
-        private var ggHoldsStoryViews: Bool = false
-        private var ggHeldStoryViews: [EngineStoryId] = []
+        // WRAITH: warning before stories are viewed (SG-D1): playback waits, views are held until the answer
+        private var wgHoldsStoryViews: Bool = false
+        private var wgHeldStoryViews: [EngineStoryId] = []
         
         private var previousSeekTime: Double?
         private var initialSeekTimestamp: Double?
@@ -764,11 +764,11 @@ private final class StoryContainerScreenComponent: Component {
             self.displayInteractionGuideDisposable?.dispose()
         }
         
-        // GHOST: the answer to the warning before stories (SG-D1): watch → the held views go out; close → the viewer closes
-        private func ggStoryWarningAnswered(watch: Bool) {
-            self.ggHoldsStoryViews = false
-            let held = self.ggHeldStoryViews
-            self.ggHeldStoryViews.removeAll()
+        // WRAITH: the answer to the warning before stories (SG-D1): watch → the held views go out; close → the viewer closes
+        private func wgStoryWarningAnswered(watch: Bool) {
+            self.wgHoldsStoryViews = false
+            let held = self.wgHeldStoryViews
+            self.wgHeldStoryViews.removeAll()
             if !watch {
                 self.environment?.controller()?.dismiss()
                 return
@@ -1361,8 +1361,8 @@ private final class StoryContainerScreenComponent: Component {
                     }
                 })
                 
-                // GHOST: ask once per opening whether to warn first (GGStoryHooks.openGate, SG-D1)
-                self.ggHoldsStoryViews = GGStoryHooks.interceptOpen(GGStoryOpenRequest(context: component.context, peerId: component.content.stateValue?.slice?.peer.id, controller: environment.controller()), completion: { [weak self] watch in self?.ggStoryWarningAnswered(watch: watch) })
+                // WRAITH: ask once per opening whether to warn first (WGStoryHooks.openGate, SG-D1)
+                self.wgHoldsStoryViews = WGStoryHooks.interceptOpen(WGStoryOpenRequest(context: component.context, peerId: component.content.stateValue?.slice?.peer.id, controller: environment.controller()), completion: { [weak self] watch in self?.wgStoryWarningAnswered(watch: watch) })
                 
                 update = true
             }
@@ -1553,7 +1553,7 @@ private final class StoryContainerScreenComponent: Component {
             if self.isDisplayingInteractionGuide {
                 isProgressPaused = true
             }
-            if self.ggHoldsStoryViews { isProgressPaused = true } // GHOST: waiting for the answer to the warning (SG-D1)
+            if self.wgHoldsStoryViews { isProgressPaused = true } // WRAITH: waiting for the answer to the warning (SG-D1)
             
             var contentDerivedBottomInset: CGFloat = environment.safeInsets.bottom
             
@@ -1808,8 +1808,8 @@ private final class StoryContainerScreenComponent: Component {
                                     guard let self, let component = self.component else {
                                         return
                                     }
-                                    // GHOST: a view waits for the answer to the warning (SG-D1)
-                                    if self.ggHoldsStoryViews { self.ggHeldStoryViews.append(id); return }
+                                    // WRAITH: a view waits for the answer to the warning (SG-D1)
+                                    if self.wgHoldsStoryViews { self.wgHeldStoryViews.append(id); return }
                                     component.content.markAsSeen(id: id)
                                 },
                                 reorder: { [weak self] in

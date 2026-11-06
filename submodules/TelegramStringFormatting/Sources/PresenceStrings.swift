@@ -2,7 +2,7 @@ import Foundation
 import TelegramCore
 import TelegramPresentationData
 import TextFormat
-import GGAppearanceSettings // GHOST: appearance snapshot
+import WGAppearanceSettings // WRAITH: appearance snapshot
 
 public func stringForTimestamp(day: Int32, month: Int32, year: Int32, dateTimeFormat: PresentationDateTimeFormat) -> String {
     let separator = dateTimeFormat.dateSeparator
@@ -573,19 +573,19 @@ public func stringForStoryActivityTimestamp(strings: PresentationStrings, dateTi
 }
 
 public func stringAndActivityForUserPresence(strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat, presence: EnginePeer.Presence, relativeTo timestamp: Int32, expanded: Bool = false) -> (String, Bool) {
-    let result = ggUpstreamStringAndActivityForUserPresence(strings: strings, dateTimeFormat: dateTimeFormat, presence: presence, relativeTo: timestamp, expanded: expanded)
-    // GHOST: exact time after «last seen» (appearance.messages.exactLastSeen)
-    if !result.1, case let .present(statusTimestamp) = presence.status, GGAppearanceSnapshot.current.exactLastSeen {
+    let result = wgUpstreamStringAndActivityForUserPresence(strings: strings, dateTimeFormat: dateTimeFormat, presence: presence, relativeTo: timestamp, expanded: expanded)
+    // WRAITH: exact time after «last seen» (appearance.messages.exactLastSeen)
+    if !result.1, case let .present(statusTimestamp) = presence.status, WGAppearanceSnapshot.current.exactLastSeen {
         var t = time_t(statusTimestamp)
         var timeinfo = tm()
         localtime_r(&t, &timeinfo)
-        return (result.0 + " (" + stringForShortTimestamp(hours: timeinfo.tm_hour, minutes: timeinfo.tm_min, seconds: timeinfo.tm_sec, dateTimeFormat: dateTimeFormat) + ")", false) // GHOST: in the user's 12/24-hour format
+        return (result.0 + " (" + stringForShortTimestamp(hours: timeinfo.tm_hour, minutes: timeinfo.tm_min, seconds: timeinfo.tm_sec, dateTimeFormat: dateTimeFormat) + ")", false) // WRAITH: in the user's 12/24-hour format
     }
     return result
 }
 
-// GHOST: upstream body, unchanged (wrapped by the function above)
-private func ggUpstreamStringAndActivityForUserPresence(strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat, presence: EnginePeer.Presence, relativeTo timestamp: Int32, expanded: Bool) -> (String, Bool) {
+// WRAITH: upstream body, unchanged (wrapped by the function above)
+private func wgUpstreamStringAndActivityForUserPresence(strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat, presence: EnginePeer.Presence, relativeTo timestamp: Int32, expanded: Bool) -> (String, Bool) {
     switch presence.status {
     case let .present(statusTimestamp):
         if statusTimestamp >= timestamp {

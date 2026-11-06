@@ -8,7 +8,7 @@ import TelegramCore
 import SwiftUI
 import Translation
 import Combine
-import GGFeaturesShared // GHOST: Ghostgram translation settings (W2-3)
+import WGFeaturesShared // WRAITH: Wraithgram translation settings (W2-3)
 
 // Incuding at least one Objective-C class in a swift file ensures that it doesn't get stripped by the linker
 private final class LinkHelperClass: NSObject {
@@ -174,8 +174,8 @@ public func normalizeTranslationLanguage(_ code: String) -> String {
 }
 
 public func canTranslateChats(context: AccountContext) -> Bool {
-    // GHOST: chats translate without Premium and whatever the server's config says, as in Swiftgram (GGMessagesPolicy)
-    if GGMessagesPolicy.translatesChatsWithoutPremium { return true }
+    // WRAITH: chats translate without Premium and whatever the server's config says, as in Swiftgram (WGMessagesPolicy)
+    if WGMessagesPolicy.translatesChatsWithoutPremium { return true }
     let translationConfiguration = TranslationConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
     var chatTranslationAvailable = true
     switch translationConfiguration.auto {
@@ -210,8 +210,8 @@ public func canTranslateText(context: AccountContext, text: String, showTranslat
         break
     }
     
-    // GHOST: the Translate button whatever the server's config says, as in Swiftgram (GGMessagesPolicy)
-    if GGMessagesPolicy.translatesChatsWithoutPremium { translateButtonAvailable = true }
+    // WRAITH: the Translate button whatever the server's config says, as in Swiftgram (WGMessagesPolicy)
+    if WGMessagesPolicy.translatesChatsWithoutPremium { translateButtonAvailable = true }
     let showTranslate = showTranslate && translateButtonAvailable
         
     if #available(iOS 12.0, *) {

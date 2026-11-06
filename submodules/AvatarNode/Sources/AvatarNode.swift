@@ -351,7 +351,7 @@ public final class AvatarNode: ASDisplayNode {
             let resourceId: String?
             let displayDimensions: CGSize
             let clipStyle: AvatarNodeClipStyle
-            let ggShapeRevision: CGFloat = ggAvatarShapeRevision() // GHOST: a corner change between square levels re-applies the radius (GGAvatarHooks.shape)
+            let wgShapeRevision: CGFloat = wgAvatarShapeRevision() // WRAITH: a corner change between square levels re-applies the radius (WGAvatarHooks.shape)
 
             init(
                 peerId: EnginePeer.Id?,
@@ -393,7 +393,7 @@ public final class AvatarNode: ASDisplayNode {
         private var currentImage: UIImage?
         
         private var params: Params?
-        private var ggLettersShapeRevision: CGFloat? // GHOST: the corner the letter avatar was drawn with (setCustomLetters)
+        private var wgLettersShapeRevision: CGFloat? // WRAITH: the corner the letter avatar was drawn with (setCustomLetters)
         private var loadDisposable = MetaDisposable()
         
         var clipStyle: AvatarNodeClipStyle {
@@ -597,7 +597,7 @@ public final class AvatarNode: ASDisplayNode {
             storeUnrounded: Bool = false,
             cutoutRect: CGRect? = nil
         ) {
-            let clipStyle = ggAvatarClipStyle(clipStyle) // GHOST: square avatars (GGAvatarHooks.shape)
+            let clipStyle = wgAvatarClipStyle(clipStyle) // WRAITH: square avatars (WGAvatarHooks.shape)
             var synchronousLoad = synchronousLoad
             var representation: TelegramMediaImageRepresentation?
             var icon = AvatarNodeIcon.none
@@ -726,7 +726,7 @@ public final class AvatarNode: ASDisplayNode {
             displayDimensions: CGSize = CGSize(width: 60.0, height: 60.0),
             storeUnrounded: Bool = false
         ) {
-            let clipStyle = ggAvatarClipStyle(clipStyle) // GHOST: square avatars (GGAvatarHooks.shape)
+            let clipStyle = wgAvatarClipStyle(clipStyle) // WRAITH: square avatars (WGAvatarHooks.shape)
             let smallProfileImage = peer?.smallProfileImage
             let params = Params(
                 peerId: peer?.id,
@@ -749,7 +749,7 @@ public final class AvatarNode: ASDisplayNode {
                 self.imageNode.cornerRadius = displayDimensions.height * 0.5
             case .roundedRect:
                 self.imageNode.clipsToBounds = true
-                self.imageNode.cornerRadius = ggAvatarRoundedRectRadius(displayDimensions.height, upstream: displayDimensions.height * 0.25) // GHOST: square avatars
+                self.imageNode.cornerRadius = wgAvatarRoundedRectRadius(displayDimensions.height, upstream: displayDimensions.height * 0.25) // WRAITH: square avatars
             case .bubble:
                 break
             }
@@ -806,7 +806,7 @@ public final class AvatarNode: ASDisplayNode {
             storeUnrounded: Bool = false,
             cutoutRect: CGRect? = nil
         ) {
-            let clipStyle = ggAvatarClipStyle(clipStyle) // GHOST: square avatars (GGAvatarHooks.shape)
+            let clipStyle = wgAvatarClipStyle(clipStyle) // WRAITH: square avatars (WGAvatarHooks.shape)
             var synchronousLoad = synchronousLoad
             var representation: TelegramMediaImageRepresentation?
             var icon = AvatarNodeIcon.none
@@ -933,17 +933,17 @@ public final class AvatarNode: ASDisplayNode {
                 }
             }
             let updatedState: AvatarNodeState = .custom(letter: letters, explicitColorIndex: explicitIndex, explicitIcon: icon)
-            let clipStyle = ggAvatarClipStyle(.round) // GHOST: square avatars — letter avatars too (GGAvatarHooks.shape)
-            let ggShapeRevision = ggAvatarShapeRevision() // GHOST: the corner between square levels too
-            if updatedState != self.state || self.parameters?.clipStyle != clipStyle || self.ggLettersShapeRevision != ggShapeRevision { // GHOST: a shape change redraws them
-                self.ggLettersShapeRevision = ggShapeRevision // GHOST: see ggShapeRevision
+            let clipStyle = wgAvatarClipStyle(.round) // WRAITH: square avatars — letter avatars too (WGAvatarHooks.shape)
+            let wgShapeRevision = wgAvatarShapeRevision() // WRAITH: the corner between square levels too
+            if updatedState != self.state || self.parameters?.clipStyle != clipStyle || self.wgLettersShapeRevision != wgShapeRevision { // WRAITH: a shape change redraws them
+                self.wgLettersShapeRevision = wgShapeRevision // WRAITH: see wgShapeRevision
                 self.state = updatedState
                 
                 let parameters: AvatarNodeParameters
                 if let icon = icon, case .phone = icon {
-                    parameters = AvatarNodeParameters(theme: nil, accountPeerId: nil, peerId: nil, colors: calculateAvatarColors(context: nil, explicitColorIndex: explicitIndex, peerId: nil, nameColor: nil, icon: .phoneIcon, theme: nil), letters: [], font: self.font, icon: .phoneIcon, explicitColorIndex: explicitIndex, hasImage: false, clipStyle: clipStyle, cutoutRect: cutoutRect) // GHOST: see clipStyle
+                    parameters = AvatarNodeParameters(theme: nil, accountPeerId: nil, peerId: nil, colors: calculateAvatarColors(context: nil, explicitColorIndex: explicitIndex, peerId: nil, nameColor: nil, icon: .phoneIcon, theme: nil), letters: [], font: self.font, icon: .phoneIcon, explicitColorIndex: explicitIndex, hasImage: false, clipStyle: clipStyle, cutoutRect: cutoutRect) // WRAITH: see clipStyle
                 } else {
-                    parameters = AvatarNodeParameters(theme: nil, accountPeerId: nil, peerId: nil, colors: calculateAvatarColors(context: nil, explicitColorIndex: explicitIndex, peerId: nil, nameColor: nil, icon: .none, theme: nil), letters: letters, font: self.font, icon: .none, explicitColorIndex: explicitIndex, hasImage: false, clipStyle: clipStyle, cutoutRect: cutoutRect) // GHOST: see clipStyle
+                    parameters = AvatarNodeParameters(theme: nil, accountPeerId: nil, peerId: nil, colors: calculateAvatarColors(context: nil, explicitColorIndex: explicitIndex, peerId: nil, nameColor: nil, icon: .none, theme: nil), letters: letters, font: self.font, icon: .none, explicitColorIndex: explicitIndex, hasImage: false, clipStyle: clipStyle, cutoutRect: cutoutRect) // WRAITH: see clipStyle
                 }
                 
                 self.displaySuspended = true
@@ -987,7 +987,7 @@ public final class AvatarNode: ASDisplayNode {
                     context.clip()
                 } else if case .roundedRect = parameters.clipStyle {
                     context.beginPath()
-                    context.addPath(UIBezierPath(roundedRect: CGRect(x: 0.0, y: 0.0, width: bounds.size.width, height: bounds.size.height), cornerRadius: ggAvatarRoundedRectRadius(bounds.size.width, upstream: floor(bounds.size.width * 0.25))).cgPath) // GHOST: square avatars
+                    context.addPath(UIBezierPath(roundedRect: CGRect(x: 0.0, y: 0.0, width: bounds.size.width, height: bounds.size.height), cornerRadius: wgAvatarRoundedRectRadius(bounds.size.width, upstream: floor(bounds.size.width * 0.25))).cgPath) // WRAITH: square avatars
                     context.clip()
                 } else if case .bubble = parameters.clipStyle {
                     context.beginPath()
@@ -1175,8 +1175,8 @@ public final class AvatarNode: ASDisplayNode {
     public private(set) var storyPresentationParams: StoryPresentationParams?
     
     private var loadingStatuses = Bag<Disposable>()
-    private var ggStoryIndicatorClipStyle: AvatarNodeClipStyle? // GHOST: the clip style the story ring was drawn for (ggRefreshStoryIndicatorShape)
-    private var ggStoryIndicatorCorner: CGFloat = 0.0 // GHOST: see ggStoryIndicatorClipStyle
+    private var wgStoryIndicatorClipStyle: AvatarNodeClipStyle? // WRAITH: the clip style the story ring was drawn for (wgRefreshStoryIndicatorShape)
+    private var wgStoryIndicatorCorner: CGFloat = 0.0 // WRAITH: see wgStoryIndicatorClipStyle
     
     public struct StoryStats: Equatable {
         public var totalCount: Int
@@ -1329,7 +1329,7 @@ public final class AvatarNode: ASDisplayNode {
             displayDimensions: displayDimensions,
             storeUnrounded: storeUnrounded
         )
-        self.ggRefreshStoryIndicatorShape() // GHOST: square avatars — the story ring follows the clip
+        self.wgRefreshStoryIndicatorShape() // WRAITH: square avatars — the story ring follows the clip
     }
     
     public func setPeerV2(
@@ -1356,7 +1356,7 @@ public final class AvatarNode: ASDisplayNode {
             displayDimensions: displayDimensions,
             storeUnrounded: storeUnrounded
         )
-        self.ggRefreshStoryIndicatorShape() // GHOST: square avatars — the story ring follows the clip
+        self.wgRefreshStoryIndicatorShape() // WRAITH: square avatars — the story ring follows the clip
     }
     
     public func setPeer(
@@ -1387,30 +1387,30 @@ public final class AvatarNode: ASDisplayNode {
             storeUnrounded: storeUnrounded,
             cutoutRect: cutoutRect
         )
-        self.ggRefreshStoryIndicatorShape() // GHOST: square avatars — the story ring follows the clip
+        self.wgRefreshStoryIndicatorShape() // WRAITH: square avatars — the story ring follows the clip
     }
     
     public func setCustomLetters(_ letters: [String], explicitColor: AvatarNodeColorOverride? = nil, icon: AvatarNodeExplicitIcon? = nil) {
         self.contentNode.setCustomLetters(letters, explicitColor: explicitColor, icon: icon)
-        self.ggRefreshStoryIndicatorShape() // GHOST: square avatars — the story ring follows the clip
+        self.wgRefreshStoryIndicatorShape() // WRAITH: square avatars — the story ring follows the clip
     }
     
-    // GHOST: square avatars — the story ring is drawn for the avatar's clip style. The chat list sets the
+    // WRAITH: square avatars — the story ring is drawn for the avatar's clip style. The chat list sets the
     // story stats BEFORE the peer (ChatListItem.setupItem), and a change of «Скругление углов» leaves the
     // stats equal, so `setStoryStats` alone kept a circle around a rounded square. Every setter of the
     // avatar redraws the ring when the clip style or the corner it was drawn for changed.
-    private func ggNoteStoryIndicatorShape() -> Bool {
+    private func wgNoteStoryIndicatorShape() -> Bool {
         let clipStyle = self.contentNode.clipStyle
-        self.ggStoryIndicatorClipStyle = clipStyle
-        self.ggStoryIndicatorCorner = ggAvatarRingCornerFraction()
+        self.wgStoryIndicatorClipStyle = clipStyle
+        self.wgStoryIndicatorCorner = wgAvatarRingCornerFraction()
         return clipStyle == .roundedRect
     }
     
-    private func ggRefreshStoryIndicatorShape() {
+    private func wgRefreshStoryIndicatorShape() {
         guard self.storyStats != nil, self.storyIndicator != nil else {
             return
         }
-        if self.ggStoryIndicatorClipStyle != self.contentNode.clipStyle || self.ggStoryIndicatorCorner != ggAvatarRingCornerFraction() {
+        if self.wgStoryIndicatorClipStyle != self.contentNode.clipStyle || self.wgStoryIndicatorCorner != wgAvatarRingCornerFraction() {
             self.updateStoryIndicator(transition: .immediate)
         }
     }
@@ -1517,8 +1517,8 @@ public final class AvatarNode: ASDisplayNode {
                         unseenCount: storyStats.unseenCount
                     ),
                     progress: mappedProgress,
-                    isRoundedRect: self.ggNoteStoryIndicatorShape() || storyPresentationParams.forceRoundedRect, // GHOST: = clipStyle == .roundedRect, noted for ggRefreshStoryIndicatorShape
-                    roundedRectCornerFraction: ggAvatarRingCornerFraction() // GHOST: square avatars — one ring shape
+                    isRoundedRect: self.wgNoteStoryIndicatorShape() || storyPresentationParams.forceRoundedRect, // WRAITH: = clipStyle == .roundedRect, noted for wgRefreshStoryIndicatorShape
+                    roundedRectCornerFraction: wgAvatarRingCornerFraction() // WRAITH: square avatars — one ring shape
                 )),
                 environment: {},
                 containerSize: indicatorSize

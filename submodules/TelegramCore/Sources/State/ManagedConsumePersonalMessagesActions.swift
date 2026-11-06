@@ -252,8 +252,8 @@ func managedReadReactionOrPollVoteActions(postbox: Postbox, network: Network, st
 }
 
 private func synchronizeConsumeMessageContents(transaction: Transaction, postbox: Postbox, network: Network, stateManager: AccountStateManager, id: MessageId) -> Signal<Void, NoError> {
-    // GHOST: a mention or reply seen in ghost mode stays seen on the device only (GGPresenceHooks.sendReadReceipt)
-    if let ggLocal = ggConsumePersonalMessageLocallyIfKept(postbox: postbox, accountPeerId: stateManager.accountPeerId, id: id) { return ggLocal }
+    // WRAITH: a mention or reply seen in ghost mode stays seen on the device only (WGPresenceHooks.sendReadReceipt)
+    if let wgLocal = wgConsumePersonalMessageLocallyIfKept(postbox: postbox, accountPeerId: stateManager.accountPeerId, id: id) { return wgLocal }
     if id.peerId.namespace == Namespaces.Peer.CloudUser || id.peerId.namespace == Namespaces.Peer.CloudGroup {
         return network.request(Api.functions.messages.readMessageContents(id: [id.id]))
             |> map(Optional.init)

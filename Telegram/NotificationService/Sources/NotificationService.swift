@@ -22,7 +22,7 @@ import ConvertOpusToAAC
 import CoreServices
 import ImageIO
 import UniformTypeIdentifiers
-import GGFeaturesShared // GHOST: Swiftgram-parity settings read by the extension (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings read by the extension (W5-SG)
 
 private let queue = Queue()
 
@@ -730,10 +730,10 @@ private struct NotificationContent: CustomStringConvertible {
     }
 }
 
-// GHOST: the content point decides before generate(): it writes the text into attributedBody (custom emoji) and donates a Siri intent with it (GGNotificationServiceHooks.content)
+// WRAITH: the content point decides before generate(): it writes the text into attributedBody (custom emoji) and donates a Siri intent with it (WGNotificationServiceHooks.content)
 private extension NotificationContent {
-    func ggGenerate() -> UNNotificationContent {
-        switch ggNotificationPreparation(title: self.title, subtitle: self.subtitle, body: self.body, userInfo: self.userInfo) {
+    func wgGenerate() -> UNNotificationContent {
+        switch wgNotificationPreparation(title: self.title, subtitle: self.subtitle, body: self.body, userInfo: self.userInfo) {
         case .unchanged:
             return self.generate()
         case .hidden:
@@ -809,7 +809,7 @@ private final class NotificationServiceHandler {
         let apiHash: String = buildConfig.apiHash
         let languagesCategory = "ios"
 
-        let appGroupName = BuildConfig.appGroupName(baseAppBundleId: baseAppBundleId) // GHOST: app group of a re-signed app (BuildConfig.h)
+        let appGroupName = BuildConfig.appGroupName(baseAppBundleId: baseAppBundleId) // WRAITH: app group of a re-signed app (BuildConfig.h)
         try! PasscodeEnvironment.shared.configure(PasscodeConfiguration(appGroupIdentifier: appGroupName, processRole: .appExtension))
         let maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
 
@@ -817,8 +817,8 @@ private final class NotificationServiceHandler {
             return nil
         }
 
-        // GHOST: Ghostgram core and the shared part of the features, before any account opens (FOUNDATION_SPEC §2)
-        ggNotificationServiceDidStart(appGroupPath: appGroupUrl.path)
+        // WRAITH: Wraithgram core and the shared part of the features, before any account opens (FOUNDATION_SPEC §2)
+        wgNotificationServiceDidStart(appGroupPath: appGroupUrl.path)
 
         let rootPath = rootPathForBasePath(appGroupUrl.path)
 
@@ -836,8 +836,8 @@ private final class NotificationServiceHandler {
         let appVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "unknown"
 
         self.accountManager = setupAccountManager(basePath: rootPath + "/accounts-metadata", isTemporary: true, isReadOnly: false, useCaches: false, removeDatabaseOnError: false)
-        // GHOST: Ghostgram's own requests follow the user's SOCKS5 proxy (GGNetwork, W1-1 bridge)
-        ggCoreAttachProxySettings(accountManager: self.accountManager)
+        // WRAITH: Wraithgram's own requests follow the user's SOCKS5 proxy (WGNetwork, W1-1 bridge)
+        wgCoreAttachProxySettings(accountManager: self.accountManager)
 
         let deviceSpecificEncryptionParameters = BuildConfig.deviceSpecificEncryptionParameters(rootPath, baseAppBundleId: baseAppBundleId)
         self.encryptionParameters = ValueBoxEncryptionParameters(forceEncryptionIfNoSet: false, key: ValueBoxEncryptionParameters.Key(data: deviceSpecificEncryptionParameters.key)!, salt: ValueBoxEncryptionParameters.Salt(data: deviceSpecificEncryptionParameters.salt)!)
@@ -957,7 +957,7 @@ private final class NotificationServiceHandler {
             guard let strongSelf = self, let recordId = recordId else {
                 Logger.shared.log("NotificationService \(episode)", "Couldn't find a matching decryption key")
 
-                // GHOST: a failure, not a drop: no content, so the original push is shown (GGEmptyNotifications)
+                // WRAITH: a failure, not a drop: no content, so the original push is shown (WGEmptyNotifications)
                 completed()
 
                 return
@@ -978,7 +978,7 @@ private final class NotificationServiceHandler {
                 guard let stateManager = stateManager else {
                     Logger.shared.log("NotificationService \(episode)", "Didn't receive stateManager")
 
-                    // GHOST: a failure, not a drop: no content, so the original push is shown (GGEmptyNotifications)
+                    // WRAITH: a failure, not a drop: no content, so the original push is shown (WGEmptyNotifications)
                     completed()
                     return
                 }
@@ -1006,7 +1006,7 @@ private final class NotificationServiceHandler {
                 // extension runs out of time, already names the account. Only with several
                 // accounts: every transaction here takes the database write lock the app may hold.
                 let recipientAccountName: Signal<String?, NoError>
-                if notificationsNameRecipientAccount(records: records.records) && !GGExtrasPolicy.hidesRecipientAccountInNotifications { // GHOST: «Не называть аккаунт в уведомлениях» (GGExtrasPolicy)
+                if notificationsNameRecipientAccount(records: records.records) && !WGExtrasPolicy.hidesRecipientAccountInNotifications { // WRAITH: «Не называть аккаунт в уведомлениях» (WGExtrasPolicy)
                     recipientAccountName = stateManager.postbox.transaction { transaction -> String? in
                         return notificationRecipientAccountName(accountPeer: transaction.getPeer(accountPeerId).flatMap(EnginePeer.init))
                     }
@@ -1021,7 +1021,7 @@ private final class NotificationServiceHandler {
                     recipientAccountName
                 ) |> deliverOn(strongSelf.queue)).start(next: { notificationsKey, notificationSoundList, lottieSettings, recipientAccountName in
                     guard let strongSelf = self else {
-                        // GHOST: a failure, not a drop: no content, so the original push is shown (GGEmptyNotifications)
+                        // WRAITH: a failure, not a drop: no content, so the original push is shown (WGEmptyNotifications)
                         completed()
 
                         return
@@ -1029,7 +1029,7 @@ private final class NotificationServiceHandler {
                     guard let notificationsKey = notificationsKey else {
                         Logger.shared.log("NotificationService \(episode)", "Didn't receive decryption key")
 
-                        // GHOST: a failure, not a drop: no content, so the original push is shown (GGEmptyNotifications)
+                        // WRAITH: a failure, not a drop: no content, so the original push is shown (WGEmptyNotifications)
                         completed()
 
                         return
@@ -1037,7 +1037,7 @@ private final class NotificationServiceHandler {
                     guard let decryptedPayload = decryptedNotificationPayload(key: notificationsKey, data: payloadData) else {
                         Logger.shared.log("NotificationService \(episode)", "Couldn't decrypt payload")
 
-                        // GHOST: a failure, not a drop: no content, so the original push is shown (GGEmptyNotifications)
+                        // WRAITH: a failure, not a drop: no content, so the original push is shown (WGEmptyNotifications)
                         completed()
 
                         return
@@ -1045,7 +1045,7 @@ private final class NotificationServiceHandler {
                     guard let payloadJson = try? JSONSerialization.jsonObject(with: decryptedPayload, options: []) as? [String: Any] else {
                         Logger.shared.log("NotificationService \(episode)", "Couldn't process payload as JSON")
 
-                        // GHOST: a failure, not a drop: no content, so the original push is shown (GGEmptyNotifications)
+                        // WRAITH: a failure, not a drop: no content, so the original push is shown (WGEmptyNotifications)
                         completed()
 
                         return
@@ -1243,7 +1243,7 @@ private final class NotificationServiceHandler {
                         if let aps = payloadJson["aps"] as? [String: Any], var peerId = peerId {
                             var content: NotificationContent = NotificationContent(isLockedMessage: isLockedMessage)
                             content.recipientAccountName = recipientAccountName
-                            ggMarkNotificationContent(&content.userInfo, payload: payloadJson) // GHOST: pinned / mention flags for GGNotificationServiceHooks.content
+                            wgMarkNotificationContent(&content.userInfo, payload: payloadJson) // WRAITH: pinned / mention flags for WGNotificationServiceHooks.content
                             if let alert = aps["alert"] as? [String: Any] {
                                 if let topicTitleValue = payloadJson["topic_title"] as? String {
                                     topicTitle = topicTitleValue
@@ -1565,7 +1565,7 @@ private final class NotificationServiceHandler {
 
                                 let pollCompletion: (NotificationContent, Media?) -> Void = { content, customMedia in
                                     var content = content
-                                    ggMarkNotificationContent(&content.userInfo, media: customMedia) // GHOST: a «pinned» service message (GGNotificationServiceHooks.content)
+                                    wgMarkNotificationContent(&content.userInfo, media: customMedia) // WRAITH: a «pinned» service message (WGNotificationServiceHooks.content)
 
                                     queue.async {
                                         guard let strongSelf = self, let stateManager = strongSelf.stateManager else {
@@ -2505,17 +2505,17 @@ private final class NotificationServiceHandler {
                         case let .deleteMessage(ids):
                             Logger.shared.log("NotificationService \(episode)", "Will delete messages \(ids)")
                             let mediaBox = stateManager.postbox.mediaBox
-                            let ggDeletedIds = Atomic<[MessageId]>(value: ids) // GHOST: a kept message keeps its banner (GGUpdateHooks.messagesWillBeDeleted)
+                            let wgDeletedIds = Atomic<[MessageId]>(value: ids) // WRAITH: a kept message keeps its banner (WGUpdateHooks.messagesWillBeDeleted)
                             let _ = (stateManager.postbox.transaction { transaction -> Void in
-                                // GHOST: features may keep deleted messages; the extension hands them to the app (GGUpdateHooks.messagesWillBeDeleted)
-                                _internal_deleteMessages(transaction: transaction, mediaBox: mediaBox, ids: ggDeletedIds.modify { _ in GGUpdateHooks.messageIdsToDelete(ids, source: .remoteUpdate, transaction: transaction, accountPeerId: stateManager.accountPeerId) }, deleteMedia: true)
+                                // WRAITH: features may keep deleted messages; the extension hands them to the app (WGUpdateHooks.messagesWillBeDeleted)
+                                _internal_deleteMessages(transaction: transaction, mediaBox: mediaBox, ids: wgDeletedIds.modify { _ in WGUpdateHooks.messageIdsToDelete(ids, source: .remoteUpdate, transaction: transaction, accountPeerId: stateManager.accountPeerId) }, deleteMedia: true)
                             }
                             |> deliverOn(strongSelf.queue)).start(completed: {
                                 UNUserNotificationCenter.current().getDeliveredNotifications(completionHandler: { notifications in
                                     var removeIdentifiers: [String] = []
                                     for notification in notifications {
                                         if let peerIdString = notification.request.content.userInfo["peerId"] as? String, let peerIdValue = Int64(peerIdString), let messageIdString = notification.request.content.userInfo["msg_id"] as? String, let messageIdValue = Int32(messageIdString) {
-                                            for id in ggDeletedIds.with({ $0 }) { // GHOST: only really deleted messages lose their banner
+                                            for id in wgDeletedIds.with({ $0 }) { // WRAITH: only really deleted messages lose their banner
                                                 if PeerId(peerIdValue) == id.peerId && messageIdValue == id.id {
                                                     removeIdentifiers.append(notification.request.identifier)
                                                 }
@@ -2720,7 +2720,7 @@ final class NotificationService: UNNotificationServiceExtension {
     private let content = Atomic<NotificationContent?>(value: nil)
     private var contentHandler: ((UNNotificationContent) -> Void)?
     private var episode: String?
-    private var ggRequestIdentifier = "" // GHOST: the push whose empty placeholder is removed once delivered (GGEmptyNotifications)
+    private var wgRequestIdentifier = "" // WRAITH: the push whose empty placeholder is removed once delivered (WGEmptyNotifications)
     
     override init() {
         super.init()
@@ -2732,7 +2732,7 @@ final class NotificationService: UNNotificationServiceExtension {
         
         self.initialContent = request.content
         self.contentHandler = contentHandler
-        self.ggRequestIdentifier = request.identifier // GHOST: see ggRequestIdentifier
+        self.wgRequestIdentifier = request.identifier // WRAITH: see wgRequestIdentifier
 
         self.impl = nil
 
@@ -2756,11 +2756,11 @@ final class NotificationService: UNNotificationServiceExtension {
                         
                         strongSelf.contentHandler = nil
                         
-                        // GHOST: features may rewrite the delivered content (GGNotificationServiceHooks.content); an empty one goes as a placeholder that is removed (GGEmptyNotifications)
+                        // WRAITH: features may rewrite the delivered content (WGNotificationServiceHooks.content); an empty one goes as a placeholder that is removed (WGEmptyNotifications)
                         if let content = content.with({ $0 }) {
-                            ggDeliverNotificationContent(ggNotificationContent(content.ggGenerate()), requestIdentifier: request.identifier, to: contentHandler) // GHOST: see above; the decision is taken before generate() too
+                            wgDeliverNotificationContent(wgNotificationContent(content.wgGenerate()), requestIdentifier: request.identifier, to: contentHandler) // WRAITH: see above; the decision is taken before generate() too
                         } else if let initialContent = strongSelf.initialContent {
-                            ggDeliverNotificationContent(ggNotificationContent(initialContent), requestIdentifier: request.identifier, to: contentHandler) // GHOST: see above
+                            wgDeliverNotificationContent(wgNotificationContent(initialContent), requestIdentifier: request.identifier, to: contentHandler) // WRAITH: see above
                         }
                     } else {
                         Logger.shared.log("NotificationService \(episode)", "Attempted to repeatedly complete handling notification")
@@ -2784,11 +2784,11 @@ final class NotificationService: UNNotificationServiceExtension {
             
             Logger.shared.log("NotificationService \(self.episode ?? "???")", "Completing due to serviceExtensionTimeWillExpire")
             
-            // GHOST: features may rewrite the delivered content (GGNotificationServiceHooks.content); an empty one goes as a placeholder that is removed (GGEmptyNotifications)
+            // WRAITH: features may rewrite the delivered content (WGNotificationServiceHooks.content); an empty one goes as a placeholder that is removed (WGEmptyNotifications)
             if let content = self.content.with({ $0 }) {
-                ggDeliverNotificationContent(ggNotificationContent(content.ggGenerate()), requestIdentifier: self.ggRequestIdentifier, to: contentHandler) // GHOST: see above; the decision is taken before generate() too
+                wgDeliverNotificationContent(wgNotificationContent(content.wgGenerate()), requestIdentifier: self.wgRequestIdentifier, to: contentHandler) // WRAITH: see above; the decision is taken before generate() too
             } else if let initialContent = self.initialContent {
-                ggDeliverNotificationContent(ggNotificationContent(initialContent), requestIdentifier: self.ggRequestIdentifier, to: contentHandler) // GHOST: see above
+                wgDeliverNotificationContent(wgNotificationContent(initialContent), requestIdentifier: self.wgRequestIdentifier, to: contentHandler) // WRAITH: see above
             }
         }
     }

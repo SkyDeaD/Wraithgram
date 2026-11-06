@@ -309,7 +309,7 @@ public struct ChatListNodeState: Equatable {
     public var selectedPeerMap: [EnginePeer.Id: EnginePeer]
     public var selectedThreadIds: Set<Int64>
     public var archiveStoryState: StoryState?
-    public var ggAccessoryPeerIds: Set<EnginePeer.Id> = Set() // GHOST: chats a feature decorates in place of the preview (GGChatListHooks.accessoryPeers)
+    public var wgAccessoryPeerIds: Set<EnginePeer.Id> = Set() // WRAITH: chats a feature decorates in place of the preview (WGChatListHooks.accessoryPeers)
     
     public init(
         presentationData: ChatListPresentationData,
@@ -386,7 +386,7 @@ public struct ChatListNodeState: Equatable {
         if lhs.archiveStoryState != rhs.archiveStoryState {
             return false
         }
-        if lhs.ggAccessoryPeerIds != rhs.ggAccessoryPeerIds { // GHOST: see ggAccessoryPeerIds
+        if lhs.wgAccessoryPeerIds != rhs.wgAccessoryPeerIds { // WRAITH: see wgAccessoryPeerIds
             return false
         }
         return true
@@ -1338,7 +1338,7 @@ public final class ChatListNode: ListViewImpl {
     private let chatListLocation = ValuePromise<ChatListNodeLocation>()
     private let chatListDisposable = MetaDisposable()
     private var activityStatusesDisposable: Disposable?
-    private var ggAccessoryPeersDisposable: Disposable? // GHOST: see ChatListNodeState.ggAccessoryPeerIds
+    private var wgAccessoryPeersDisposable: Disposable? // WRAITH: see ChatListNodeState.wgAccessoryPeerIds
     
     private let scrollToTopOptionPromise = Promise<ChatListGlobalScrollOption>(.none)
     public var scrollToTopOption: Signal<ChatListGlobalScrollOption, NoError> {
@@ -2170,7 +2170,7 @@ public final class ChatListNode: ListViewImpl {
         let chatListFilters: Signal<[ChatListFilter]?, NoError>
         if case .chatList = mode {
             chatListFilters = combineLatest(queue: .mainQueue(),
-                ggChatListFolders(context.engine.peers.updatedChatListFilters(), context: context), // GHOST: no tag of a hidden folder on chat rows (GGChatListHooks.folders)
+                wgChatListFolders(context.engine.peers.updatedChatListFilters(), context: context), // WRAITH: no tag of a hidden folder on chat rows (WGChatListHooks.folders)
                 context.engine.data.subscribe(
                     TelegramEngine.EngineData.Item.ChatList.FiltersDisplayTags()
                 )
@@ -2217,7 +2217,7 @@ public final class ChatListNode: ListViewImpl {
             
             let innerIsMainTab = location == .chatList(groupId: .root) && chatListFilter == nil
             
-            let (rawEntries, isLoading) = chatListNodeEntriesForView(view: update.list, state: state, savedMessagesPeer: savedMessagesPeer, foundPeers: state.foundPeers, hideArchivedFolderByDefault: hideArchivedFolderByDefault, displayArchiveIntro: displayArchiveIntro, mode: mode, chatListLocation: location, contacts: contacts, accountPeerId: accountPeerId, isMainTab: innerIsMainTab, ggContext: context) // GHOST: promoted chat policy (GGChatListHooks.hidesPromoChat)
+            let (rawEntries, isLoading) = chatListNodeEntriesForView(view: update.list, state: state, savedMessagesPeer: savedMessagesPeer, foundPeers: state.foundPeers, hideArchivedFolderByDefault: hideArchivedFolderByDefault, displayArchiveIntro: displayArchiveIntro, mode: mode, chatListLocation: location, contacts: contacts, accountPeerId: accountPeerId, isMainTab: innerIsMainTab, wgContext: context) // WRAITH: promoted chat policy (WGChatListHooks.hidesPromoChat)
             var isEmpty = true
             var entries = rawEntries.filter { entry in
                 switch entry {
@@ -2928,12 +2928,12 @@ public final class ChatListNode: ListViewImpl {
             }
         })
         
-        // GHOST: rows of chats a feature decorates (download status) re-lay out when the set changes (GGChatListHooks.accessoryPeers)
-        if case .chatList = location, let ggAccessoryPeers = ggChatListAccessoryPeers(context: context) {
-            self.ggAccessoryPeersDisposable = (ggAccessoryPeers |> deliverOnMainQueue).startStrict(next: { [weak self] peerIds in
+        // WRAITH: rows of chats a feature decorates (download status) re-lay out when the set changes (WGChatListHooks.accessoryPeers)
+        if case .chatList = location, let wgAccessoryPeers = wgChatListAccessoryPeers(context: context) {
+            self.wgAccessoryPeersDisposable = (wgAccessoryPeers |> deliverOnMainQueue).startStrict(next: { [weak self] peerIds in
                 self?.updateState { state in
                     var state = state
-                    state.ggAccessoryPeerIds = peerIds
+                    state.wgAccessoryPeerIds = peerIds
                     return state
                 }
             })
@@ -3226,7 +3226,7 @@ public final class ChatListNode: ListViewImpl {
         self.pollFilterUpdatesDisposable?.dispose()
         self.chatFilterUpdatesDisposable?.dispose()
         self.updateIsMainTabDisposable?.dispose()
-        self.ggAccessoryPeersDisposable?.dispose() // GHOST: see ggAccessoryPeersDisposable
+        self.wgAccessoryPeersDisposable?.dispose() // WRAITH: see wgAccessoryPeersDisposable
     }
     
     func updateFilter(_ filter: ChatListFilter?) {

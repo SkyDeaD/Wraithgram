@@ -6,17 +6,17 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: the footnote under the text (GGMessageDecoration.footnote)
-        "//Ghostgram/GGHooks:ChatMessageTextBubbleContentNodeHookSources",
+        # WRAITH: the footnote under the text (WGMessageDecoration.footnote)
+        "//Wraithgram/WGHooks:ChatMessageTextBubbleContentNodeHookSources",
     ],
     copts = [
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: Ghostgram hook points
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/GGHooks:GGHooks",
-        "//submodules/TelegramPresentationData", # GHOST: named by the footnote helper
+        # WRAITH: Wraithgram hook points
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/WGHooks:WGHooks",
+        "//submodules/TelegramPresentationData", # WRAITH: named by the footnote helper
         "//submodules/AsyncDisplayKit",
         "//submodules/LottieSettings:LottieSettings",
         "//submodules/Display",

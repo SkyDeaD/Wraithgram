@@ -59,8 +59,8 @@ enum SettingsSearchableItemIcon {
     case myProfile
     case gift
     case powerSaving
-    // GHOST: Ghostgram rows in Telegram's settings search (GGSettingsSearchBridge.swift)
-    case ghostgram
+    // WRAITH: Wraithgram rows in Telegram's settings search (WGSettingsSearchBridge.swift)
+    case wraithgram
 }
 
 public enum SettingsSearchableItemPresentation {
@@ -4462,8 +4462,8 @@ func settingsSearchableItems(
         let helpItems = helpSearchableItems(context: context)
         allItems.append(contentsOf: helpItems)
         
-        // GHOST: Ghostgram menu rows (GGSettingsSearchBridge.swift)
-        allItems.append(contentsOf: ggSettingsSearchableItems(context: context))
+        // WRAITH: Wraithgram menu rows (WGSettingsSearchBridge.swift)
+        allItems.append(contentsOf: wgSettingsSearchableItems(context: context))
                 
         let deleteAccount = SettingsSearchableItem(
             id: "delete-account",

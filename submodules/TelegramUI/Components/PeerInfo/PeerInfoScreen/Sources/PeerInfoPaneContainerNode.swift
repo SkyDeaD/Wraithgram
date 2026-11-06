@@ -23,7 +23,7 @@ import UndoUI
 import HorizontalTabsComponent
 import GlassBackgroundComponent
 import EdgeEffect
-import GGHooks // GHOST: capture protection
+import WGHooks // WRAITH: capture protection
 
 final class PeerInfoPaneWrapper {
     let key: PeerInfoPaneKey
@@ -446,8 +446,8 @@ private final class PeerInfoPendingPane {
     ) {
         let (chatLocationPeerId, chatLocation, chatLocationContextHolder) = peerInfoSharedMediaChatLocation(peerId: peerId, chatLocation: chatLocation, chatLocationContextHolder: chatLocationContextHolder, sharedMediaFromForumTopic: sharedMediaFromForumTopic)
         
-        // GHOST: features may lift capture protection of shared media (GGChatScreenHooks.captureProtection)
-        var captureProtected = GGChatScreenHooks.captureProtection(peerInfoIsCopyProtected(data: data, sharedMediaFromForumTopic: sharedMediaFromForumTopic), context: context, chatLocation: .peer(id: peerId))
+        // WRAITH: features may lift capture protection of shared media (WGChatScreenHooks.captureProtection)
+        var captureProtected = WGChatScreenHooks.captureProtection(peerInfoIsCopyProtected(data: data, sharedMediaFromForumTopic: sharedMediaFromForumTopic), context: context, chatLocation: .peer(id: peerId))
         let paneNode: PeerInfoPaneNode
         switch key {
         case .gifts:

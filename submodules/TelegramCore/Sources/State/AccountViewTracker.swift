@@ -3,7 +3,7 @@ import Postbox
 import SwiftSignalKit
 internal import TelegramApi
 import MtProtoKit
-import GGCore // GHOST: hook points (GGHookPoint.isEmpty)
+import WGCore // WRAITH: hook points (WGHookPoint.isEmpty)
 
 
 public enum CallListViewType {
@@ -969,8 +969,8 @@ public final class AccountViewTracker {
                     
                     if let account = self.account {
                         let signal = (account.postbox.transaction { transaction -> Signal<Void, NoError> in
-                            // GHOST: features may keep a seen live location on the device (GGPresenceHooks.sendReadReceipt)
-                            if !ggShouldSendReadReceipt(peerId: peerId, kind: .messageContents(ids: Array(messageIds)), accountPeerId: account.peerId) { return .complete() }
+                            // WRAITH: features may keep a seen live location on the device (WGPresenceHooks.sendReadReceipt)
+                            if !wgShouldSendReadReceipt(peerId: peerId, kind: .messageContents(ids: Array(messageIds)), accountPeerId: account.peerId) { return .complete() }
                             if let peer = transaction.getPeer(peerId), let inputPeer = apiInputPeer(peer) {
                                 let request: Signal<Bool, MTRpcError>
                                 switch inputPeer {

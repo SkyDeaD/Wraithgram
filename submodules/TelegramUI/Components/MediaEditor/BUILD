@@ -76,8 +76,8 @@ swift_library(
         "//submodules/FileMediaResourceStatus",
         "//submodules/TelegramUI/Components/MediaEditor/ImageObjectSeparation",
         "//submodules/TelegramUI/Components/MediaAssetsContext",
-        # GHOST: round video quality settings.
-        "//Ghostgram/Features/CameraMasks:GGCameraPipeline",
+        # WRAITH: round video quality settings.
+        "//Wraithgram/Features/CameraMasks:WGCameraPipeline",
     ],
     visibility = [
         "//visibility:public",

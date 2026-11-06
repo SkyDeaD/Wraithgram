@@ -8,7 +8,7 @@ import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AppBundle
-import GGCore // GHOST: names of Ghostgram's app icons
+import WGCore // WRAITH: names of Wraithgram's app icons
 
 private func generateBorderImage(theme: PresentationTheme, bordered: Bool, selected: Bool) -> UIImage? {
     return generateImage(CGSize(width: 30.0, height: 30.0), rotatedContext: { size, context in
@@ -410,8 +410,8 @@ class ThemeSettingsAppIconItemNode: ListViewItemNode, ItemListItemNode {
                                     name = item.strings.Appearance_AppIconBlack
                                 case "PremiumTurbo":
                                     name = item.strings.Appearance_AppIconTurbo
-                                case "Ghost": // GHOST: Ghostgram's app icon (W2-5)
-                                    name = GGStrings.Interface.Menu.ghostIconName
+                                case "Wraith": // WRAITH: Wraithgram's app icon
+                                    name = WGStrings.Interface.Menu.wraithIconName
                                 default:
                                     name = icon.name
                             }

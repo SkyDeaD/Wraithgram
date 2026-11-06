@@ -12,8 +12,8 @@ import ReactionImageComponent
 import AnimationCache
 import MultiAnimationRenderer
 import TelegramStringFormatting
-import GGAppearanceSettings // GHOST: appearance snapshot
-import GGHooks // GHOST: status-line icons (GGStatusIcon)
+import WGAppearanceSettings // WRAITH: appearance snapshot
+import WGHooks // WRAITH: status-line icons (WGStatusIcon)
 
 private func maybeAddRotationAnimation(_ layer: CALayer, duration: Double) {
     if let _ = layer.animation(forKey: "clockFrameAnimation") {
@@ -333,7 +333,7 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
     private var clockMinNode: ASImageNode?
     private let dateNode: TextNode
     private var impressionIcon: ASImageNode?
-    private var ggStatusIconNode: ASImageNode? // GHOST: a feature's flat icon before the time (GGStatusIcon)
+    private var wgStatusIconNode: ASImageNode? // WRAITH: a feature's flat icon before the time (WGStatusIcon)
     private var reactionNodes: [MessageReaction.Reaction: StatusReactionNode] = [:]
     private let reactionButtonsContainer = ReactionButtonsAsyncLayoutContainer()
     private var reactionButtonNode: HighlightTrackingButtonNode?
@@ -407,8 +407,8 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
         let reactionButtonsContainer = self.reactionButtonsContainer
         
         return { [weak self] arguments in
-            // GHOST: status line options of the appearance snapshot (edited, time, views, comments, reactions)
-            let arguments = ggApplyAppearance(arguments)
+            // WRAITH: status line options of the appearance snapshot (edited, time, views, comments, reactions)
+            let arguments = wgApplyAppearance(arguments)
             let dateColor: UIColor
             var backgroundImage: UIImage?
             var blurredBackgroundColor: (UIColor, Bool)?
@@ -500,10 +500,10 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                 dateColor = arguments.presentationData.theme.theme.chat.message.outgoing.secondaryTextColor
                 outgoingStatus = status
                 leftInset = 5.0
-                // GHOST: custom checkmark colors, read and unread apart (appearance.checkmarks.*)
-                let ggChecks = ggCustomCheckImages(status: status, size: checkSize)
-                loadedCheckFullImage = ggChecks?.full ?? PresentationResourcesChat.chatOutgoingFullCheck(arguments.presentationData.theme.theme, size: checkSize)
-                loadedCheckPartialImage = ggChecks?.partial ?? PresentationResourcesChat.chatOutgoingPartialCheck(arguments.presentationData.theme.theme, size: checkSize)
+                // WRAITH: custom checkmark colors, read and unread apart (appearance.checkmarks.*)
+                let wgChecks = wgCustomCheckImages(status: status, size: checkSize)
+                loadedCheckFullImage = wgChecks?.full ?? PresentationResourcesChat.chatOutgoingFullCheck(arguments.presentationData.theme.theme, size: checkSize)
+                loadedCheckPartialImage = wgChecks?.partial ?? PresentationResourcesChat.chatOutgoingPartialCheck(arguments.presentationData.theme.theme, size: checkSize)
                 clockFrameImage = graphics.clockBubbleOutgoingFrameImage
                 clockMinImage = graphics.clockBubbleOutgoingMinImage
                 if arguments.impressionCount != nil {
@@ -621,12 +621,12 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                 updatedDateText = compactNumericCountString(impressionCount, decimalSeparator: arguments.presentationData.dateTimeFormat.decimalSeparator) + " " + updatedDateText
             }
             
-            // GHOST: icons a feature put in the text as markers (the deleted mark) are drawn before it
-            let (ggDateText, ggStatusIcons) = GGStatusIcon.split(updatedDateText)
-            if !ggStatusIcons.isEmpty {
-                updatedDateText = ggDateText
+            // WRAITH: icons a feature put in the text as markers (the deleted mark) are drawn before it
+            let (wgDateText, wgStatusIcons) = WGStatusIcon.split(updatedDateText)
+            if !wgStatusIcons.isEmpty {
+                updatedDateText = wgDateText
             }
-            let ggStatusIconImage = ggStatusIcons.first.flatMap { ggStatusIconTemplateImage($0, color: dateColor, height: floor(arguments.presentationData.fontSize.baseDisplaySize * 12.0 / 17.0)) }
+            let wgStatusIconImage = wgStatusIcons.first.flatMap { wgStatusIconTemplateImage($0, color: dateColor, height: floor(arguments.presentationData.fontSize.baseDisplaySize * 12.0 / 17.0)) }
             let dateFont = Font.regular(floor(arguments.presentationData.fontSize.baseDisplaySize * 11.0 / 17.0))
             let (date, dateApply) = dateLayout(TextNodeLayoutArguments(attributedString: NSAttributedString(string: updatedDateText, font: dateFont, textColor: dateColor), backgroundColor: nil, maximumNumberOfLines: 1, truncationType: .middle, constrainedSize: arguments.constrainedSize, alignment: .natural, cutout: nil, insets: UIEdgeInsets()))
             
@@ -654,9 +654,9 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
             } else {
                 currentImpressionIcon = nil
             }
-            // GHOST: the feature icon sits between the views icon and the text (see ggStatusIconImage)
-            let ggStatusIconWidth: CGFloat = ggStatusIconImage.flatMap { image in image.size.width + (updatedDateText.isEmpty ? 0.0 : 2.0) } ?? 0.0
-            impressionWidth += ggStatusIconWidth
+            // WRAITH: the feature icon sits between the views icon and the text (see wgStatusIconImage)
+            let wgStatusIconWidth: CGFloat = wgStatusIconImage.flatMap { image in image.size.width + (updatedDateText.isEmpty ? 0.0 : 2.0) } ?? 0.0
+            impressionWidth += wgStatusIconWidth
             
             var repliesIconSize = CGSize()
             if let repliesImage = repliesImage {
@@ -1198,31 +1198,31 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                             impressionIcon.removeFromSupernode()
                             strongSelf.impressionIcon = nil
                         }
-                        // GHOST: the feature icon right before the text (GGStatusIcon)
-                        if let ggStatusIconImage {
+                        // WRAITH: the feature icon right before the text (WGStatusIcon)
+                        if let wgStatusIconImage {
                             let iconNode: ASImageNode
-                            if let current = strongSelf.ggStatusIconNode {
+                            if let current = strongSelf.wgStatusIconNode {
                                 iconNode = current
                             } else {
                                 iconNode = ASImageNode()
                                 iconNode.isLayerBacked = true
                                 iconNode.displayWithoutProcessing = true
                                 iconNode.displaysAsynchronously = false
-                                strongSelf.ggStatusIconNode = iconNode
+                                strongSelf.wgStatusIconNode = iconNode
                                 strongSelf.addSubnode(iconNode)
                             }
-                            if iconNode.image !== ggStatusIconImage {
-                                iconNode.image = ggStatusIconImage
+                            if iconNode.image !== wgStatusIconImage {
+                                iconNode.image = wgStatusIconImage
                             }
-                            let iconSize = ggStatusIconImage.size
-                            let iconFrame = CGRect(origin: CGPoint(x: leftOffset + leftInset + backgroundInsets.left + impressionWidth - ggStatusIconWidth, y: backgroundInsets.top + 1.0 + offset + verticalInset + floor((date.size.height - iconSize.height) / 2.0)), size: iconSize)
+                            let iconSize = wgStatusIconImage.size
+                            let iconFrame = CGRect(origin: CGPoint(x: leftOffset + leftInset + backgroundInsets.left + impressionWidth - wgStatusIconWidth, y: backgroundInsets.top + 1.0 + offset + verticalInset + floor((date.size.height - iconSize.height) / 2.0)), size: iconSize)
                             if iconNode.frame.isEmpty {
                                 iconNode.frame = iconFrame
                             } else {
                                 animation.animator.updateFrame(layer: iconNode.layer, frame: iconFrame, completion: nil)
                             }
-                        } else if let iconNode = strongSelf.ggStatusIconNode {
-                            strongSelf.ggStatusIconNode = nil
+                        } else if let iconNode = strongSelf.wgStatusIconNode {
+                            strongSelf.wgStatusIconNode = nil
                             iconNode.removeFromSupernode()
                         }
                         
@@ -1279,7 +1279,7 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                                 strongSelf.checkSentNode = checkSentNode
                                 strongSelf.addSubnode(checkSentNode)
                                 animateSentNode = animation.isAnimated
-                            } else if themeUpdated || checkSentNode.image !== loadedCheckFullImage { // GHOST: the color follows the read state
+                            } else if themeUpdated || checkSentNode.image !== loadedCheckFullImage { // WRAITH: the color follows the read state
                                 checkSentNode.image = loadedCheckFullImage
                             }
                             
@@ -1303,7 +1303,7 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                                 checkReadNode.image = loadedCheckPartialImage
                                 strongSelf.checkReadNode = checkReadNode
                                 strongSelf.addSubnode(checkReadNode)
-                            } else if themeUpdated || checkReadNode.image !== loadedCheckPartialImage { // GHOST: the color follows the read state
+                            } else if themeUpdated || checkReadNode.image !== loadedCheckPartialImage { // WRAITH: the color follows the read state
                                 checkReadNode.image = loadedCheckPartialImage
                             }
                         
@@ -1588,9 +1588,9 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
 }
 
 public func shouldDisplayInlineDateReactions(message: EngineMessage, isPremium: Bool, forceInline: Bool) -> Bool {
-    // GHOST: hidden reactions (appearance.messages.hideReactions). Upstream never asks for inline
+    // WRAITH: hidden reactions (appearance.messages.hideReactions). Upstream never asks for inline
     // reactions, so «inline» here always means «hidden»: no footer, and the status line drops them.
-    let snapshot = GGAppearanceSnapshot.current
+    let snapshot = WGAppearanceSnapshot.current
     if snapshot.hideReactionsInChats || snapshot.hideReactionsInChannels {
         if let channel = message.peers[message.id.peerId] as? TelegramChannel, case .broadcast = channel.info {
             return snapshot.hideReactionsInChannels
@@ -1601,9 +1601,9 @@ public func shouldDisplayInlineDateReactions(message: EngineMessage, isPremium: 
     return false
 }
 
-// GHOST: the status line options of the appearance snapshot. Read once per layout of the line.
-private func ggApplyAppearance(_ arguments: ChatMessageDateAndStatusNode.Arguments) -> ChatMessageDateAndStatusNode.Arguments {
-    let snapshot = GGAppearanceSnapshot.current
+// WRAITH: the status line options of the appearance snapshot. Read once per layout of the line.
+private func wgApplyAppearance(_ arguments: ChatMessageDateAndStatusNode.Arguments) -> ChatMessageDateAndStatusNode.Arguments {
+    let snapshot = WGAppearanceSnapshot.current
     let hidesReactions = arguments.layoutInput.displayInlineReactions
     if !snapshot.hideEdited && !snapshot.hideTime && !snapshot.hideViewCounts && !snapshot.hideChannelComments && !hidesReactions {
         return arguments
@@ -1613,8 +1613,8 @@ private func ggApplyAppearance(_ arguments: ChatMessageDateAndStatusNode.Argumen
         arguments.edited = false
     }
     if snapshot.hideTime {
-        // The time goes, a feature's icon stays (GGStatusIcon markers).
-        arguments.dateText = String(arguments.dateText.filter { GGStatusIcon(rawValue: $0) != nil })
+        // The time goes, a feature's icon stays (WGStatusIcon markers).
+        arguments.dateText = String(arguments.dateText.filter { WGStatusIcon(rawValue: $0) != nil })
     }
     if snapshot.hideViewCounts {
         arguments.impressionCount = nil
@@ -1629,19 +1629,19 @@ private func ggApplyAppearance(_ arguments: ChatMessageDateAndStatusNode.Argumen
     return arguments
 }
 
-// GHOST: a feature's status-line icon (GGStatusIcon): the template tinted with the time's color and
+// WRAITH: a feature's status-line icon (WGStatusIcon): the template tinted with the time's color and
 // scaled to the line, cached per (icon, color, height).
-private var ggStatusIconImages: [String: UIImage] = [:]
-private let ggStatusIconImagesLock = NSLock()
+private var wgStatusIconImages: [String: UIImage] = [:]
+private let wgStatusIconImagesLock = NSLock()
 
-private func ggStatusIconTemplateImage(_ icon: GGStatusIcon, color: UIColor, height: CGFloat) -> UIImage? {
+private func wgStatusIconTemplateImage(_ icon: WGStatusIcon, color: UIColor, height: CGFloat) -> UIImage? {
     let key = "\(icon.rawValue)|\(color.argb)|\(height)"
-    ggStatusIconImagesLock.lock()
-    if let image = ggStatusIconImages[key] {
-        ggStatusIconImagesLock.unlock()
+    wgStatusIconImagesLock.lock()
+    if let image = wgStatusIconImages[key] {
+        wgStatusIconImagesLock.unlock()
         return image
     }
-    ggStatusIconImagesLock.unlock()
+    wgStatusIconImagesLock.unlock()
     guard let source = UIImage(bundleImageName: icon.imageName), source.size.height > 0.0 else {
         return nil
     }
@@ -1657,16 +1657,16 @@ private func ggStatusIconTemplateImage(_ icon: GGStatusIcon, color: UIColor, hei
     }) else {
         return nil
     }
-    ggStatusIconImagesLock.lock()
-    ggStatusIconImages[key] = image
-    ggStatusIconImagesLock.unlock()
+    wgStatusIconImagesLock.lock()
+    wgStatusIconImages[key] = image
+    wgStatusIconImagesLock.unlock()
     return image
 }
 
-// GHOST: checkmarks of the user's colors: both checks in the read color once read, the single check
+// WRAITH: checkmarks of the user's colors: both checks in the read color once read, the single check
 // in the unread color before that. nil = the theme's checkmarks.
-private func ggCustomCheckImages(status: ChatMessageDateAndStatusOutgoingType, size: CGFloat) -> (full: UIImage?, partial: UIImage?)? {
-    let snapshot = GGAppearanceSnapshot.current
+private func wgCustomCheckImages(status: ChatMessageDateAndStatusOutgoingType, size: CGFloat) -> (full: UIImage?, partial: UIImage?)? {
+    let snapshot = WGAppearanceSnapshot.current
     if snapshot.readCheckRGB == nil && snapshot.unreadCheckRGB == nil {
         return nil
     }
@@ -1682,5 +1682,5 @@ private func ggCustomCheckImages(status: ChatMessageDateAndStatusOutgoingType, s
     guard let rgb else {
         return nil
     }
-    return (PresentationResourcesChat.ggChatOutgoingCheck(partial: false, rgb: rgb, size: size), PresentationResourcesChat.ggChatOutgoingCheck(partial: true, rgb: rgb, size: size))
+    return (PresentationResourcesChat.wgChatOutgoingCheck(partial: false, rgb: rgb, size: size), PresentationResourcesChat.wgChatOutgoingCheck(partial: true, rgb: rgb, size: size))
 }

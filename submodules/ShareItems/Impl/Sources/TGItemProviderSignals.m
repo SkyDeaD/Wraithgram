@@ -12,11 +12,11 @@
 
 @implementation TGItemProviderSignals
 
-// GHOST: see setGGPhotoMaxPixelSize: (set on the main thread before the items are read)
-static CGFloat ggPhotoMaxPixelSize = 0.0;
+// WRAITH: see setWGPhotoMaxPixelSize: (set on the main thread before the items are read)
+static CGFloat wgPhotoMaxPixelSize = 0.0;
 
-+ (void)setGGPhotoMaxPixelSize:(CGFloat)size {
-    ggPhotoMaxPixelSize = size;
++ (void)setWGPhotoMaxPixelSize:(CGFloat)size {
+    wgPhotoMaxPixelSize = size;
 }
 
 + (NSArray<MTSignal *> *)itemSignalsForInputItems:(NSArray *)inputItems
@@ -182,9 +182,9 @@ __unused static CGSize TGFitSize(CGSize size, CGSize maxSize) {
         bool preferAsFile = false;
         
         CGSize maxSize = CGSizeMake(1280.0, 1280.0);
-        CGFloat ggMaxPixelSize = ggPhotoMaxPixelSize; // GHOST: see setGGPhotoMaxPixelSize:
-        if (ggMaxPixelSize > 0.0) {
-            maxSize = CGSizeMake(ggMaxPixelSize, ggMaxPixelSize);
+        CGFloat wgMaxPixelSize = wgPhotoMaxPixelSize; // WRAITH: see setWGPhotoMaxPixelSize:
+        if (wgMaxPixelSize > 0.0) {
+            maxSize = CGSizeMake(wgMaxPixelSize, wgMaxPixelSize);
         }
         NSDictionary *imageOptions = @{
             NSItemProviderPreferredImageSizeKey: [NSValue valueWithCGSize:maxSize]
@@ -243,8 +243,8 @@ __unused static CGSize TGFitSize(CGSize size, CGSize maxSize) {
                                 return;
                             }
                             
-                            // GHOST: Ghostgram's outgoing photo settings: ShareItems scales, marks and compresses the decoded picture
-                            if (ggMaxPixelSize > 0.0) {
+                            // WRAITH: Wraithgram's outgoing photo settings: ShareItems scales, marks and compresses the decoded picture
+                            if (wgMaxPixelSize > 0.0) {
                                 UIImage *decoded = [UIImage imageWithCGImage:image];
                                 CGImageRelease(image);
                                 [subscriber putNext:@{@"image": decoded}];

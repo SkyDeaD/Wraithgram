@@ -40,8 +40,8 @@ import ButtonComponent
 import BundleIconComponent
 import AnimatedTextComponent
 import TextFormat
-import ChatListTitleView // GHOST: search by numeric id (GGChatListSearchHooks)
-import GGHooks // GHOST: sponsored peers in the search (GGChatScreenHooks.showsAdMessages)
+import ChatListTitleView // WRAITH: search by numeric id (WGChatListSearchHooks)
+import WGHooks // WRAITH: sponsored peers in the search (WGChatScreenHooks.showsAdMessages)
 
 private func isIncludedCommunityContainer(_ peer: EnginePeer?, filter: ChatListNodePeersFilter) -> Bool {
     if filter.contains(.includeCommunities), case .community = peer {
@@ -2412,7 +2412,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
                     }
 
                     foundLocalPeers = combineLatest(
-                        ggChatListSearchLocalPeers(updatedLocalPeers, query: query, context: context), // GHOST: search by numeric id (GGChatListSearchHooks)
+                        wgChatListSearchLocalPeers(updatedLocalPeers, query: query, context: context), // WRAITH: search by numeric id (WGChatListSearchHooks)
                         fixedOrRemovedRecentlySearchedPeers
                     )
                     |> mapToSignal { local, allRecentlySearched -> Signal<([EnginePeer.Id: Optional<EnginePeer.NotificationSettings>], [EnginePeer.Id: TelegramEngine.EngineData.Item.Messages.PeerUnreadState.Result], [EngineRenderedPeer], Set<EnginePeer.Id>, EngineGlobalNotificationSettings), NoError> in
@@ -2709,8 +2709,8 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
                         |> then(
                             globalPeerSearchContext.searchRemotePeers(engine: context.engine, query: query)
                             |> mapToSignal { result in
-                                // GHOST: no sponsored peers in the search when ads are turned off (GGChatScreenHooks.showsAdMessages)
-                                return (GGChatScreenHooks.showsAdMessages(context: context, peerId: context.account.peerId) ? context.engine.peers.searchAdPeers(query: query) : Signal<[AdPeer], NoError>.single([]))
+                                // WRAITH: no sponsored peers in the search when ads are turned off (WGChatScreenHooks.showsAdMessages)
+                                return (WGChatScreenHooks.showsAdMessages(context: context, peerId: context.account.peerId) ? context.engine.peers.searchAdPeers(query: query) : Signal<[AdPeer], NoError>.single([]))
                                 |> map { adPeers in
                                     return (result.0, result.1, adPeers, false)
                                 }
@@ -3431,7 +3431,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
                                     continue
                                 }
                                 existingMessageIds.insert(message.id)
-                                if ggChatListHidesSearchMessage(message, context: context) { continue } // GHOST: messages of locked chats stay out of the search (GGChatListHooks.hidesSearchMessages)
+                                if wgChatListHidesSearchMessage(message, context: context) { continue } // WRAITH: messages of locked chats stay out of the search (WGChatListHooks.hidesSearchMessages)
 
                                 if searchState.deletedMessageIds.contains(message.id) {
                                     continue

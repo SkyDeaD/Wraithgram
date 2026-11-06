@@ -360,8 +360,8 @@ public final class TabBarComponent: Component {
     public let axis: Axis
     /// Icons without labels, on either axis.
     public let isCompact: Bool
-    // GHOST: tab bar organizer style — labels, wide bar, height (GGTabBarHooks); .upstream elsewhere
-    public let ggStyle: GGTabBarStyle
+    // WRAITH: tab bar organizer style — labels, wide bar, height (WGTabBarHooks); .upstream elsewhere
+    public let wgStyle: WGTabBarStyle
     
     public init(
         theme: PresentationTheme,
@@ -374,9 +374,9 @@ public final class TabBarComponent: Component {
         outerInsets: UIEdgeInsets,
         axis: Axis,
         isCompact: Bool,
-        ggStyle: GGTabBarStyle = .upstream // GHOST: see the property
+        wgStyle: WGTabBarStyle = .upstream // WRAITH: see the property
     ) {
-        self.ggStyle = ggStyle // GHOST: see the property
+        self.wgStyle = wgStyle // WRAITH: see the property
         self.theme = theme
         self.tintSelectedItem = tintSelectedItem
         self.isLiftedStateEnabled = isLiftedStateEnabled
@@ -420,7 +420,7 @@ public final class TabBarComponent: Component {
         if lhs.isCompact != rhs.isCompact {
             return false
         }
-        if lhs.ggStyle != rhs.ggStyle { // GHOST: see the property
+        if lhs.wgStyle != rhs.wgStyle { // WRAITH: see the property
             return false
         }
         return true
@@ -678,7 +678,7 @@ public final class TabBarComponent: Component {
         
         func update(component: TabBarComponent, availableSize: CGSize, state: EmptyComponentState, environment: Environment<Empty>, transition: ComponentTransition) -> CGSize {
             let innerInset: CGFloat = 4.0
-            let availableSize = component.axis == .vertical ? CGSize(width: min(500.0, availableSize.width), height: availableSize.height) : CGSize(width: ggTabBarAvailableWidth(component.ggStyle.isWide ? availableSize.width : min(500.0, availableSize.width), style: component.ggStyle, itemCount: component.items.count, hasSearch: component.search != nil, isSearchActive: component.search?.isActive == true, searchButtonWidth: 48.0 + innerInset * 2.0), height: availableSize.height) // GHOST: wide tab bar; a narrow one fits its tabs (GGTabBarStyle.fitsItems); the vertical bar is Telegram's
+            let availableSize = component.axis == .vertical ? CGSize(width: min(500.0, availableSize.width), height: availableSize.height) : CGSize(width: wgTabBarAvailableWidth(component.wgStyle.isWide ? availableSize.width : min(500.0, availableSize.width), style: component.wgStyle, itemCount: component.items.count, hasSearch: component.search != nil, isSearchActive: component.search?.isActive == true, searchButtonWidth: 48.0 + innerInset * 2.0), height: availableSize.height) // WRAITH: wide tab bar; a narrow one fits its tabs (WGTabBarStyle.fitsItems); the vertical bar is Telegram's
             
             let previousComponent = self.component
             // A new axis or mode is applied without animation, so the capsule does not morph through
@@ -697,7 +697,7 @@ public final class TabBarComponent: Component {
             
             self.overrideUserInterfaceStyle = component.theme.overallDarkAppearance ? .dark : .light
 
-            let barHeight: CGFloat = component.ggStyle.baseItemHeight + component.ggStyle.heightOffset + innerInset * 2.0 // GHOST: tab bar height; compact without labels
+            let barHeight: CGFloat = component.wgStyle.baseItemHeight + component.wgStyle.heightOffset + innerInset * 2.0 // WRAITH: tab bar height; compact without labels
 
             var unboundItemWidths: [CGFloat] = []
             var validIds: [AnyHashable] = []
@@ -723,10 +723,10 @@ public final class TabBarComponent: Component {
                         isSelected: false,
                         tintSelectedItem: true,
                         isUnconstrained: true,
-                        ggStyle: component.ggStyle // GHOST: tab bar style
+                        wgStyle: component.wgStyle // WRAITH: tab bar style
                     )),
                     environment: {},
-                    containerSize: CGSize(width: 200.0, height: component.ggStyle.baseItemHeight) // GHOST: compact without labels
+                    containerSize: CGSize(width: 200.0, height: component.wgStyle.baseItemHeight) // WRAITH: compact without labels
                 )
                 unboundItemWidths.append(itemSize.width)
             }
@@ -735,7 +735,7 @@ public final class TabBarComponent: Component {
             if search != nil {
                 availableLength -= barHeight + 8.0
             }
-            let itemsLayout = ggTabBarItemsLayout(tabBarItemsLayout(axis: component.axis, isCompact: component.isCompact, unboundItemWidths: unboundItemWidths, availableLength: availableLength), style: component.ggStyle, axis: component.axis, isCompact: component.isCompact) // GHOST: tab height of the organizer style
+            let itemsLayout = wgTabBarItemsLayout(tabBarItemsLayout(axis: component.axis, isCompact: component.isCompact, unboundItemWidths: unboundItemWidths, availableLength: availableLength), style: component.wgStyle, axis: component.axis, isCompact: component.isCompact) // WRAITH: tab height of the organizer style
             let tabsSize = itemsLayout.size
 
             var selectedItemFrame: CGRect?
@@ -781,7 +781,7 @@ public final class TabBarComponent: Component {
                         isSelected: false,
                         tintSelectedItem: component.tintSelectedItem,
                         isUnconstrained: false,
-                        ggStyle: component.ggStyle // GHOST: tab bar style
+                        wgStyle: component.wgStyle // WRAITH: tab bar style
                     )),
                     environment: {},
                     containerSize: itemSize
@@ -796,7 +796,7 @@ public final class TabBarComponent: Component {
                         isSelected: true,
                         tintSelectedItem: component.tintSelectedItem,
                         isUnconstrained: false,
-                        ggStyle: component.ggStyle // GHOST: tab bar style
+                        wgStyle: component.wgStyle // WRAITH: tab bar style
                     )),
                     environment: {},
                     containerSize: itemSize
@@ -966,10 +966,10 @@ private final class ItemComponent: Component {
     let isSelected: Bool
     let tintSelectedItem: Bool
     let isUnconstrained: Bool
-    let ggStyle: GGTabBarStyle // GHOST: tab bar style (labels, hidden titles)
+    let wgStyle: WGTabBarStyle // WRAITH: tab bar style (labels, hidden titles)
     
-    init(item: TabBarComponent.Item, theme: PresentationTheme, isSearchActive: Bool, showsTitle: Bool, isSelected: Bool, tintSelectedItem: Bool, isUnconstrained: Bool, ggStyle: GGTabBarStyle = .upstream) {
-        self.ggStyle = ggStyle // GHOST: see the property
+    init(item: TabBarComponent.Item, theme: PresentationTheme, isSearchActive: Bool, showsTitle: Bool, isSelected: Bool, tintSelectedItem: Bool, isUnconstrained: Bool, wgStyle: WGTabBarStyle = .upstream) {
+        self.wgStyle = wgStyle // WRAITH: see the property
         self.item = item
         self.theme = theme
         self.isSearchActive = isSearchActive
@@ -1001,7 +1001,7 @@ private final class ItemComponent: Component {
         if lhs.isUnconstrained != rhs.isUnconstrained {
             return false
         }
-        if lhs.ggStyle != rhs.ggStyle { // GHOST: see the property
+        if lhs.wgStyle != rhs.wgStyle { // WRAITH: see the property
             return false
         }
         return true
@@ -1131,7 +1131,7 @@ private final class ItemComponent: Component {
 
             switch component.item.content {
             case let .tabBarItem(tabBarItem):
-                title = (component.ggStyle == .upstream ? tabBarItem.title : ggTabBarItemTitle(tabBarItem)) ?? " " // GHOST: own tab labels (GGTabBarHooks.itemTitle)
+                title = (component.wgStyle == .upstream ? tabBarItem.title : wgTabBarItemTitle(tabBarItem)) ?? " " // WRAITH: own tab labels (WGTabBarHooks.itemTitle)
                 badgeValue = tabBarItem.badgeValue
 
                 if let animationName = tabBarItem.animationName {
@@ -1168,7 +1168,7 @@ private final class ItemComponent: Component {
                         environment: {},
                         containerSize: CGSize(width: floor(48.0 * animationScale), height: floor(48.0 * animationScale))
                     )
-                    let iconFrame = CGRect(origin: CGPoint(x: floor((availableSize.width - iconSize.width) * 0.5), y: iconY(regular: -4.0, height: iconSize.height) + ggTabBarIconShift(component, availableHeight: availableSize.height)), size: iconSize).offsetBy(dx: tabBarItem.animationOffset.x, dy: tabBarItem.animationOffset.y) // GHOST: hidden labels / height
+                    let iconFrame = CGRect(origin: CGPoint(x: floor((availableSize.width - iconSize.width) * 0.5), y: iconY(regular: -4.0, height: iconSize.height) + wgTabBarIconShift(component, availableHeight: availableSize.height)), size: iconSize).offsetBy(dx: tabBarItem.animationOffset.x, dy: tabBarItem.animationOffset.y) // WRAITH: hidden labels / height
                     if let animationIconView = animationIcon.view {
                         if animationIconView.superview == nil {
                             if let badgeView = self.badge?.view {
@@ -1206,7 +1206,7 @@ private final class ItemComponent: Component {
                         environment: {},
                         containerSize: CGSize(width: 100.0, height: 100.0)
                     )
-                    let iconFrame = CGRect(origin: CGPoint(x: floor((availableSize.width - iconSize.width) * 0.5), y: iconY(regular: 3.0, height: iconSize.height) + ggTabBarIconShift(component, availableHeight: availableSize.height)), size: iconSize) // GHOST: hidden labels / height
+                    let iconFrame = CGRect(origin: CGPoint(x: floor((availableSize.width - iconSize.width) * 0.5), y: iconY(regular: 3.0, height: iconSize.height) + wgTabBarIconShift(component, availableHeight: availableSize.height)), size: iconSize) // WRAITH: hidden labels / height
                     if let imageIconView = imageIcon.view {
                         if imageIconView.superview == nil {
                             if let badgeView = self.badge?.view {
@@ -1319,7 +1319,7 @@ private final class ItemComponent: Component {
                     self.contextContainerView.contentView.addSubview(titleView)
                 }
                 titleView.frame = titleFrame
-                alphaTransition.setAlpha(view: titleView, alpha: (component.isSearchActive || !component.showsTitle || component.ggStyle.hidesTitles) ? 0.0 : 1.0) // GHOST: hidden labels
+                alphaTransition.setAlpha(view: titleView, alpha: (component.isSearchActive || !component.showsTitle || component.wgStyle.hidesTitles) ? 0.0 : 1.0) // WRAITH: hidden labels
             }
 
             if let badgeText = badgeValue, !badgeText.isEmpty {
@@ -1345,7 +1345,7 @@ private final class ItemComponent: Component {
                     containerSize: CGSize(width: 100.0, height: 100.0)
                 )
                 let contentWidth: CGFloat = 25.0
-                let badgeFrame = CGRect(origin: CGPoint(x: floor(availableSize.width / 2.0) + contentWidth - badgeSize.width - 1.0, y: 5.0 + badgeOffsetY + ggTabBarBadgeShift(component, availableHeight: availableSize.height)), size: badgeSize) // GHOST: the badge follows its icon (hidden labels / height)
+                let badgeFrame = CGRect(origin: CGPoint(x: floor(availableSize.width / 2.0) + contentWidth - badgeSize.width - 1.0, y: 5.0 + badgeOffsetY + wgTabBarBadgeShift(component, availableHeight: availableSize.height)), size: badgeSize) // WRAITH: the badge follows its icon (hidden labels / height)
                 if let badgeView = badge.view {
                     if badgeView.superview == nil {
                         self.contextContainerView.contentView.addSubview(badgeView)
@@ -1379,27 +1379,27 @@ private final class ItemComponent: Component {
     }
 }
 
-// GHOST: the unread badge moves with a tab's icon (custom items keep Telegram's icon place, and their badge too).
-private func ggTabBarBadgeShift(_ component: ItemComponent, availableHeight: CGFloat) -> CGFloat {
+// WRAITH: the unread badge moves with a tab's icon (custom items keep Telegram's icon place, and their badge too).
+private func wgTabBarBadgeShift(_ component: ItemComponent, availableHeight: CGFloat) -> CGFloat {
     if case .tabBarItem = component.item.content {
-        return ggTabBarIconShift(component, availableHeight: availableHeight)
+        return wgTabBarIconShift(component, availableHeight: availableHeight)
     }
     return 0.0
 }
 
-// GHOST: vertical shift of a tab icon, kept in the middle of a taller item. Telegram's icon places
+// WRAITH: vertical shift of a tab icon, kept in the middle of a taller item. Telegram's icon places
 // already center it in the compact 40 pt tab without labels (Swiftgram's places, unshifted). An item
 // without a title (Telegram's own compact bar) is centered by `iconY` already.
-private func ggTabBarIconShift(_ component: ItemComponent, availableHeight: CGFloat) -> CGFloat {
-    if component.ggStyle == .upstream || !component.showsTitle {
+private func wgTabBarIconShift(_ component: ItemComponent, availableHeight: CGFloat) -> CGFloat {
+    if component.wgStyle == .upstream || !component.showsTitle {
         return 0.0
     }
-    return floor(max(0.0, availableHeight - component.ggStyle.baseItemHeight) * 0.5)
+    return floor(max(0.0, availableHeight - component.wgStyle.baseItemHeight) * 0.5)
 }
 
-// GHOST: the horizontal bar's tabs at the organizer style's height — 40 pt without labels (Swiftgram's compact
+// WRAITH: the horizontal bar's tabs at the organizer style's height — 40 pt without labels (Swiftgram's compact
 // bar), plus «Высота панели». Telegram's own compact and vertical bars keep their thickness.
-private func ggTabBarItemsLayout(_ layout: TabBarItemsLayout, style: GGTabBarStyle, axis: TabBarAxis, isCompact: Bool) -> TabBarItemsLayout {
+private func wgTabBarItemsLayout(_ layout: TabBarItemsLayout, style: WGTabBarStyle, axis: TabBarAxis, isCompact: Bool) -> TabBarItemsLayout {
     if style == .upstream || axis != .horizontal {
         return layout
     }

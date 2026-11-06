@@ -16,12 +16,12 @@ import WebUI
 import AvatarNode
 import PeerNameColorItem
 import BoostLevelIconComponent
-import GGHooks // GHOST: peer info points
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGHooks // WRAITH: peer info points
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 private let enabledPublicBioEntities: EnabledEntityTypes = [.allUrl, .mention, .hashtag]
-// GHOST: «Ссылки в описании» — every URL is tappable without Premium (GGExtrasPolicy.clickableBioLinks)
-private var enabledPrivateBioEntities: EnabledEntityTypes { return GGExtrasPolicy.clickableBioLinks ? [.allUrl, .mention, .hashtag] : [.internalUrl, .mention, .hashtag] }
+// WRAITH: «Ссылки в описании» — every URL is tappable without Premium (WGExtrasPolicy.clickableBioLinks)
+private var enabledPrivateBioEntities: EnabledEntityTypes { return WGExtrasPolicy.clickableBioLinks ? [.allUrl, .mention, .hashtag] : [.internalUrl, .mention, .hashtag] }
 
 private func peerVerificationDescriptionEntities(_ verification: PeerVerification) -> [MessageTextEntity] {
     var result = verification.descriptionEntities
@@ -176,8 +176,8 @@ func infoItems(
             ))
         }
         
-        // GHOST: features may hide or replace the shown number (GGPeerInfoHooks.displayedPhoneNumber)
-        if let phone = GGPeerInfoHooks.phone(user.phone, peerId: user.id, context: context) {
+        // WRAITH: features may hide or replace the shown number (WGPeerInfoHooks.displayedPhoneNumber)
+        if let phone = WGPeerInfoHooks.phone(user.phone, peerId: user.id, context: context) {
             let formattedPhone = formatPhoneNumber(context: context, number: phone)
             let label: String
             if formattedPhone.hasPrefix("+888 ") {
@@ -305,8 +305,8 @@ func infoItems(
                     })
                 }
                 
-                let ggHidesAbout = user.botInfo == nil && ggPeerInfoHidesItem(.description, data: data, context: context, interaction: interaction) // GHOST: features may hide «О себе» (GGPeerInfoHooks.hidesItem)
-                if (hasAbout || hasWebApp) && !ggHidesAbout { // GHOST: see ggHidesAbout
+                let wgHidesAbout = user.botInfo == nil && wgPeerInfoHidesItem(.description, data: data, context: context, interaction: interaction) // WRAITH: features may hide «О себе» (WGPeerInfoHooks.hidesItem)
+                if (hasAbout || hasWebApp) && !wgHidesAbout { // WRAITH: see wgHidesAbout
                     var label: String = ""
                     if let about = cachedData.about, !about.isEmpty {
                         label = user.botInfo == nil ? presentationData.strings.Profile_About : presentationData.strings.Profile_BotInfo
@@ -686,7 +686,7 @@ func infoItems(
                     aboutText = nil
                 }
                 
-                if let aboutText = aboutText, !(aboutText == cachedData.about && ggPeerInfoHidesItem(.description, data: data, context: context, interaction: interaction)) { // GHOST: features may hide the description, never a scam / fake warning (GGPeerInfoHooks.hidesItem)
+                if let aboutText = aboutText, !(aboutText == cachedData.about && wgPeerInfoHidesItem(.description, data: data, context: context, interaction: interaction)) { // WRAITH: features may hide the description, never a scam / fake warning (WGPeerInfoHooks.hidesItem)
                     var enabledEntities = enabledPublicBioEntities
                     if case .group = channel.info {
                         enabledEntities = enabledPrivateBioEntities
@@ -727,7 +727,7 @@ func infoItems(
 
                 if case .broadcast = channel.info {
                     var canEditMembers = false
-                    if channel.hasPermission(.banMembers) || GGExtrasPolicy.adminListsForAllAdmins { // GHOST: «Списки для всех админов» (GGExtrasPolicy)
+                    if channel.hasPermission(.banMembers) || WGExtrasPolicy.adminListsForAllAdmins { // WRAITH: «Списки для всех админов» (WGExtrasPolicy)
                         canEditMembers = true
                     }
                     if canEditMembers {
@@ -809,8 +809,8 @@ func infoItems(
                     items[section]!.append(PeerInfoScreenDisclosureItem(id: ItemEdit, label: .none, text: settingsTitle, icon: PresentationResourcesSettings.settings, action: {
                         interaction.openEditing()
                     }))
-                    // GHOST: «Недавние действия» in a channel's profile, as groups have it (GGExtrasPolicy.showsRecentActionsInProfile)
-                    if case .broadcast = channel.info, GGExtrasPolicy.showsRecentActionsInProfile { items[section]!.append(PeerInfoScreenDisclosureItem(id: "gg.recentActions", label: .none, text: presentationData.strings.Group_Info_AdminLog, icon: PresentationResourcesSettings.recentActions, action: { interaction.openRecentActions() })) }
+                    // WRAITH: «Недавние действия» in a channel's profile, as groups have it (WGExtrasPolicy.showsRecentActionsInProfile)
+                    if case .broadcast = channel.info, WGExtrasPolicy.showsRecentActionsInProfile { items[section]!.append(PeerInfoScreenDisclosureItem(id: "wg.recentActions", label: .none, text: presentationData.strings.Group_Info_AdminLog, icon: PresentationResourcesSettings.recentActions, action: { interaction.openRecentActions() })) }
                 }
                 
                 if channel.hasPermission(.manageDirect), let personalChannel = data.personalChannel {
@@ -842,7 +842,7 @@ func infoItems(
                 aboutText = nil
             }
             
-            if let aboutText = aboutText, !(aboutText == cachedData.about && ggPeerInfoHidesItem(.description, data: data, context: context, interaction: interaction)) { // GHOST: features may hide the description, never a scam / fake warning (GGPeerInfoHooks.hidesItem)
+            if let aboutText = aboutText, !(aboutText == cachedData.about && wgPeerInfoHidesItem(.description, data: data, context: context, interaction: interaction)) { // WRAITH: features may hide the description, never a scam / fake warning (WGPeerInfoHooks.hidesItem)
                 items[currentPeerInfoSection]!.append(PeerInfoScreenLabeledValueItem(id: 0, label: presentationData.strings.Channel_Info_Description, text: aboutText, textColor: .primary, textBehavior: .multiLine(maxLines: 100, enabledEntities: enabledPrivateBioEntities), action: isMyProfile ? { node, _ in
                     bioContextAction(node, nil, nil)
                 } : nil, linkItemAction: bioLinkAction, contextAction: bioContextAction, requestLayout: { animated in
@@ -907,8 +907,8 @@ func infoItems(
         }
     }
     
-    // GHOST: feature rows in the info section: ID, data center, dates (GGPeerInfoHooks.infoRows)
-    ggAppendPeerInfoRows(&items[.peerInfo]!, data: data, context: context, interaction: interaction)
+    // WRAITH: feature rows in the info section: ID, data center, dates (WGPeerInfoHooks.infoRows)
+    wgAppendPeerInfoRows(&items[.peerInfo]!, data: data, context: context, interaction: interaction)
     var result: [(AnyHashable, [PeerInfoScreenItem])] = []
     for section in InfoSection.allCases {
         if let sectionItems = items[section], !sectionItems.isEmpty {
@@ -1096,7 +1096,7 @@ func editingItems(data: PeerInfoScreenData?, boostStatus: ChannelBoostStatus?, s
                     }
                     
                     let imageSignal: Signal<UIImage?, NoError>
-                    if let representation, let signal = peerAvatarImage(account: context.account, peerReference: PeerReference(user), authorOfMessage: nil, representation: representation, displayDimensions: CGSize(width: 28.0, height: 28.0), clipStyle: ggAvatarClipStyle(.round)) { // GHOST: square avatars (clipStyle)
+                    if let representation, let signal = peerAvatarImage(account: context.account, peerReference: PeerReference(user), authorOfMessage: nil, representation: representation, displayDimensions: CGSize(width: 28.0, height: 28.0), clipStyle: wgAvatarClipStyle(.round)) { // WRAITH: square avatars (clipStyle)
                         imageSignal = signal
                         |> map { data -> UIImage? in
                             return data?.0
@@ -1311,7 +1311,7 @@ func editingItems(data: PeerInfoScreenData?, boostStatus: ChannelBoostStatus?, s
                 }
                 
                 var canEditMembers = false
-                if (channel.hasPermission(.banMembers) || GGExtrasPolicy.adminListsForAllAdmins) && (channel.adminRights != nil || channel.flags.contains(.isCreator)) { // GHOST: «Списки для всех админов» (GGExtrasPolicy)
+                if (channel.hasPermission(.banMembers) || WGExtrasPolicy.adminListsForAllAdmins) && (channel.adminRights != nil || channel.flags.contains(.isCreator)) { // WRAITH: «Списки для всех админов» (WGExtrasPolicy)
                     canEditMembers = true
                 }
                 if canEditMembers {

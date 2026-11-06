@@ -1,7 +1,7 @@
 /* Localized versions of Info.plist keys */
 
-"NSContactsUsageDescription" = "Актуальная информация о ваших контактах будет храниться зашифрованной в облаке Telegram, чтобы вы могли связаться с друзьями с любого устройства."; /* GHOST: Telegram's cloud, the name stays */
-"NSLocationWhenInUseUsageDescription" = "Когда вы отправляете друзьям геопозицию, Ghostgram нужно разрешение, чтобы показать им карту."; /* GHOST: app name */
+"NSContactsUsageDescription" = "Актуальная информация о ваших контактах будет храниться зашифрованной в облаке Telegram, чтобы вы могли связаться с друзьями с любого устройства."; /* WRAITH: Telegram's cloud, the name stays */
+"NSLocationWhenInUseUsageDescription" = "Когда вы отправляете друзьям геопозицию, Wraithgram нужно разрешение, чтобы показать им карту."; /* WRAITH: app name */
 "NSLocationAlwaysAndWhenInUseUsageDescription" = "Фоновый доступ к геопозиции требуется, чтобы обновлять вашу геопозицию, когда вы транслируете её в чат с друзьями.";
 "NSLocationAlwaysUsageDescription" = "Фоновый доступ к геопозиции требуется, чтобы обновлять вашу геопозицию, когда вы транслируете её в чат с друзьями. Он также необходим для отправки геопозиции с Apple Watch.";
 "NSCameraUsageDescription" = "Это необходимо, чтобы вы могли делиться снятыми фотографиями и видео.";

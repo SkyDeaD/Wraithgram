@@ -30,8 +30,8 @@ swift_library(
         "//submodules/TelegramUI/Components/Chat/ChatMessageAttachedContentNode",
         "//submodules/TelegramUI/Components/Chat/ChatHistoryEntry",
         "//submodules/TelegramUI/Components/ChatControllerInteraction",
-        # GHOST: Swiftgram-parity settings (W5-SG)
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
+        # WRAITH: Swiftgram-parity settings (W5-SG)
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
     ],
     visibility = [
         "//visibility:public",

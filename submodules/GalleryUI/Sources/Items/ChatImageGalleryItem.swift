@@ -28,7 +28,7 @@ import AdsReportScreen
 import GlassBackgroundComponent
 import ComponentFlow
 import ComponentDisplayAdapters
-import GGHooks // GHOST: gallery points
+import WGHooks // WRAITH: gallery points
 
 /// Upper bound on the pixel dimensions a full-screen photo is decoded and rasterized at.
 /// Photos larger than this are downscaled to fit; smaller ones are left untouched.
@@ -465,7 +465,7 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
         self.translateToLanguage = translateToLanguage
         self.peerIsCopyProtected = peerIsCopyProtected
         self.isSecret = isSecret
-        self.imageNode.captureProtected = GGChatScreenHooks.captureProtection(message.id.peerId.namespace == Namespaces.Peer.SecretChat || message.isCopyProtected() || peerIsCopyProtected || isSecret || message.paidContent != nil, context: self.context, chatLocation: .peer(id: message.id.peerId)) // GHOST: «Обход скриншотов» in the viewer too (GGChatScreenHooks.captureProtection)
+        self.imageNode.captureProtected = WGChatScreenHooks.captureProtection(message.id.peerId.namespace == Namespaces.Peer.SecretChat || message.isCopyProtected() || peerIsCopyProtected || isSecret || message.paidContent != nil, context: self.context, chatLocation: .peer(id: message.id.peerId)) // WRAITH: «Обход скриншотов» in the viewer too (WGChatScreenHooks.captureProtection)
         self.updateFooter(animated: false)
         
         var title: String?
@@ -813,8 +813,8 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
                     }
                 })))
             }
-            // GHOST: features add gallery menu items (GGGalleryHooks.menuItems)
-            items = GGGalleryHooks.appendMenuItems(items, context: context, message: self.message, kind: .image, isCopyProtected: (self.message?.isCopyProtected() ?? false) || self.peerIsCopyProtected || self.message?.paidContent != nil) // GHOST: + whether the media is protected, as for «Save»
+            // WRAITH: features add gallery menu items (WGGalleryHooks.menuItems)
+            items = WGGalleryHooks.appendMenuItems(items, context: context, message: self.message, kind: .image, isCopyProtected: (self.message?.isCopyProtected() ?? false) || self.peerIsCopyProtected || self.message?.paidContent != nil) // WRAITH: + whether the media is protected, as for «Save»
             return items
         }
     }

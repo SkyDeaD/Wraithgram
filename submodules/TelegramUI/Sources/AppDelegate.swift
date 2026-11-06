@@ -63,7 +63,7 @@ import AlertComponent
 import AppCenter
 import AppCenterCrashes
 #endif
-import GGHooks // GHOST: launch and lifecycle points
+import WGHooks // WRAITH: launch and lifecycle points
 
 private let handleVoipNotifications = false
 
@@ -317,7 +317,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
         }
         
         let baseAppBundleId = Bundle.main.bundleIdentifier!
-        let appGroupName = BuildConfig.appGroupName(baseAppBundleId: baseAppBundleId) // GHOST: app group of a re-signed app (BuildConfig.h)
+        let appGroupName = BuildConfig.appGroupName(baseAppBundleId: baseAppBundleId) // WRAITH: app group of a re-signed app (BuildConfig.h)
 
         let configuration = URLSessionConfiguration.background(withIdentifier: identifier)
         configuration.sharedContainerIdentifier = appGroupName
@@ -570,7 +570,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
         let appVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "unknown"
         
         let baseAppBundleId = Bundle.main.bundleIdentifier!
-        // GHOST: the app group of a re-signed app and the passcode keychain group that goes with it (BuildConfig.h)
+        // WRAITH: the app group of a re-signed app and the passcode keychain group that goes with it (BuildConfig.h)
         let appGroupName = BuildConfig.appGroupName(baseAppBundleId: baseAppBundleId)
         try! PasscodeEnvironment.shared.configure(PasscodeConfiguration(appGroupIdentifier: appGroupName, processRole: .mainApp, biometricKeychainService: walletBiometricKeychainService), privateAccessGroup: {
             BuildConfig.passcodePrivateAccessGroup(baseAppBundleId: baseAppBundleId)
@@ -702,8 +702,8 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
             self.mainWindow?.presentNative(UIAlertController(title: nil, message: "Error 2", preferredStyle: .alert))
             return true
         }
-        // GHOST: Ghostgram core and feature modules, before the AccountManager and the accounts (FOUNDATION_SPEC §2)
-        ggApplicationDidLaunch(appGroupPath: appGroupUrl.path)
+        // WRAITH: Wraithgram core and feature modules, before the AccountManager and the accounts (FOUNDATION_SPEC §2)
+        wgApplicationDidLaunch(appGroupPath: appGroupUrl.path)
         
         var isDebugConfiguration = false
         #if DEBUG
@@ -1005,8 +1005,8 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
             self.window?.rootViewController?.dismiss(animated: true, completion: nil)
         }, getAvailableAlternateIcons: {
             if #available(iOS 10.3, *) {
-                // GHOST: client branding — only Ghostgram's ghost; Telegram's icons and the duck are not shipped (owner, 2026-10-27, 2026-10-28)
-                let icons = [PresentationAppIcon(name: "Ghost", imageName: "GhostgramIcon@3x", isDefault: true)]
+                // WRAITH: client branding — only Wraithgram's icon; Telegram's icons are not shipped (owner, 2026-10-27, 2026-10-28)
+                let icons = [PresentationAppIcon(name: "Wraith", imageName: "WraithgramIcon@3x", isDefault: true)]
                 return icons
             } else {
                 return []
@@ -1054,8 +1054,8 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
             try resetWalletLocalSecrets()
         })
         self.accountManager = accountManager
-        // GHOST: Ghostgram's own requests follow the user's SOCKS5 proxy (GGNetwork, W1-1 bridge)
-        ggCoreAttachProxySettings(accountManager: accountManager)
+        // WRAITH: Wraithgram's own requests follow the user's SOCKS5 proxy (WGNetwork, W1-1 bridge)
+        wgCoreAttachProxySettings(accountManager: accountManager)
 
         telegramUIDeclareEncodables()
         initializeAccountManagement()
@@ -2032,8 +2032,8 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
     }
 
     func handleWillResignActive() {
-        // GHOST: foreground tasks stop, settings are flushed, lifecycle observers (GGLifecycleHooks)
-        ggApplicationWillResignActive()
+        // WRAITH: foreground tasks stop, settings are flushed, lifecycle observers (WGLifecycleHooks)
+        wgApplicationWillResignActive()
         self.isActiveValue = false
         self.isActivePromise.set(false)
         self.clearNotificationsManager?.commitNow()
@@ -2061,8 +2061,8 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
     }
 
     func handleDidEnterBackground() {
-        // GHOST: lifecycle observers, e.g. chat lock (GGLifecycleHooks)
-        ggApplicationDidEnterBackground()
+        // WRAITH: lifecycle observers, e.g. chat lock (WGLifecycleHooks)
+        wgApplicationDidEnterBackground()
         let _ = (self.sharedContextPromise.get()
         |> take(1)
         |> deliverOnMainQueue).start(next: { sharedApplicationContext in
@@ -2142,8 +2142,8 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
     }
 
     func handleDidBecomeActive() {
-        // GHOST: throttled foreground tasks and lifecycle observers (GGForegroundTaskScheduler, GGLifecycleHooks)
-        ggApplicationDidBecomeActive()
+        // WRAITH: throttled foreground tasks and lifecycle observers (WGForegroundTaskScheduler, WGLifecycleHooks)
+        wgApplicationDidBecomeActive()
         self.isInForegroundValue = true
         self.isInForegroundPromise.set(true)
         self.isActiveValue = true
@@ -2643,8 +2643,8 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
             if let authContext = authContext, let confirmationCode = parseConfirmationCodeUrl(sharedContext: sharedContext, url: url) {
                 authContext.rootController.applyConfirmationCode(confirmationCode)
             } else if let context = context {
-                // GHOST: ghostgram:// and gg:// links, features first (GGLifecycleHooks.openURL)
-                if GGLifecycleHooks.handleURL(url, context: context.context, navigationController: context.rootController) { return }
+                // WRAITH: wraithgram:// and wg:// links, features first (WGLifecycleHooks.openURL)
+                if WGLifecycleHooks.handleURL(url, context: context.context, navigationController: context.rootController) { return }
                 if (WalletContext.isTonConnectUrl(url.absoluteString) || url.scheme?.lowercased() == "ton"), !WalletConfiguration.with(appConfiguration: context.context.currentAppConfiguration.with { $0 }).isAvailable {
                     self.presentWalletUnavailable(in: context)
                 } else if WalletContext.isTonConnectUrl(url.absoluteString) {

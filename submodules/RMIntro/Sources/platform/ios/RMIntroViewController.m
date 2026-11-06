@@ -108,7 +108,7 @@ typedef enum {
     UIView *_startButton;
     
     bool _loadedView;
-    bool _ggStaticLogo; // GHOST: client branding — the still Ghostgram icon replaces the animated logo
+    bool _ggStaticLogo; // WRAITH: client branding — the still Wraithgram icon replaces the animated logo
 }
 @end
 
@@ -159,12 +159,12 @@ typedef enum {
                 englishStrings[key] = key;
             }
         }
-        // GHOST: client branding — the intro reads en.lproj directly, past PresentationStrings'
-        // ggBrandedString, so «Telegram» on its pages becomes the app's display name here
-        NSString *ggBrandName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-        if ([ggBrandName isKindOfClass:[NSString class]] && ggBrandName.length != 0 && ![ggBrandName isEqualToString:@"Telegram"]) {
+        // WRAITH: client branding — the intro reads en.lproj directly, past PresentationStrings'
+        // wgBrandedString, so «Telegram» on its pages becomes the app's display name here
+        NSString *wgBrandName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+        if ([wgBrandName isKindOfClass:[NSString class]] && wgBrandName.length != 0 && ![wgBrandName isEqualToString:@"Telegram"]) {
             for (NSString *key in stringKeys) {
-                englishStrings[key] = [englishStrings[key] stringByReplacingOccurrencesOfString:@"Telegram" withString:ggBrandName];
+                englishStrings[key] = [englishStrings[key] stringByReplacingOccurrencesOfString:@"Telegram" withString:wgBrandName];
             }
         }
         _englishStrings = englishStrings;
@@ -222,7 +222,7 @@ typedef enum {
 
 - (void)startTimer
 {
-    if (_ggStaticLogo) { // GHOST: nothing to animate with the still logo
+    if (_ggStaticLogo) { // WRAITH: nothing to animate with the still logo
         return;
     }
     if (_updateAndRenderTimer == nil)
@@ -313,14 +313,14 @@ typedef enum {
         _glkView.userInteractionEnabled = false;
         _glkView.delegate = self;
         
-        // GHOST: client branding — Telegram's animated logo is not drawn; the app's own icon stands
+        // WRAITH: client branding — Telegram's animated logo is not drawn; the app's own icon stands
         // still in its place (the view keeps its frame, layout and entrance animation)
-        UIImage *ggLogo = [UIImage imageNamed:@"GhostgramIcon@3x"];
-        if (ggLogo != nil) {
+        UIImage *wgLogo = [UIImage imageNamed:@"WraithgramIcon@3x"];
+        if (wgLogo != nil) {
             _glkView.delegate = nil;
             CGFloat logoSide = isIpad ? 144.0f : 120.0f;
             UIImageView *logoView = [[UIImageView alloc] initWithFrame:CGRectMake((size - logoSide) / 2.0f, (size - logoSide) / 2.0f, logoSide, logoSide)];
-            logoView.image = ggLogo;
+            logoView.image = wgLogo;
             logoView.contentMode = UIViewContentModeScaleAspectFill;
             logoView.layer.cornerRadius = logoSide * 0.2237f;
             if (@available(iOS 13.0, *)) {
@@ -423,7 +423,7 @@ typedef enum {
 }
 
 - (UIView *)createAnimationSnapshot {
-    if (_ggStaticLogo) { // GHOST: the still logo is a plain view, not GL content
+    if (_ggStaticLogo) { // WRAITH: the still logo is a plain view, not GL content
         UIView *snapshotView = [_glkView snapshotViewAfterScreenUpdates:false];
         snapshotView.frame = _glkView.frame;
         return snapshotView;

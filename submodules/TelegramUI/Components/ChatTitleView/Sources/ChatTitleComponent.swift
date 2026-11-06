@@ -121,9 +121,9 @@ public final class ChatNavigationBarTitleView: UIView, NavigationBarGlassPillTit
     public var tapAction: (() -> Void)?
     public var longTapAction: (() -> Void)?
     
-    // GHOST: the chat hides its title panel (appearance.chatTopBar.hideTitle): nothing is drawn and no
-    // space is taken. Set by the chat; this module stays free of Ghostgram settings.
-    public var ggHidesContent: Bool = false
+    // WRAITH: the chat hides its title panel (appearance.chatTopBar.hideTitle): nothing is drawn and no
+    // space is taken. Set by the chat; this module stays free of Wraithgram settings.
+    public var wgHidesContent: Bool = false
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -235,9 +235,9 @@ public final class ChatNavigationBarTitleView: UIView, NavigationBarGlassPillTit
     public func updateLayout(availableSize: CGSize, transition: ContainedViewLayoutTransition) -> CGSize {
         let transition = ComponentTransition(transition)
         
-        // GHOST: hidden title panel (ggHidesContent)
-        self.title.view?.isHidden = self.ggHidesContent
-        if self.ggHidesContent {
+        // WRAITH: hidden title panel (wgHidesContent)
+        self.title.view?.isHidden = self.wgHidesContent
+        if self.wgHidesContent {
             return CGSize()
         }
         

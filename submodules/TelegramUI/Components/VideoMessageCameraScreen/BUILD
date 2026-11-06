@@ -6,8 +6,8 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: video part of the Ghostgram round video settings and masks
-        "//Ghostgram/Features/CameraMasks:VideoMessageCameraScreenSources",
+        # WRAITH: video part of the Wraithgram round video settings and masks
+        "//Wraithgram/Features/CameraMasks:VideoMessageCameraScreenSources",
     ],
     copts = [
         "-warnings-as-errors",
@@ -48,9 +48,9 @@ swift_library(
         "//submodules/TelegramUI/Components/ChatControllerInteraction",
         "//submodules/TelegramUI/Components/LottieComponent",
         "//submodules/TelegramUI/Components/GlassBackgroundComponent",
-        # GHOST: Ghostgram round video settings and masks
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/Features/CameraMasks:GGCameraPipeline",
+        # WRAITH: Wraithgram round video settings and masks
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/Features/CameraMasks:WGCameraPipeline",
     ],
     visibility = [
         "//visibility:public",

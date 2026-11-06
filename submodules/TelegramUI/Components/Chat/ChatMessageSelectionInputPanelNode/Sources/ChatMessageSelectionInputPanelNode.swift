@@ -15,9 +15,9 @@ import TopMessageReactions
 import GlassBackgroundComponent
 import ComponentFlow
 import ComponentDisplayAdapters
-import GGCore // GHOST: Ghostgram strings (W5-SG)
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
-import GGExtrasHooks // GHOST: Swiftgram-parity points (W5-SG)
+import WGCore // WRAITH: Wraithgram strings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
+import WGExtrasHooks // WRAITH: Swiftgram-parity points (W5-SG)
 
 private final class ChatMessageSelectionInputPanelNodeViewForOverlayContent: UIView, ChatInputPanelViewForOverlayContent {
     var reactionContextNode: ReactionContextNode?
@@ -187,9 +187,9 @@ public final class ChatMessageSelectionInputPanelNode: ChatInputPanelNode {
     private let shareButton: GlassButtonView
     private let tagButton: GlassButtonView
     private let tagEditButton: GlassButtonView
-    // GHOST: «В Избранное» / «Переслать без автора» (GGExtrasPolicy.showsSelectionPanelButtons, GGExtrasUIHooks.selectionAction)
-    private let ggCloudButton = GlassButtonView()
-    private let ggForwardWithoutAuthorButton = GlassButtonView()
+    // WRAITH: «В Избранное» / «Переслать без автора» (WGExtrasPolicy.showsSelectionPanelButtons, WGExtrasUIHooks.selectionAction)
+    private let wgCloudButton = GlassButtonView()
+    private let wgForwardWithoutAuthorButton = GlassButtonView()
     
     private let reactionOverlayContainer: ChatMessageSelectionInputPanelNodeViewForOverlayContent
     
@@ -256,7 +256,7 @@ public final class ChatMessageSelectionInputPanelNode: ChatInputPanelNode {
         self.view.addSubview(self.shareButton)
         self.view.addSubview(self.tagButton)
         self.view.addSubview(self.tagEditButton)
-        self.ggSetupExtraButtons() // GHOST: see the properties
+        self.wgSetupExtraButtons() // WRAITH: see the properties
         
         self.viewForOverlayContent = self.reactionOverlayContainer
         
@@ -533,7 +533,7 @@ public final class ChatMessageSelectionInputPanelNode: ChatInputPanelNode {
             tagButton = self.tagEditButton
         }
         
-        var buttons: [GlassButtonView] // GHOST: var — the extra buttons are inserted below
+        var buttons: [GlassButtonView] // WRAITH: var — the extra buttons are inserted below
         if self.reportButton.isHidden {
             if let tagButton {
                 buttons = [
@@ -585,7 +585,7 @@ public final class ChatMessageSelectionInputPanelNode: ChatInputPanelNode {
             }
         }
         
-        buttons = self.ggArrangeExtraButtons(buttons) // GHOST: see the properties
+        buttons = self.wgArrangeExtraButtons(buttons) // WRAITH: see the properties
         
         let buttonSize = CGSize(width: 40.0, height: 40.0)
         
@@ -627,56 +627,56 @@ public final class ChatMessageSelectionInputPanelNode: ChatInputPanelNode {
     }
 }
 
-// GHOST: the selection panel's extra buttons «В Избранное» / «Переслать без автора» (W5-SG). Off = the
-// buttons stay hidden and out of the row: upstream layout. The action itself is GGExtras' handler.
+// WRAITH: the selection panel's extra buttons «В Избранное» / «Переслать без автора» (W5-SG). Off = the
+// buttons stay hidden and out of the row: upstream layout. The action itself is WGExtras' handler.
 extension ChatMessageSelectionInputPanelNode {
-    fileprivate func ggSetupExtraButtons() {
-        self.ggCloudButton.icon = "Chat/Context Menu/Fave"
-        self.ggCloudButton.isAccessibilityElement = true
-        self.ggCloudButton.accessibilityLabel = GGStrings.Extras.Selection.saveToCloud
-        self.ggCloudButton.isHidden = true
-        self.ggForwardWithoutAuthorButton.icon = "Chat/Input/Accessory Panels/ForwardSettingsIcon"
-        self.ggForwardWithoutAuthorButton.isAccessibilityElement = true
-        self.ggForwardWithoutAuthorButton.accessibilityLabel = GGStrings.Extras.Selection.forwardWithoutAuthor
-        self.ggForwardWithoutAuthorButton.isHidden = true
-        self.view.addSubview(self.ggCloudButton)
-        self.view.addSubview(self.ggForwardWithoutAuthorButton)
-        self.ggCloudButton.button.addTarget(self, action: #selector(self.ggCloudButtonPressed), for: .touchUpInside)
-        self.ggForwardWithoutAuthorButton.button.addTarget(self, action: #selector(self.ggForwardWithoutAuthorButtonPressed), for: .touchUpInside)
+    fileprivate func wgSetupExtraButtons() {
+        self.wgCloudButton.icon = "Chat/Context Menu/Fave"
+        self.wgCloudButton.isAccessibilityElement = true
+        self.wgCloudButton.accessibilityLabel = WGStrings.Extras.Selection.saveToCloud
+        self.wgCloudButton.isHidden = true
+        self.wgForwardWithoutAuthorButton.icon = "Chat/Input/Accessory Panels/ForwardSettingsIcon"
+        self.wgForwardWithoutAuthorButton.isAccessibilityElement = true
+        self.wgForwardWithoutAuthorButton.accessibilityLabel = WGStrings.Extras.Selection.forwardWithoutAuthor
+        self.wgForwardWithoutAuthorButton.isHidden = true
+        self.view.addSubview(self.wgCloudButton)
+        self.view.addSubview(self.wgForwardWithoutAuthorButton)
+        self.wgCloudButton.button.addTarget(self, action: #selector(self.wgCloudButtonPressed), for: .touchUpInside)
+        self.wgForwardWithoutAuthorButton.button.addTarget(self, action: #selector(self.wgForwardWithoutAuthorButtonPressed), for: .touchUpInside)
     }
 
     /// The row with the extra buttons right before «Переслать», enabled like it.
-    fileprivate func ggArrangeExtraButtons(_ buttons: [GlassButtonView]) -> [GlassButtonView] {
+    fileprivate func wgArrangeExtraButtons(_ buttons: [GlassButtonView]) -> [GlassButtonView] {
         let isSecretChat = self.presentationInterfaceState?.renderedPeer?.peer is TelegramSecretChat
-        let isShown = GGExtrasPolicy.showsSelectionPanelButtons && !isSecretChat && !self.peerMedia
-        self.ggCloudButton.isHidden = !isShown
-        self.ggForwardWithoutAuthorButton.isHidden = !isShown
+        let isShown = WGExtrasPolicy.showsSelectionPanelButtons && !isSecretChat && !self.peerMedia
+        self.wgCloudButton.isHidden = !isShown
+        self.wgForwardWithoutAuthorButton.isHidden = !isShown
         if !isShown {
             return buttons
         }
-        for button in [self.ggCloudButton, self.ggForwardWithoutAuthorButton] {
+        for button in [self.wgCloudButton, self.wgForwardWithoutAuthorButton] {
             button.isEnabled = self.forwardButton.isEnabled
             button.isImplicitlyDisabled = self.forwardButton.isImplicitlyDisabled
         }
         var result = buttons
-        // GHOST: as in Swiftgram (W6-SGD), the two buttons take the place of «Пожаловаться», which stays in the
+        // WRAITH: as in Swiftgram (W6-SGD), the two buttons take the place of «Пожаловаться», which stays in the
         // message menu. Upstream decides its visibility again at the start of every layout pass.
         self.reportButton.isHidden = true
         result.removeAll(where: { $0 === self.reportButton })
         let index = result.firstIndex(where: { $0 === self.forwardButton }) ?? result.count
-        result.insert(contentsOf: [self.ggCloudButton, self.ggForwardWithoutAuthorButton], at: index)
+        result.insert(contentsOf: [self.wgCloudButton, self.wgForwardWithoutAuthorButton], at: index)
         return result
     }
 
-    @objc fileprivate func ggCloudButtonPressed() {
-        self.ggPerformExtraAction(.saveToCloud, sourceView: self.ggCloudButton)
+    @objc fileprivate func wgCloudButtonPressed() {
+        self.wgPerformExtraAction(.saveToCloud, sourceView: self.wgCloudButton)
     }
 
-    @objc fileprivate func ggForwardWithoutAuthorButtonPressed() {
-        self.ggPerformExtraAction(.forwardWithoutAuthor, sourceView: self.ggForwardWithoutAuthorButton)
+    @objc fileprivate func wgForwardWithoutAuthorButtonPressed() {
+        self.wgPerformExtraAction(.forwardWithoutAuthor, sourceView: self.wgForwardWithoutAuthorButton)
     }
 
-    private func ggPerformExtraAction(_ action: GGExtrasSelectionAction, sourceView: UIView) {
+    private func wgPerformExtraAction(_ action: WGExtrasSelectionAction, sourceView: UIView) {
         if self.presentationInterfaceState?.renderedPeer?.peer is TelegramSecretChat {
             return
         }
@@ -687,7 +687,7 @@ extension ChatMessageSelectionInputPanelNode {
         guard let context = self.context, !self.selectedMessages.isEmpty, !self.forwardButton.isImplicitlyDisabled else {
             return
         }
-        GGExtrasUIHooks.performSelectionAction(action, context: context, messageIds: Array(self.selectedMessages))
+        WGExtrasUIHooks.performSelectionAction(action, context: context, messageIds: Array(self.selectedMessages))
         self.interfaceInteraction?.cancelMessageSelection(.animated(duration: 0.4, curve: .spring))
     }
 }

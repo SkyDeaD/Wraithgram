@@ -60,8 +60,8 @@ private func generateInputPanelButtonStrokeImage(color: UIColor, offset: CGFloat
     })?.stretchableImage(withLeftCapWidth: Int(radius), topCapHeight: Int(radius))
 }
 
-// GHOST: images of custom-colored checkmarks (see ggChatOutgoingCheck)
-private let ggCheckImageCache = NSCache<NSNumber, UIImage>()
+// WRAITH: images of custom-colored checkmarks (see wgChatOutgoingCheck)
+private let wgCheckImageCache = NSCache<NSNumber, UIImage>()
 
 public struct PresentationResourcesChat {
     public static func chatTitleLockIcon(_ theme: PresentationTheme) -> UIImage? {
@@ -1040,17 +1040,17 @@ public struct PresentationResourcesChat {
         })
     }
     
-    // GHOST: outgoing checkmarks of a custom color (appearance.checkmarks.*), generated once per
+    // WRAITH: outgoing checkmarks of a custom color (appearance.checkmarks.*), generated once per
     // (color, size, partial) — not per layout.
-    public static func ggChatOutgoingCheck(partial: Bool, rgb: UInt32, size: CGFloat) -> UIImage? {
+    public static func wgChatOutgoingCheck(partial: Bool, rgb: UInt32, size: CGFloat) -> UIImage? {
         let key = NSNumber(value: (Int64(rgb & 0xffffff) << 24) | (Int64(max(0.0, min(size, 1000.0)) * 8.0) << 1) | (partial ? 1 : 0))
-        if let image = ggCheckImageCache.object(forKey: key) {
+        if let image = wgCheckImageCache.object(forKey: key) {
             return image
         }
         guard let image = generateCheckImage(partial: partial, color: UIColor(rgb: rgb), width: size) else {
             return nil
         }
-        ggCheckImageCache.setObject(image, forKey: key)
+        wgCheckImageCache.setObject(image, forKey: key)
         return image
     }
     

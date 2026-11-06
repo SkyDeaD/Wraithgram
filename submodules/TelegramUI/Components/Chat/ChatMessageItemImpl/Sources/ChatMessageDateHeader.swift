@@ -982,9 +982,9 @@ public final class ChatMessageAvatarHeaderNodeImpl: ListViewItemHeaderNode, Chat
     
     private var isAvatarHidden: Bool = false
     
-    // GHOST: online dot on the author's avatar (appearance.messages.authorOnline)
-    private var ggOnlineIndicator: GGAuthorOnlineIndicator?
-    private var ggAvatarShape = GGAvatarHooks.currentShape() // GHOST: the avatar shape it was set with («Скругление углов»)
+    // WRAITH: online dot on the author's avatar (appearance.messages.authorOnline)
+    private var wgOnlineIndicator: WGAuthorOnlineIndicator?
+    private var wgAvatarShape = WGAvatarHooks.currentShape() // WRAITH: the avatar shape it was set with («Скругление углов»)
 
     private var trackingIsInHierarchy: Bool = false {
         didSet {
@@ -1032,8 +1032,8 @@ public final class ChatMessageAvatarHeaderNodeImpl: ListViewItemHeaderNode, Chat
         if let storyStats {
             self.updateStoryStats(storyStats: storyStats, theme: presentationData.theme.theme, force: true)
         }
-        // GHOST: online dot on the author's avatar
-        self.ggOnlineIndicator = ggUpdateAuthorOnlineIndicator(self.ggOnlineIndicator, host: self.containerNode, context: context, peer: peer, theme: presentationData.theme.theme)
+        // WRAITH: online dot on the author's avatar
+        self.wgOnlineIndicator = wgUpdateAuthorOnlineIndicator(self.wgOnlineIndicator, host: self.containerNode, context: context, peer: peer, theme: presentationData.theme.theme)
 
         self.containerNode.activated = { [weak self] gesture, _ in
             guard let strongSelf = self, let peer = strongSelf.peer?._asPeer() else {
@@ -1231,12 +1231,12 @@ public final class ChatMessageAvatarHeaderNodeImpl: ListViewItemHeaderNode, Chat
     public func updatePresentationData(_ presentationData: ChatPresentationData, context: AccountContext) {
         if self.presentationData !== presentationData {
             self.presentationData = presentationData
-            // GHOST: an appearance change rebuilds the theme: the online dot follows the setting
-            self.ggOnlineIndicator = ggUpdateAuthorOnlineIndicator(self.ggOnlineIndicator, host: self.containerNode, context: context, peer: self.peer, theme: presentationData.theme.theme)
-            // GHOST: «Скругление углов» changed while the header is on screen: the avatar is set again, in the new shape (GGAvatarHooks.shape)
-            let ggAvatarShape = GGAvatarHooks.currentShape()
-            if ggAvatarShape != self.ggAvatarShape {
-                self.ggAvatarShape = ggAvatarShape
+            // WRAITH: an appearance change rebuilds the theme: the online dot follows the setting
+            self.wgOnlineIndicator = wgUpdateAuthorOnlineIndicator(self.wgOnlineIndicator, host: self.containerNode, context: context, peer: self.peer, theme: presentationData.theme.theme)
+            // WRAITH: «Скругление углов» changed while the header is on screen: the avatar is set again, in the new shape (WGAvatarHooks.shape)
+            let wgAvatarShape = WGAvatarHooks.currentShape()
+            if wgAvatarShape != self.wgAvatarShape {
+                self.wgAvatarShape = wgAvatarShape
                 if let peer = self.peer {
                     self.setPeer(context: context, theme: presentationData.theme.theme, synchronousLoad: false, peer: peer, authorOfMessage: self.messageReference, emptyColor: .black)
                 }
@@ -1251,7 +1251,7 @@ public final class ChatMessageAvatarHeaderNodeImpl: ListViewItemHeaderNode, Chat
         self.avatarNode.position = avatarFrame.center
         self.avatarNode.bounds = CGRect(origin: CGPoint(), size: avatarFrame.size)
         self.avatarNode.updateSize(size: avatarFrame.size)
-        self.ggOnlineIndicator?.layout(avatarSize: avatarHeaderSize()) // GHOST: online dot
+        self.wgOnlineIndicator?.layout(avatarSize: avatarHeaderSize()) // WRAITH: online dot
     }
 
     override public func animateRemoved(duration: Double) {

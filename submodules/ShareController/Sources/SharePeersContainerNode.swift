@@ -13,7 +13,7 @@ import PeerPresenceStatusManager
 import AppBundle
 import SegmentedControlNode
 import ContextUI
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 private let subtitleFont = Font.regular(12.0)
 
@@ -164,7 +164,7 @@ final class SharePeersContainerNode: ASDisplayNode, ShareContentContainerNode {
         
         self.peersValue.set(.single(peers))
         
-        let canShareStory = controllerInteraction.shareStory != nil && !GGExtrasPolicy.hidesRepostToStory // GHOST: «Скрыть «В историю»» (GGExtrasPolicy)
+        let canShareStory = controllerInteraction.shareStory != nil && !WGExtrasPolicy.hidesRepostToStory // WRAITH: «Скрыть «В историю»» (WGExtrasPolicy)
         
         let items: Signal<[SharePeerEntry], NoError> = combineLatest(self.peersValue.get(), self.foundPeers.get(), self.tick.get(), self.themePromise.get())
         |> map { [weak controllerInteraction] initialPeers, foundPeers, _, theme -> [SharePeerEntry] in

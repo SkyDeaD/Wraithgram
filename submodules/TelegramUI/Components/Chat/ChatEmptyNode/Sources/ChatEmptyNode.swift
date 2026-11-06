@@ -24,7 +24,7 @@ import UndoUI
 import PremiumUI
 import LottieComponent
 import BundleIconComponent
-import GGFeaturesShared // GHOST: Ghostgram message settings (W2-3)
+import WGFeaturesShared // WRAITH: Wraithgram message settings (W2-3)
 
 private protocol ChatEmptyNodeContent {
     func updateLayout(interfaceState: ChatPresentationInterfaceState, subject: ChatEmptyNode.Subject, size: CGSize, leftInset: CGFloat, rightInset: CGFloat, transition: ContainedViewLayoutTransition) -> CGSize
@@ -1687,8 +1687,8 @@ public final class ChatEmptyNode: ASDisplayNode {
                     } else if interfaceState.isPremiumRequiredForMessaging {
                         contentType = .premiumRequired
                     } else {
-                        // GHOST: «Без приветственного стикера» (GGMessagesPolicy.hidesGreetingSticker)
-                        if peer.isDeleted || peer.botInfo != nil || peer.flags.contains(.isSupport) || peer.isScam || interfaceState.peerIsBlocked || GGMessagesPolicy.hidesGreetingSticker {
+                        // WRAITH: «Без приветственного стикера» (WGMessagesPolicy.hidesGreetingSticker)
+                        if peer.isDeleted || peer.botInfo != nil || peer.flags.contains(.isSupport) || peer.isScam || interfaceState.peerIsBlocked || WGMessagesPolicy.hidesGreetingSticker {
                             contentType = .regular
                         } else {
                             contentType = .greeting

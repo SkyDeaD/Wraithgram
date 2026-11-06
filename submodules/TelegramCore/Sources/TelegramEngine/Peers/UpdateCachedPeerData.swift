@@ -970,8 +970,8 @@ func _internal_fetchAndUpdateCachedPeerData(accountPeerId: PeerId, peerId rawPee
                                         
                                             if let minAvailableMessageId = minAvailableMessageId, minAvailableMessageIdUpdated {
                                                 var resourceIds: [MediaResourceId] = []
-                                                // GHOST: features may keep messages of a cleared history (GGUpdateHooks.historyWillBeCleared)
-                                                ggDeleteMessagesInRange(transaction: transaction, peerId: peerId, namespace: minAvailableMessageId.namespace, minId: 1, maxId: minAvailableMessageId.id, source: .remoteUpdate, forEachMedia: { media in
+                                                // WRAITH: features may keep messages of a cleared history (WGUpdateHooks.historyWillBeCleared)
+                                                wgDeleteMessagesInRange(transaction: transaction, peerId: peerId, namespace: minAvailableMessageId.namespace, minId: 1, maxId: minAvailableMessageId.id, source: .remoteUpdate, forEachMedia: { media in
                                                     addMessageMediaResourceIdsToRemove(media: media, resourceIds: &resourceIds)
                                                 })
                                                 if !resourceIds.isEmpty {

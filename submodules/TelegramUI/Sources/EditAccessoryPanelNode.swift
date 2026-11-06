@@ -17,7 +17,7 @@ import AnimationCache
 import MultiAnimationRenderer
 import TextFormat
 import AccessoryPanelNode
-import GGFeaturesShared // GHOST: Ghostgram message settings (W2-3)
+import WGFeaturesShared // WRAITH: Wraithgram message settings (W2-3)
 
 final class EditAccessoryPanelNode: AccessoryPanelNode {
     let dateTimeFormat: PresentationDateTimeFormat
@@ -234,7 +234,7 @@ final class EditAccessoryPanelNode: AccessoryPanelNode {
         }
         self.previousMediaReference = updatedMediaReference
         
-        let hasSpoiler = (message?.attributes.contains(where: { $0 is MediaSpoilerMessageAttribute }) ?? false) && !GGMessagesPolicy.revealsSpoilers // GHOST: anti-spoiler
+        let hasSpoiler = (message?.attributes.contains(where: { $0 is MediaSpoilerMessageAttribute }) ?? false) && !WGMessagesPolicy.revealsSpoilers // WRAITH: anti-spoiler
         
         var isPhoto = false
         var updateImageSignal: Signal<(TransformImageArguments) -> DrawingContext?, NoError>?
@@ -297,8 +297,8 @@ final class EditAccessoryPanelNode: AccessoryPanelNode {
         let textFont = Font.regular(14.0)
         let messageText: NSAttributedString
         if isText, let message = message {
-            // GHOST: anti-spoiler (GGMessagesPolicy.visibleEntities)
-            let entities = GGMessagesPolicy.visibleEntities(message.textEntitiesAttribute?.entities ?? []).filter { entity in
+            // WRAITH: anti-spoiler (WGMessagesPolicy.visibleEntities)
+            let entities = WGMessagesPolicy.visibleEntities(message.textEntitiesAttribute?.entities ?? []).filter { entity in
                 switch entity.type {
                 case .Spoiler, .CustomEmoji:
                     return true

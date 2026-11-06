@@ -10,8 +10,8 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: Swiftgram-parity settings (W5-SG)
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
+        # WRAITH: Swiftgram-parity settings (W5-SG)
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",

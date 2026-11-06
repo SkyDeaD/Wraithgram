@@ -1918,16 +1918,16 @@ extension TextFieldComponent.InputState {
     }
 }
 
-// GHOST: the formatting toolbar (SG-F11, GGFormattingToolbar) formats like this field's own Format
+// WRAITH: the formatting toolbar (SG-F11, WGFormattingToolbar) formats like this field's own Format
 // menu — the same availability (a locked menu asks for Premium) and the same toggles; the toolbar
 // cannot reach them through the responder chain (`chatInputTextNodeTargetForAction` answers only
 // while the legacy format submenu is open).
 extension TextFieldComponent.View {
-    public var ggFormatMenuAvailability: TextFieldComponent.FormatMenuAvailability {
+    public var wgFormatMenuAvailability: TextFieldComponent.FormatMenuAvailability {
         return self.component?.formatMenuAvailability ?? .none
     }
 
-    public func ggPerformFormat(_ action: TextFieldComponent.FormatMenuAvailability.Action) {
+    public func wgPerformFormat(_ action: TextFieldComponent.FormatMenuAvailability.Action) {
         guard let component = self.component else {
             return
         }
@@ -1956,21 +1956,21 @@ extension TextFieldComponent.View {
         case .underline:
             self.toggleAttribute(key: ChatTextInputAttributes.underline)
         case .spoiler:
-            let animated = self.ggInputTextContains(ChatTextInputAttributes.spoiler)
+            let animated = self.wgInputTextContains(ChatTextInputAttributes.spoiler)
             self.toggleAttribute(key: ChatTextInputAttributes.spoiler)
             self.updateSpoilersRevealed(animated: animated)
         case .quote:
-            let animated = self.ggInputTextContains(ChatTextInputAttributes.block)
+            let animated = self.wgInputTextContains(ChatTextInputAttributes.block)
             self.toggleAttribute(key: ChatTextInputAttributes.block, value: ChatTextInputTextQuoteAttribute(kind: .quote, isCollapsed: false))
             self.updateSpoilersRevealed(animated: animated)
         case .code:
-            let animated = self.ggInputTextContains(ChatTextInputAttributes.block)
+            let animated = self.wgInputTextContains(ChatTextInputAttributes.block)
             self.toggleAttribute(key: ChatTextInputAttributes.block, value: ChatTextInputTextQuoteAttribute(kind: .code(language: nil), isCollapsed: false))
             self.updateSpoilersRevealed(animated: animated)
         }
     }
 
-    private func ggInputTextContains(_ key: NSAttributedString.Key) -> Bool {
+    private func wgInputTextContains(_ key: NSAttributedString.Key) -> Bool {
         let attributedText = self.inputState.inputText
         var found = false
         attributedText.enumerateAttribute(key, in: NSMakeRange(0, attributedText.length), options: [], using: { value, _, stop in

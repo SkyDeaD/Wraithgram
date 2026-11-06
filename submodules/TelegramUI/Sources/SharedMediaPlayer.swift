@@ -9,7 +9,7 @@ import AccountContext
 import TelegramUniversalVideoContent
 import DeviceProximity
 import PeerMessagesMediaPlaylist
-import GGFeaturesShared // GHOST: «без автовоспроизведения» (voice.disableAutoplay)
+import WGFeaturesShared // WRAITH: «без автовоспроизведения» (voice.disableAutoplay)
 
 private enum SharedMediaPlaybackItem: Equatable {
     case audio(MediaPlayer)
@@ -259,8 +259,8 @@ final class SharedMediaPlayer {
                                             strongSelf.playbackItem?.seek(0.0)
                                             strongSelf.playbackItem?.play()
                                         default:
-                                            // GHOST: stop after a voice message / round video instead of playing the next one (voice.disableAutoplay)
-                                            if strongSelf.type == .voice && GGVoiceRecordingHooks.disablesNextVoiceAutoplay {
+                                            // WRAITH: stop after a voice message / round video instead of playing the next one (voice.disableAutoplay)
+                                            if strongSelf.type == .voice && WGVoiceRecordingHooks.disablesNextVoiceAutoplay {
                                                 strongSelf.playedToEnd?()
                                                 return
                                             }

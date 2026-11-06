@@ -5,7 +5,7 @@
 
 #import <map>
 
-// GHOST: custom font family (set once at launch, before any legacy screen exists)
+// WRAITH: custom font family (set once at launch, before any legacy screen exists)
 static TGFontSubstitutionBlock TGFontSubstitution = nil;
 
 void TGFontSetSubstitution(TGFontSubstitutionBlock block)
@@ -21,7 +21,7 @@ static UIFont *TGSubstitutedFont(CGFloat size, NSInteger weight, bool italic)
 
 UIFont *TGSystemFontOfSize(CGFloat size)
 {
-    // GHOST: custom font family
+    // WRAITH: custom font family
     UIFont *substituted = TGSubstitutedFont(size, 0, false);
     if (substituted != nil)
         return substituted;
@@ -41,7 +41,7 @@ UIFont *TGSystemFontOfSize(CGFloat size)
 
 UIFont *TGMediumSystemFontOfSize(CGFloat size)
 {
-    // GHOST: custom font family
+    // WRAITH: custom font family
     UIFont *substituted = TGSubstitutedFont(size, 2, false);
     if (substituted != nil)
         return substituted;
@@ -62,7 +62,7 @@ UIFont *TGMediumSystemFontOfSize(CGFloat size)
 
 UIFont *TGSemiboldSystemFontOfSize(CGFloat size)
 {
-    // GHOST: custom font family
+    // WRAITH: custom font family
     UIFont *substituted = TGSubstitutedFont(size, 3, false);
     if (substituted != nil)
         return substituted;
@@ -83,7 +83,7 @@ UIFont *TGSemiboldSystemFontOfSize(CGFloat size)
 
 UIFont *TGBoldSystemFontOfSize(CGFloat size)
 {
-    // GHOST: custom font family
+    // WRAITH: custom font family
     UIFont *substituted = TGSubstitutedFont(size, 4, false);
     if (substituted != nil)
         return substituted;
@@ -103,7 +103,7 @@ UIFont *TGBoldSystemFontOfSize(CGFloat size)
 
 UIFont *TGLightSystemFontOfSize(CGFloat size)
 {
-    // GHOST: custom font family
+    // WRAITH: custom font family
     UIFont *substituted = TGSubstitutedFont(size, 1, false);
     if (substituted != nil)
         return substituted;
@@ -132,7 +132,7 @@ UIFont *TGUltralightSystemFontOfSize(CGFloat size)
 
 UIFont *TGItalicSystemFontOfSize(CGFloat size)
 {
-    // GHOST: custom font family
+    // WRAITH: custom font family
     UIFont *substituted = TGSubstitutedFont(size, 0, true);
     if (substituted != nil)
         return substituted;

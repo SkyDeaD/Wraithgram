@@ -6,16 +6,16 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: outgoing photo size / quality / pixels (GGOutgoingImageHooks)
-        "//Ghostgram/GGHooks:ImageCompressionHookSources",
+        # WRAITH: outgoing photo size / quality / pixels (WGOutgoingImageHooks)
+        "//Wraithgram/WGHooks:ImageCompressionHookSources",
     ],
     copts = [
         "-warnings-as-errors",
     ],
     deps = [
         "//submodules/MozjpegBinding:MozjpegBinding",
-        # GHOST: hook points
-        "//Ghostgram/GGCore:GGCore",
+        # WRAITH: hook points
+        "//Wraithgram/WGCore:WGCore",
     ],
     visibility = [
         "//visibility:public",

@@ -4,7 +4,7 @@ import SwiftSignalKit
 import TelegramCore
 import AccountContext
 import TelegramUIPreferences
-import GGFeaturesShared // GHOST: chat translation without Premium (GGMessagesPolicy)
+import WGFeaturesShared // WRAITH: chat translation without Premium (WGMessagesPolicy)
 
 public struct ChatTranslationState: Codable {
     enum CodingKeys: String, CodingKey {
@@ -202,8 +202,8 @@ public func translateMessageIds(context: AccountContext, messageIds: [EngineMess
         default:
             break
         }
-        // GHOST: without Premium Telegram's server gets the messages as texts (GGMessagesPolicy.translateChatWithoutPremium)
-        if !enableLocalIfPossible, let signal = GGMessagesPolicy.translateChatWithoutPremium(account: context.account, isPremium: context.isPremium, messageIds: messageIdsToTranslate, toLang: toLang) { return signal }
+        // WRAITH: without Premium Telegram's server gets the messages as texts (WGMessagesPolicy.translateChatWithoutPremium)
+        if !enableLocalIfPossible, let signal = WGMessagesPolicy.translateChatWithoutPremium(account: context.account, isPremium: context.isPremium, messageIds: messageIdsToTranslate, toLang: toLang) { return signal }
         return context.engine.messages.translateMessages(messageIds: messageIdsToTranslate, fromLang: fromLang, toLang: toLang, enableLocalIfPossible: enableLocalIfPossible)
         |> `catch` { _ -> Signal<Never, NoError> in
             return .complete()

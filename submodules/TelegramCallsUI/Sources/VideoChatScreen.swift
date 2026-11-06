@@ -38,8 +38,8 @@ import GlassBackgroundComponent
 import PremiumUI
 import VideoChatMicButtonComponent
 import AlertComponent
-import GGCallsMediaHooks // GHOST: Ghostgram call overlay (GGCallsMediaHooks.screenOverlay)
-import GGCallCameraHooks // GHOST: virtual camera capturer (W3-2)
+import WGCallsMediaHooks // WRAITH: Wraithgram call overlay (WGCallsMediaHooks.screenOverlay)
+import WGCallCameraHooks // WRAITH: virtual camera capturer (W3-2)
 
 extension VideoChatCall {
     var myAudioLevelAndSpeaking: Signal<(Float, Bool), NoError> {
@@ -241,7 +241,7 @@ final class VideoChatScreenComponent: Component {
         
         let videoRenderingContext = VideoRenderingContext()
         
-        private var ggOverlay: GGCallScreenOverlay? // GHOST: soundboard and the masks column in group calls
+        private var wgOverlay: WGCallScreenOverlay? // WRAITH: soundboard and the masks column in group calls
         
         let title = ComponentView<Empty>()
         let navigationLeftButton = ComponentView<Empty>()
@@ -372,7 +372,7 @@ final class VideoChatScreenComponent: Component {
         }
         
         deinit {
-            self.ggOverlay?.screenWillClose() // GHOST: see ggOverlay
+            self.wgOverlay?.screenWillClose() // WRAITH: see wgOverlay
             self.stateDisposable?.dispose()
             self.membersDisposable?.dispose()
             self.invitedPeersDisposable?.dispose()
@@ -968,7 +968,7 @@ final class VideoChatScreenComponent: Component {
                         return
                     }
                     var isFrontCamera = true
-                    let videoCapturer = GGCallCameraHooks.makeCameraCapturer() ?? OngoingCallVideoCapturer() // GHOST: virtual camera (W3-2, GGCallCameraHooks)
+                    let videoCapturer = WGCallCameraHooks.makeCameraCapturer() ?? OngoingCallVideoCapturer() // WRAITH: virtual camera (W3-2, WGCallCameraHooks)
                     let input = videoCapturer.video()
                     if let videoView = self.videoRenderingContext.makeView(input: input, blur: false) {
                         videoView.updateIsEnabled(true)
@@ -984,7 +984,7 @@ final class VideoChatScreenComponent: Component {
                         }, switchCamera: {
                             Queue.mainQueue().after(0.1) {
                                 isFrontCamera = !isFrontCamera
-                                if GGCallCameraHooks.switchCamera(capturer: videoCapturer, isFront: isFrontCamera) { return } // GHOST: virtual camera (W3-2, GGCallCameraHooks)
+                                if WGCallCameraHooks.switchCamera(capturer: videoCapturer, isFront: isFrontCamera) { return } // WRAITH: virtual camera (W3-2, WGCallCameraHooks)
                                 videoCapturer.switchVideoInput(isFront: isFrontCamera)
                             }
                         })
@@ -4091,14 +4091,14 @@ final class VideoChatScreenComponent: Component {
                 transition.setFrame(view: messagesListView, frame: messagesListFrame)
             }
             
-            // GHOST: Ghostgram call overlay (GGCallsMediaHooks.screenOverlay)
-            if self.ggOverlay == nil, case let .group(groupCall) = call {
-                self.ggOverlay = GGCallsMediaHooks.makeScreenOverlay(GGCallScreen(context: groupCall.accountContext, call: nil, groupCall: groupCall, audioDevice: (groupCall as? PresentationGroupCallImpl)?.ggAudioDevice, present: { [weak self] controller in self?.environment?.controller()?.present(controller, in: .window(.root)) }))
+            // WRAITH: Wraithgram call overlay (WGCallsMediaHooks.screenOverlay)
+            if self.wgOverlay == nil, case let .group(groupCall) = call {
+                self.wgOverlay = WGCallsMediaHooks.makeScreenOverlay(WGCallScreen(context: groupCall.accountContext, call: nil, groupCall: groupCall, audioDevice: (groupCall as? PresentationGroupCallImpl)?.wgAudioDevice, present: { [weak self] controller in self?.environment?.controller()?.present(controller, in: .window(.root)) }))
             }
-            if let ggOverlay = self.ggOverlay {
-                if ggOverlay.view.superview == nil { self.containerView.addSubview(ggOverlay.view) }
-                ggOverlay.view.frame = CGRect(origin: CGPoint(), size: availableSize)
-                ggOverlay.update(size: availableSize, insets: UIEdgeInsets(top: environment.statusBarHeight, left: environment.safeInsets.left, bottom: environment.safeInsets.bottom, right: environment.safeInsets.right), state: GGCallScreenState(hasLocalVideo: self.callState?.isMyVideoActive ?? false, signalQuality: nil, activeSince: nil, isTerminated: false), transition: .immediate)
+            if let wgOverlay = self.wgOverlay {
+                if wgOverlay.view.superview == nil { self.containerView.addSubview(wgOverlay.view) }
+                wgOverlay.view.frame = CGRect(origin: CGPoint(), size: availableSize)
+                wgOverlay.update(size: availableSize, insets: UIEdgeInsets(top: environment.statusBarHeight, left: environment.safeInsets.left, bottom: environment.safeInsets.bottom, right: environment.safeInsets.right), state: WGCallScreenState(hasLocalVideo: self.callState?.isMyVideoActive ?? false, signalQuality: nil, activeSince: nil, isTerminated: false), transition: .immediate)
             }
             
             return availableSize

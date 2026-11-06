@@ -10,8 +10,8 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: Ghostgram (W2-3)
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
+        # WRAITH: Wraithgram (W2-3)
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
         "//submodules/TelegramPresentationData",
         "//submodules/ComponentFlow",
         "//submodules/AccountContext",

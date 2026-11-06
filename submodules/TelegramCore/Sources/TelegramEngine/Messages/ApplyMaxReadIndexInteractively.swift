@@ -81,7 +81,7 @@ func _internal_applyMaxReadIndexInteractively(transaction: Transaction, stateMan
             if let message = transaction.getMessage(id) {
                 for attribute in message.attributes {
                     if let attribute = attribute as? AutoremoveTimeoutMessageAttribute {
-                        if (attribute.countdownBeginTime == nil || attribute.countdownBeginTime == 0) && !message.ggRawContainsSecretMedia { // GHOST: raw — media shown as ordinary (GGRestrictionHooks.secretMediaDisplay) must not start its timer on read
+                        if (attribute.countdownBeginTime == nil || attribute.countdownBeginTime == 0) && !message.wgRawContainsSecretMedia { // WRAITH: raw — media shown as ordinary (WGRestrictionHooks.secretMediaDisplay) must not start its timer on read
                             transaction.updateMessage(message.id, update: { currentMessage in
                                 var storeForwardInfo: StoreMessageForwardInfo?
                                 if let forwardInfo = currentMessage.forwardInfo {
@@ -149,7 +149,7 @@ func applySecretOutgoingMessageReadActions(transaction: Transaction, id: Message
         if message.flags.intersection([.Unsent, .Sending, .Failed]).isEmpty {
             for attribute in message.attributes {
                 if let attribute = attribute as? AutoremoveTimeoutMessageAttribute {
-                    if (attribute.countdownBeginTime == nil || attribute.countdownBeginTime == 0) && !message.ggRawContainsSecretMedia { // GHOST: raw — media shown as ordinary (GGRestrictionHooks.secretMediaDisplay) must not start its timer on read
+                    if (attribute.countdownBeginTime == nil || attribute.countdownBeginTime == 0) && !message.wgRawContainsSecretMedia { // WRAITH: raw — media shown as ordinary (WGRestrictionHooks.secretMediaDisplay) must not start its timer on read
                         transaction.updateMessage(message.id, update: { currentMessage in
                             var storeForwardInfo: StoreMessageForwardInfo?
                             if let forwardInfo = currentMessage.forwardInfo {
@@ -217,8 +217,8 @@ func _internal_toggleForumThreadUnreadMarkInteractively(transaction: Transaction
                 transaction.setMessageHistoryThreadInfo(peerId: peerId, threadId: threadId, info: entry)
             }
             
-            // GHOST: features may keep a topic read on the device (GGPresenceHooks.sendReadReceipt)
-            if !ggShouldSendThreadReadReceipt(transaction: transaction, peerId: peerId, threadId: threadId, maxId: messageIndex.id.id) { return }
+            // WRAITH: features may keep a topic read on the device (WGPresenceHooks.sendReadReceipt)
+            if !wgShouldSendThreadReadReceipt(transaction: transaction, peerId: peerId, threadId: threadId, maxId: messageIndex.id.id) { return }
             if peer.isForum {
                 if let inputPeer = apiInputPeer(peer) {
                     let _ = network.request(Api.functions.messages.readDiscussion(peer: inputPeer, msgId: Int32(clamping: threadId), readMaxId: messageIndex.id.id)).start()
@@ -255,8 +255,8 @@ func _internal_markForumThreadAsReadInteractively(transaction: Transaction, netw
             transaction.setMessageHistoryThreadInfo(peerId: peerId, threadId: threadId, info: entry)
         }
         
-        // GHOST: features may keep a topic read on the device (GGPresenceHooks.sendReadReceipt)
-        if !ggShouldSendThreadReadReceipt(transaction: transaction, peerId: peerId, threadId: threadId, maxId: messageIndex.id.id) { return }
+        // WRAITH: features may keep a topic read on the device (WGPresenceHooks.sendReadReceipt)
+        if !wgShouldSendThreadReadReceipt(transaction: transaction, peerId: peerId, threadId: threadId, maxId: messageIndex.id.id) { return }
         if peer.isForum {
             if let inputPeer = apiInputPeer(peer) {
                 let _ = network.request(Api.functions.messages.readDiscussion(peer: inputPeer, msgId: Int32(clamping: threadId), readMaxId: messageIndex.id.id)).start()
@@ -299,8 +299,8 @@ func _internal_togglePeerUnreadMarkInteractively(transaction: Transaction, netwo
                     transaction.setMessageHistoryThreadInfo(peerId: peerId, threadId: item.threadId, info: entry)
                 }
                 
-                // GHOST: features may keep a topic read on the device (GGPresenceHooks.sendReadReceipt)
-                if !ggShouldSendThreadReadReceipt(transaction: transaction, peerId: peerId, threadId: item.threadId, maxId: messageIndex.id.id) { continue }
+                // WRAITH: features may keep a topic read on the device (WGPresenceHooks.sendReadReceipt)
+                if !wgShouldSendThreadReadReceipt(transaction: transaction, peerId: peerId, threadId: item.threadId, maxId: messageIndex.id.id) { continue }
                 if peer.isForum {
                     if let inputPeer = apiInputPeer(peer) {
                         let _ = network.request(Api.functions.messages.readDiscussion(peer: inputPeer, msgId: Int32(clamping: item.threadId), readMaxId: messageIndex.id.id)).start()

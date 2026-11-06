@@ -31,7 +31,7 @@ import WalletContext
 import WalletConnectScreen
 import AlertUI
 import MetalEngine
-import GGHooks // GHOST: confirmation before an outgoing call (GGCallHooks)
+import WGHooks // WRAITH: confirmation before an outgoing call (WGCallHooks)
 
 private final class DeviceSpecificContactImportContext {
     let disposable = MetaDisposable()
@@ -1013,8 +1013,8 @@ public final class AccountContextImpl: AccountContext {
     }
     
     public func requestCall(peerId: EnginePeer.Id, isVideo: Bool, completion: @escaping () -> Void) {
-        // GHOST: features may confirm an outgoing call first, then come back here once (GGCallHooks.outgoingCall, SG-C6)
-        if GGCallHooks.interceptOutgoingCall(context: self, peerId: peerId, isVideo: isVideo, proceed: { [weak self] in self?.requestCall(peerId: peerId, isVideo: isVideo, completion: completion) }) { return }
+        // WRAITH: features may confirm an outgoing call first, then come back here once (WGCallHooks.outgoingCall, SG-C6)
+        if WGCallHooks.interceptOutgoingCall(context: self, peerId: peerId, isVideo: isVideo, proceed: { [weak self] in self?.requestCall(peerId: peerId, isVideo: isVideo, completion: completion) }) { return }
         guard let callResult = self.sharedContext.callManager?.requestCall(context: self, peerId: peerId, isVideo: isVideo, endCurrentIfAny: false) else {
             return
         }

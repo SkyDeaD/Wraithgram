@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import TelegramPresentationData
 import TelegramUIPreferences
-import ChatListTitleView // GHOST: chat list row style (GGChatListStyleHooks)
+import ChatListTitleView // WRAITH: chat list row style (WGChatListStyleHooks)
 
 public final class ChatListPresentationData {
     public let theme: PresentationTheme
@@ -12,8 +12,8 @@ public final class ChatListPresentationData {
     public let nameSortOrder: PresentationPersonNameOrder
     public let nameDisplayOrder: PresentationPersonNameOrder
     public let disableAnimations: Bool
-    // GHOST: the look of the rows, taken once per presentation data (GGChatListStyleHooks.rowStyle)
-    public let ggRowStyle: GGChatListRowStyle
+    // WRAITH: the look of the rows, taken once per presentation data (WGChatListStyleHooks.rowStyle)
+    public let wgRowStyle: WGChatListRowStyle
     
     public init(theme: PresentationTheme, fontSize: PresentationFontSize, strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat, nameSortOrder: PresentationPersonNameOrder, nameDisplayOrder: PresentationPersonNameOrder, disableAnimations: Bool) {
         self.theme = theme
@@ -23,6 +23,6 @@ public final class ChatListPresentationData {
         self.nameSortOrder = nameSortOrder
         self.nameDisplayOrder = nameDisplayOrder
         self.disableAnimations = disableAnimations
-        self.ggRowStyle = ggChatListRowStyle() // GHOST: see the property
+        self.wgRowStyle = wgChatListRowStyle() // WRAITH: see the property
     }
 }

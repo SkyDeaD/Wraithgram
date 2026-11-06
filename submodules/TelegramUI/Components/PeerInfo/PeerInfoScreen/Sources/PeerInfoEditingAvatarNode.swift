@@ -91,9 +91,9 @@ final class PeerInfoEditingAvatarNode: ASDisplayNode {
         let avatarCornerRadius: CGFloat
         if case let .channel(channel) = peer, channel.isForumOrMonoForum {
             isForum = true
-            avatarCornerRadius = ggAvatarCornerRadius(side: avatarSize, isForum: true, upstream: floor(avatarSize * 0.25)) // GHOST: square avatars
+            avatarCornerRadius = wgAvatarCornerRadius(side: avatarSize, isForum: true, upstream: floor(avatarSize * 0.25)) // WRAITH: square avatars
         } else {
-            avatarCornerRadius = ggAvatarCornerRadius(side: avatarSize, isForum: false, upstream: avatarSize / 2.0) // GHOST: square avatars
+            avatarCornerRadius = wgAvatarCornerRadius(side: avatarSize, isForum: false, upstream: avatarSize / 2.0) // WRAITH: square avatars
         }
         if self.avatarNode.layer.cornerRadius != 0.0 {
             ContainedViewLayoutTransition.animated(duration: 0.3, curve: .easeInOut).updateCornerRadius(layer: self.avatarNode.layer, cornerRadius: avatarCornerRadius)
@@ -174,7 +174,7 @@ final class PeerInfoEditingAvatarNode: ASDisplayNode {
                     self.videoNode = videoNode
                     
                     let maskPath: UIBezierPath
-                    if isForum || avatarCornerRadius < avatarSize / 2.0 { // GHOST: square avatars mask the video as a rounded square too
+                    if isForum || avatarCornerRadius < avatarSize / 2.0 { // WRAITH: square avatars mask the video as a rounded square too
                         maskPath = UIBezierPath(roundedRect: CGRect(origin: CGPoint(), size: self.avatarNode.frame.size), cornerRadius: avatarCornerRadius)
                     } else {
                         maskPath = UIBezierPath(ovalIn: CGRect(origin: CGPoint(), size: self.avatarNode.frame.size))

@@ -23,8 +23,8 @@ swift_library(
         "//submodules/LottieSettings:LottieSettings",
         "//submodules/AppBundle",
         "//submodules/GZip",
-        # GHOST: Ghostgram round video settings and frame processor
-        "//Ghostgram/Features/CameraMasks:GGCameraPipeline",
+        # WRAITH: Wraithgram round video settings and frame processor
+        "//Wraithgram/Features/CameraMasks:WGCameraPipeline",
     ],
     visibility = [
         "//visibility:public",

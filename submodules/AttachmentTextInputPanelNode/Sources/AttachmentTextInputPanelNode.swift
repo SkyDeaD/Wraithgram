@@ -25,7 +25,7 @@ import MultiAnimationRenderer
 import TextNodeWithEntities
 import ChatInputTextNode
 import ChatEntityKeyboardInputNode
-import GGHooks // GHOST: input panel points
+import WGHooks // WRAITH: input panel points
 
 private let counterFont = Font.with(size: 14.0, design: .regular, traits: [.monospacedNumbers])
 private let minInputFontSize: CGFloat = 5.0
@@ -859,7 +859,7 @@ public class AttachmentTextInputPanelNode: ASDisplayNode, TGCaptionPanelView, AS
         guard self.isUserInteractionEnabled else {
             return nil
         }
-        if let result = GGInputPanelHooks.overlayHitTest(self.view, point: point, event: event) { // GHOST: a feature's view over the top edge — the formatting toolbar (GGInputPanelHooks.overlayHitTest)
+        if let result = WGInputPanelHooks.overlayHitTest(self.view, point: point, event: event) { // WRAITH: a feature's view over the top edge — the formatting toolbar (WGInputPanelHooks.overlayHitTest)
             return result
         }
         if let aiButton = self.aiButton, aiButton.button.alpha > 0.0 {
@@ -1291,9 +1291,9 @@ public class AttachmentTextInputPanelNode: ASDisplayNode, TGCaptionPanelView, AS
         }
 
         self.currentHeight = totalHeight
-        // GHOST: geometry / toolbar features adjust the laid-out panel (GGInputPanelHooks.didLayout)
-        GGInputPanelHooks.notifyDidLayout(panel: self, context: self.context, width: width, height: totalHeight, transition: transition)
-        GGInputPanelHooks.applyReturnKeyType(self.textInputNode?.textView, context: self.context) // GHOST: «Send» on the keyboard when Return sends (GGInputPanelHooks.sendOnReturn)
+        // WRAITH: geometry / toolbar features adjust the laid-out panel (WGInputPanelHooks.didLayout)
+        WGInputPanelHooks.notifyDidLayout(panel: self, context: self.context, width: width, height: totalHeight, transition: transition)
+        WGInputPanelHooks.applyReturnKeyType(self.textInputNode?.textView, context: self.context) // WRAITH: «Send» on the keyboard when Return sends (WGInputPanelHooks.sendOnReturn)
         return totalHeight
     }
 
@@ -1470,8 +1470,8 @@ public class AttachmentTextInputPanelNode: ASDisplayNode, TGCaptionPanelView, AS
 
     private var skipUpdate = false
     public func chatInputTextNodeDidUpdateText() {
-        // GHOST: typing animation, counters (GGInputPanelHooks.textDidChange)
-        GGInputPanelHooks.notifyTextDidChange(panel: self, context: self.context)
+        // WRAITH: typing animation, counters (WGInputPanelHooks.textDidChange)
+        WGInputPanelHooks.notifyTextDidChange(panel: self, context: self.context)
         if let textInputNode = self.textInputNode, let presentationInterfaceState = self.presentationInterfaceState {
             let baseFontSize = max(minInputFontSize, presentationInterfaceState.fontSize.baseDisplaySize)
             refreshChatTextInputAttributes(context: self.context, textView: textInputNode.textView, theme: presentationInterfaceState.theme, baseFontSize: baseFontSize, spoilersRevealed: self.spoilersRevealed, availableEmojis: Set(self.context.animatedEmojiStickersValue.keys), emojiViewProvider: self.emojiViewProvider, makeCollapsedQuoteAttachment: { text, attributes in
@@ -1929,8 +1929,8 @@ public class AttachmentTextInputPanelNode: ASDisplayNode, TGCaptionPanelView, AS
     }
 
     public func chatInputTextNodeShouldReturn(modifierFlags: UIKeyModifierFlags) -> Bool {
-        // GHOST: features may make Return insert a line break instead of sending (GGInputPanelHooks.sendOnReturn)
-        if !GGInputPanelHooks.sendOnReturn(true, modifierFlags: modifierFlags, context: self.context) { return true }
+        // WRAITH: features may make Return insert a line break instead of sending (WGInputPanelHooks.sendOnReturn)
+        if !WGInputPanelHooks.sendOnReturn(true, modifierFlags: modifierFlags, context: self.context) { return true }
         if self.actionButtons.sendButton.supernode != nil && !self.actionButtons.sendButton.isHidden && !self.actionButtons.sendButton.alpha.isZero {
             self.sendButtonPressed()
         }
@@ -2257,7 +2257,7 @@ public class AttachmentTextInputPanelNode: ASDisplayNode, TGCaptionPanelView, AS
     }
 
     public func chatInputTextNode(shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if text == "\n", GGInputPanelHooks.sendsOnScreenReturn(context: self.context) { return self.chatInputTextNodeShouldReturn(modifierFlags: []) } // GHOST: Return of the on-screen keyboard sends (GGInputPanelHooks.sendOnReturn)
+        if text == "\n", WGInputPanelHooks.sendsOnScreenReturn(context: self.context) { return self.chatInputTextNodeShouldReturn(modifierFlags: []) } // WRAITH: Return of the on-screen keyboard sends (WGInputPanelHooks.sendOnReturn)
         guard let editableTextNode = self.textInputNode else {
             return true
         }

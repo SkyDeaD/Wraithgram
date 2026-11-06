@@ -92,8 +92,8 @@ public final class PeerSelectionControllerParams {
     public let immediatelyActivateMultipleSelection: Bool
     public let suggestedPeers: [EnginePeer]
     public let excludedPeerIds: Set<EnginePeer.Id>
-    /// GHOST: «Переслать без автора» opens the picker with «Скрыть имя отправителя» already chosen.
-    public let ggHidesSenderNames: Bool
+    /// WRAITH: «Переслать без автора» opens the picker with «Скрыть имя отправителя» already chosen.
+    public let wgHidesSenderNames: Bool
     
     public init(
         context: AccountContext,
@@ -120,7 +120,7 @@ public final class PeerSelectionControllerParams {
         immediatelyActivateMultipleSelection: Bool = false,
         suggestedPeers: [EnginePeer] = [],
         excludedPeerIds: Set<EnginePeer.Id> = [],
-        ggHidesSenderNames: Bool = false
+        wgHidesSenderNames: Bool = false
     ) {
         self.context = context
         self.updatedPresentationData = updatedPresentationData
@@ -146,7 +146,7 @@ public final class PeerSelectionControllerParams {
         self.immediatelyActivateMultipleSelection = immediatelyActivateMultipleSelection
         self.suggestedPeers = suggestedPeers
         self.excludedPeerIds = excludedPeerIds
-        self.ggHidesSenderNames = ggHidesSenderNames
+        self.wgHidesSenderNames = wgHidesSenderNames
     }
 }
 

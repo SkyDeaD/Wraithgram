@@ -232,7 +232,7 @@ final class WidgetDataContext {
                             isForum = true
                         }
                         
-                        result.append(WidgetDataPeer(id: peerId.toInt64(), name: name, lastName: lastName, letters: [], avatarPath: nil, badge: nil, message: GGContentPrivacyHooks.hidesContent(accountId: account.id, peerId: peerId) ? nil : WidgetDataPeer.Message(accountPeerId: account.peerId, message: message), isForum: isForum)) // GHOST: no message of a protected chat in the widget (GGContentPrivacyHooks.hidesContent)
+                        result.append(WidgetDataPeer(id: peerId.toInt64(), name: name, lastName: lastName, letters: [], avatarPath: nil, badge: nil, message: WGContentPrivacyHooks.hidesContent(accountId: account.id, peerId: peerId) ? nil : WidgetDataPeer.Message(accountPeerId: account.peerId, message: message), isForum: isForum)) // WRAITH: no message of a protected chat in the widget (WGContentPrivacyHooks.hidesContent)
                     }
                     result.sort(by: { lhs, rhs in
                         return lhs.id < rhs.id

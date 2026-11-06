@@ -406,8 +406,8 @@ enum MultipartUploadError {
 }
 
 func multipartUpload(network: Network, postbox: Postbox, source: MultipartUploadSource, encrypt: Bool, tag: MediaResourceFetchTag?, hintFileSize: Int64?, hintFileIsLarge: Bool, forceNoBigParts: Bool, useLargerParts: Bool = false, increaseParallelParts: Bool = false, useMultiplexedRequests: Bool = true, useCompression: Bool = false) -> Signal<MultipartUploadResult, MultipartUploadError> {
-    // GHOST: features may tune upload parts (GGNetworkHooks.uploadParameters)
-    let (useLargerParts, increaseParallelParts) = ggUploadParameters(useLargerParts: useLargerParts, increaseParallelParts: increaseParallelParts, hintFileSize: hintFileSize, encrypt: encrypt)
+    // WRAITH: features may tune upload parts (WGNetworkHooks.uploadParameters)
+    let (useLargerParts, increaseParallelParts) = wgUploadParameters(useLargerParts: useLargerParts, increaseParallelParts: increaseParallelParts, hintFileSize: hintFileSize, encrypt: encrypt)
     enum UploadInterface {
         case download(Download)
         case multiplexed(manager: MultiplexedRequestManager, datacenterId: Int, consumerId: Int64)

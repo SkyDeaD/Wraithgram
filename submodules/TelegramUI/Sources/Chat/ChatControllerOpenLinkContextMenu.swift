@@ -18,7 +18,7 @@ import UrlWhitelist
 import OpenInExternalAppUI
 import SafariServices
 import TelegramPresentationData
-import GGExtrasHooks // GHOST: Swiftgram-parity points (W5-SG)
+import WGExtrasHooks // WRAITH: Swiftgram-parity points (W5-SG)
 
 private struct ChatLinkOpenMode {
     let shouldOpenInApp: Bool
@@ -293,8 +293,8 @@ extension ChatControllerImpl {
                     }
                     self.present(UndoOverlayController(presentationData: self.presentationData, content: content, elevatedLayout: false, animateInAsReplacement: false, action: { _ in return false }), in: .current)
                 }))
-                // GHOST: «Переслать» / «Поделиться» for the link (GGExtrasUIHooks.linkActions)
-                for ggAction in GGExtrasUIHooks.actions(forLink: GGExtrasLinkContext(context: self.context, url: url, present: { [weak self] c in self?.present(c, in: .window(.root)) })) { items.append(ActionSheetButtonItem(title: ggAction.title, color: .accent, action: { [weak actionSheet] in actionSheet?.dismissAnimated(); ggAction.action() })) }
+                // WRAITH: «Переслать» / «Поделиться» for the link (WGExtrasUIHooks.linkActions)
+                for wgAction in WGExtrasUIHooks.actions(forLink: WGExtrasLinkContext(context: self.context, url: url, present: { [weak self] c in self?.present(c, in: .window(.root)) })) { items.append(ActionSheetButtonItem(title: wgAction.title, color: .accent, action: { [weak actionSheet] in actionSheet?.dismissAnimated(); wgAction.action() })) }
                 if canAddToReadingList {
                     items.append(ActionSheetButtonItem(title: self.presentationData.strings.Conversation_AddToReadingList, color: .accent, action: { [weak actionSheet] in
                         actionSheet?.dismissAnimated()
@@ -399,8 +399,8 @@ extension ChatControllerImpl {
                 }))
             )
 
-            // GHOST: «Переслать» / «Поделиться» for the link (GGExtrasUIHooks.linkActions)
-            for ggAction in GGExtrasUIHooks.actions(forLink: GGExtrasLinkContext(context: self.context, url: url, present: { [weak self] c in self?.present(c, in: .window(.root)) })) { items.append(.action(ContextMenuActionItem(text: ggAction.title, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: ggAction.iconName), color: theme.contextMenu.primaryColor) }, action: { _, f in f(.default); ggAction.action() }))) }
+            // WRAITH: «Переслать» / «Поделиться» for the link (WGExtrasUIHooks.linkActions)
+            for wgAction in WGExtrasUIHooks.actions(forLink: WGExtrasLinkContext(context: self.context, url: url, present: { [weak self] c in self?.present(c, in: .window(.root)) })) { items.append(.action(ContextMenuActionItem(text: wgAction.title, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: wgAction.iconName), color: theme.contextMenu.primaryColor) }, action: { _, f in f(.default); wgAction.action() }))) }
             if canAddToReadingList {
                 items.append(
                     .action(ContextMenuActionItem(text: self.presentationData.strings.Conversation_AddToReadingList, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/ReadingList"), color: theme.contextMenu.primaryColor) }, action: { _, f in

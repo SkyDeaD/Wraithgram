@@ -46,7 +46,7 @@ import SliderContextItem
 import SaveProgressScreen
 import DirectMediaImageCache
 import PromptUI
-import GGHooks // GHOST: story points
+import WGHooks // WRAITH: story points
 
 public final class StoryAvailableReactions: Equatable {
     let reactionItems: [ReactionItem]
@@ -1820,8 +1820,8 @@ public final class StoryItemSetContainerComponent: Component {
                         if case .liveStream = component.slice.item.storyItem.media {
                             displayFooter = false
                         }
-                        // GHOST: features may lift "forwarding disabled" (GGStoryHooks.forwardingDisabled)
-                        if GGStoryHooks.isForwardingDisabled(component.slice.item.storyItem) {
+                        // WRAITH: features may lift "forwarding disabled" (WGStoryHooks.forwardingDisabled)
+                        if WGStoryHooks.isForwardingDisabled(component.slice.item.storyItem) {
                             canShare = false
                         }
                         
@@ -3264,8 +3264,8 @@ public final class StoryItemSetContainerComponent: Component {
                             }
                         },
                         timeoutAction: nil,
-                        // GHOST: features may lift "forwarding disabled" (GGStoryHooks.forwardingDisabled)
-                        forwardAction: (!isLiveStream && component.slice.item.storyItem.isPublic && !GGStoryHooks.isForwardingDisabled(component.slice.item.storyItem)) ? { [weak self] in
+                        // WRAITH: features may lift "forwarding disabled" (WGStoryHooks.forwardingDisabled)
+                        forwardAction: (!isLiveStream && component.slice.item.storyItem.isPublic && !WGStoryHooks.isForwardingDisabled(component.slice.item.storyItem)) ? { [weak self] in
                             guard let self else {
                                 return
                             }
@@ -7451,7 +7451,7 @@ public final class StoryItemSetContainerComponent: Component {
                             }
                             self.beginPictureInPicture()
                         })))
-                    } else if !GGStoryHooks.isForwardingDisabled(component.slice.item.storyItem) { // GHOST: GGStoryHooks.forwardingDisabled
+                    } else if !WGStoryHooks.isForwardingDisabled(component.slice.item.storyItem) { // WRAITH: WGStoryHooks.forwardingDisabled
                         let saveText: String = component.strings.Story_Context_SaveToGallery
                         items.append(.action(ContextMenuActionItem(text: saveText, icon: { theme in
                             return generateTintedImage(image: UIImage(bundleImageName: accountUser.isPremium ? "Chat/Context Menu/Download" : "Chat/Context Menu/DownloadLocked"), color: theme.contextMenu.primaryColor)
@@ -7559,8 +7559,8 @@ public final class StoryItemSetContainerComponent: Component {
                 }
                 
                 let (tip, tipSignal) = self.getLinkedStickerPacks()
-                // GHOST: features add items to the story menu, e.g. «Прочитать» (GGStoryHooks.menuItems)
-                items = GGStoryHooks.appendMenuItems(items, context: component.context, peer: component.slice.peer, storyItem: component.slice.item.storyItem)
+                // WRAITH: features add items to the story menu, e.g. «Прочитать» (WGStoryHooks.menuItems)
+                items = WGStoryHooks.appendMenuItems(items, context: component.context, peer: component.slice.peer, storyItem: component.slice.item.storyItem)
                 
                 let contextItems = ContextController.Items(id: 0, content: .list(items), tip: tip, tipSignal: tipSignal)
                                 

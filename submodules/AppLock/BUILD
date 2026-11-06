@@ -20,8 +20,8 @@ swift_library(
         "//submodules/TelegramUIPreferences:TelegramUIPreferences",
         "//submodules/ImageBlur:ImageBlur",
         "//submodules/AccountContext:AccountContext",
-        # GHOST: Swiftgram-parity settings (W5-SG)
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
+        # WRAITH: Swiftgram-parity settings (W5-SG)
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
         "//submodules/AppLockState:AppLockState",
         "//submodules/PasscodeCore",
     ],

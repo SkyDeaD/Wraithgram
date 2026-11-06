@@ -60,23 +60,23 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: Ghostgram core, hook points, menu and feature modules
-        "//Ghostgram/GGHooks:TelegramUIHookSources",
+        # WRAITH: Wraithgram core, hook points, menu and feature modules
+        "//Wraithgram/WGHooks:TelegramUIHookSources",
     ],
     copts = [
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: Ghostgram core, hook points, menu and feature modules
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/GGHooks:GGHooks",
-        "//Ghostgram/GGSettingsUI:GGSettingsUI",
-        "//Ghostgram/Features:GGFeatures",
-        # GHOST: imported directly by upstream files the features own (W2-3, W2-4)
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
-        "//Ghostgram/Features/Appearance:GGAppearanceSettings",
-        # GHOST: Swiftgram-parity points imported by OpenUrl and the link menu (W5-SG)
-        "//Ghostgram/Features/Extras:GGExtrasHooks",
+        # WRAITH: Wraithgram core, hook points, menu and feature modules
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/WGHooks:WGHooks",
+        "//Wraithgram/WGSettingsUI:WGSettingsUI",
+        "//Wraithgram/Features:WGFeatures",
+        # WRAITH: imported directly by upstream files the features own (W2-3, W2-4)
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
+        "//Wraithgram/Features/Appearance:WGAppearanceSettings",
+        # WRAITH: Swiftgram-parity points imported by OpenUrl and the link menu (W5-SG)
+        "//Wraithgram/Features/Extras:WGExtrasHooks",
         "//submodules/CrashReporting:CrashReporting",
         "//third-party/recaptcha:RecaptchaEnterprise",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",

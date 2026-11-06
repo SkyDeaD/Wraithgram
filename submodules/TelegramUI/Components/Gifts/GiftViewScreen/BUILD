@@ -6,8 +6,8 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: menu items of a gift's screen (GGGiftViewHooks, fake gifts), owned by W4-1
-        "//Ghostgram/Features/ProfileExport:GiftViewScreenHookSources",
+        # WRAITH: menu items of a gift's screen (WGGiftViewHooks, fake gifts), owned by W4-1
+        "//Wraithgram/Features/ProfileExport:GiftViewScreenHookSources",
     ],
     copts = [
         "-warnings-as-errors",
@@ -83,8 +83,8 @@ swift_library(
         "//submodules/Speak",
         "//submodules/TextSelectionNode",
         "//submodules/TranslateUI",
-        # GHOST: GGHookPoint and ContextMenuItem for GGGiftViewHooks
-        "//Ghostgram/GGCore:GGCore",
+        # WRAITH: WGHookPoint and ContextMenuItem for WGGiftViewHooks
+        "//Wraithgram/WGCore:WGCore",
         "//submodules/ContextUI:ContextUI",
     ],
     visibility = [

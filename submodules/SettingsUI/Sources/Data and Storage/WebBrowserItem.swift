@@ -156,7 +156,7 @@ private final class WebBrowserItemNode: ListViewItemNode {
                     } else {
                         let icons = item.context.sharedContext.applicationBindings.getAvailableAlternateIcons()
                         let current = item.context.sharedContext.applicationBindings.getAlternateIconName()
-                        let currentIcon = icons.first(where: { $0.name == current })?.imageName ?? icons.first(where: { $0.isDefault })?.imageName ?? "BlueIcon" // GHOST: client branding — the default icon is the app's own
+                        let currentIcon = icons.first(where: { $0.name == current })?.imageName ?? icons.first(where: { $0.isDefault })?.imageName ?? "BlueIcon" // WRAITH: client branding — the default icon is the app's own
                         if let image = UIImage(named: currentIcon, in: getAppBundle(), compatibleWith: nil) {
                             updatedIconSignal = openInAppIcon(engine: item.context.engine, appIcon: .image(image: image))
                         }

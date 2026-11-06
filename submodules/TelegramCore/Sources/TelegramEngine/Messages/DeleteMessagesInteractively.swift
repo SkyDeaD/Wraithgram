@@ -162,8 +162,8 @@ func deleteMessagesInteractively(transaction: Transaction, stateManager: Account
             }
         }
     }
-    // GHOST: features may keep the user's own messages deleted for everyone (GGUpdateHooks.messagesWillBeDeleted)
-    _internal_deleteMessages(transaction: transaction, mediaBox: postbox.mediaBox, ids: type == .forEveryone ? ggMessageIdsToDelete(messageIds.map(\.messageId), source: .localForEveryone, transaction: transaction, accountPeerId: stateManager?.accountPeerId) : messageIds.map(\.messageId))
+    // WRAITH: features may keep the user's own messages deleted for everyone (WGUpdateHooks.messagesWillBeDeleted)
+    _internal_deleteMessages(transaction: transaction, mediaBox: postbox.mediaBox, ids: type == .forEveryone ? wgMessageIdsToDelete(messageIds.map(\.messageId), source: .localForEveryone, transaction: transaction, accountPeerId: stateManager?.accountPeerId) : messageIds.map(\.messageId))
     
     stateManager?.notifyDeletedMessages(messageIds: messageIds.map(\.messageId))
     

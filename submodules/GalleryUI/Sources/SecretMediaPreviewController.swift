@@ -422,8 +422,8 @@ public final class SecretMediaPreviewController: ViewController {
             self.screenCaptureEventsDisposable = (screenCaptureEvents()
             |> deliverOnMainQueue).start(next: { [weak self] _ in
                 if let strongSelf = self, strongSelf.traceVisibility() {
-                    // GHOST: features may keep the screenshot from being reported («Обход скриншотов», «Не сжигать»; GGRestrictionHooks.reportMediaScreenshot)
-                    if !GGRestrictionHooks.shouldReportScreenshot(peerId: strongSelf.messageId.peerId, message: strongSelf.messageView?.message) { return }
+                    // WRAITH: features may keep the screenshot from being reported («Обход скриншотов», «Не сжигать»; WGRestrictionHooks.reportMediaScreenshot)
+                    if !WGRestrictionHooks.shouldReportScreenshot(peerId: strongSelf.messageId.peerId, message: strongSelf.messageView?.message) { return }
                     if strongSelf.messageId.peerId.namespace == Namespaces.Peer.CloudUser {
                         let _ = enqueueMessages(account: strongSelf.context.account, peerId: strongSelf.messageId.peerId, messages: [.message(text: "", attributes: [], inlineStickers: [:], mediaReference: .standalone(media: TelegramMediaAction(action: TelegramMediaActionType.historyScreenshot)), threadId: nil, replyToMessageId: nil, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: [])]).start()
                     } else if strongSelf.messageId.peerId.namespace == Namespaces.Peer.SecretChat {

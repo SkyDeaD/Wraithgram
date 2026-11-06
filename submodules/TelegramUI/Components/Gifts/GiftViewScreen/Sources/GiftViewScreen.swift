@@ -2139,9 +2139,9 @@ private final class GiftViewSheetContent: CombinedComponent {
             }
             
             guard let arguments = self.subject.arguments else {
-                // GHOST: a gift without arguments: «…» holds only Ghostgram items (GGGiftViewHooks.menuItems)
-                let ggItems = ggGiftViewMenuItems(context: self.context, subject: self.subject, controller: controller)
-                if !ggItems.isEmpty { controller.presentInGlobalOverlay(makeContextController(presentationData: self.context.sharedContext.currentPresentationData.with { $0 }, source: .reference(GiftViewContextReferenceContentSource(controller: controller, sourceView: sourceView)), items: .single(ContextController.Items(content: .list(ggItems))), gesture: nil)) }
+                // WRAITH: a gift without arguments: «…» holds only Wraithgram items (WGGiftViewHooks.menuItems)
+                let wgItems = wgGiftViewMenuItems(context: self.context, subject: self.subject, controller: controller)
+                if !wgItems.isEmpty { controller.presentInGlobalOverlay(makeContextController(presentationData: self.context.sharedContext.currentPresentationData.with { $0 }, source: .reference(GiftViewContextReferenceContentSource(controller: controller, sourceView: sourceView)), items: .single(ContextController.Items(content: .list(wgItems))), gesture: nil)) }
                 return
             }
             
@@ -2160,7 +2160,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                         }))
                     )
                 }
-                items.append(contentsOf: ggGiftViewMenuItems(context: self.context, subject: self.subject, controller: controller)) // GHOST: Ghostgram items (GGGiftViewHooks.menuItems)
+                items.append(contentsOf: wgGiftViewMenuItems(context: self.context, subject: self.subject, controller: controller)) // WRAITH: Wraithgram items (WGGiftViewHooks.menuItems)
                 if !items.isEmpty {
                     let contextController = makeContextController(presentationData: presentationData, source: .reference(GiftViewContextReferenceContentSource(controller: controller, sourceView: sourceView)), items: .single(ContextController.Items(content: .list(items))), gesture: nil)
                     controller.presentInGlobalOverlay(contextController)
@@ -2309,7 +2309,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                     })))
                 }
                 
-                items.append(contentsOf: ggGiftViewMenuItems(context: self.context, subject: self.subject, controller: controller)) // GHOST: Ghostgram items (GGGiftViewHooks.menuItems)
+                items.append(contentsOf: wgGiftViewMenuItems(context: self.context, subject: self.subject, controller: controller)) // WRAITH: Wraithgram items (WGGiftViewHooks.menuItems)
                 let contextController = makeContextController(presentationData: presentationData, source: .reference(GiftViewContextReferenceContentSource(controller: controller, sourceView: sourceView)), items: .single(ContextController.Items(content: .list(items))), gesture: nil)
                 controller.presentInGlobalOverlay(contextController)
             })
@@ -3318,7 +3318,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                 nameHidden = arguments.nameHidden
                 canGiftUpgrade = arguments.prepaidUpgradeHash != nil
                 
-                if case let .peerId(peerId) = uniqueGift?.owner, peerId == component.context.account.peerId, !ggGiftViewIsLocalGift(context: component.context, subject: subject) { // GHOST: a local-only (fake) gift gets no transfer / wear / sell (GGGiftViewHooks.isLocalGift)
+                if case let .peerId(peerId) = uniqueGift?.owner, peerId == component.context.account.peerId, !wgGiftViewIsLocalGift(context: component.context, subject: subject) { // WRAITH: a local-only (fake) gift gets no transfer / wear / sell (WGGiftViewHooks.isLocalGift)
                     isMyOwnedUniqueGift = true
                 }
                 
@@ -6200,7 +6200,7 @@ private final class GiftViewSheetContent: CombinedComponent {
             ))
             
             var rightControlItems: [GlassControlGroupComponent.Item] = []
-            if (uniqueGift != nil || ggGiftViewHasMenu(context: component.context, subject: state.subject)) && !showWearPreview && !isDismantled { // GHOST: «…» also for plain gifts with Ghostgram items (GGGiftViewHooks.menuItems)
+            if (uniqueGift != nil || wgGiftViewHasMenu(context: component.context, subject: state.subject)) && !showWearPreview && !isDismantled { // WRAITH: «…» also for plain gifts with Wraithgram items (WGGiftViewHooks.menuItems)
                 if let _ = component.subject.arguments?.canCraftDate {
                     rightControlItems.append(GlassControlGroupComponent.Item(
                         id: AnyHashable("craft"),
@@ -6225,7 +6225,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                     }
                 ))
             }
-            if uniqueGift == nil && !showUpgradePreview && state.canDeleteGift && !rightControlItems.contains(where: { $0.id == AnyHashable("more") }) { // GHOST: one «…» when Ghostgram items already added it
+            if uniqueGift == nil && !showUpgradePreview && state.canDeleteGift && !rightControlItems.contains(where: { $0.id == AnyHashable("more") }) { // WRAITH: one «…» when Wraithgram items already added it
                 rightControlItems.append(GlassControlGroupComponent.Item(
                     id: AnyHashable("more"),
                     content: .animation("anim_morewide"),

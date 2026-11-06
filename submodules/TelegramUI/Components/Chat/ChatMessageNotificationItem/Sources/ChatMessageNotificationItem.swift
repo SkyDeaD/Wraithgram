@@ -18,7 +18,7 @@ import InvisibleInkDustNode
 import TextNodeWithEntities
 import AnimationCache
 import MultiAnimationRenderer
-import GGFeaturesShared // GHOST: Ghostgram message settings (W2-3)
+import WGFeaturesShared // WRAITH: Wraithgram message settings (W2-3)
 
 public final class ChatMessageNotificationItem: NotificationItem {
     public let context: AccountContext
@@ -224,7 +224,7 @@ final class ChatMessageNotificationItemNode: NotificationItemNode {
                 messageText = message.text
                 messageEntities = message.textEntitiesAttribute?.entities.filter { entity in
                     if case .Spoiler = entity.type {
-                        return !GGMessagesPolicy.revealsSpoilers // GHOST: anti-spoiler (login codes below stay hidden)
+                        return !WGMessagesPolicy.revealsSpoilers // WRAITH: anti-spoiler (login codes below stay hidden)
                     } else if case .CustomEmoji = entity.type {
                         return true
                     } else {

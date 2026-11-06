@@ -27,7 +27,7 @@ import StoryContainerScreen
 import WallpaperGalleryScreen
 import BrowserUI
 import PeerMessagesMediaPlaylist
-import GGHooks // GHOST: documents features open themselves
+import WGHooks // WRAITH: documents features open themselves
 
 func openChatMessageImpl(_ params: OpenChatMessageParams) -> Bool {
     var story: TelegramMediaStory?
@@ -232,7 +232,7 @@ func openChatMessageImpl(_ params: OpenChatMessageParams) -> Bool {
                 params.present(controller, nil, .window(.root))
                 return true
             case let .document(file, immediateShare):
-                if !immediateShare, GGChatScreenHooks.handleOpenDocument(ggOpenDocumentRequest(params, file: file)) { return true } // GHOST: icon packs and badges install from a chat (GGChatScreenHooks.openDocument)
+                if !immediateShare, WGChatScreenHooks.handleOpenDocument(wgOpenDocumentRequest(params, file: file)) { return true } // WRAITH: icon packs and badges install from a chat (WGChatScreenHooks.openDocument)
                 params.dismissInput()
                 let presentationData = params.context.sharedContext.currentPresentationData.with { $0 }
                 if immediateShare {

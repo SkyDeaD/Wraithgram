@@ -446,14 +446,14 @@ static NSString * _Nonnull getPluralizationSuffix(uint32_t lc, int32_t value) {
 }
 
 
-// GHOST: client branding. «Telegram» is replaced by the app's display name (Ghostgram) only in
+// WRAITH: client branding. «Telegram» is replaced by the app's display name (Wraithgram) only in
 // strings where it means this app on this device: permission texts, passcode, local cache, calls,
 // the intro, update and widget texts. Where it means the service, the company, servers, accounts,
 // products (Premium, Stars, Passport, Business) or legal text, it stays. Keyed, so it works for the
 // bundled English and for every language pack downloaded from the server alike.
-// GHOST: the intro's «keeps your messages safe / multiple devices / unlimited cloud» and the contacts
+// WRAITH: the intro's «keeps your messages safe / multiple devices / unlimited cloud» and the contacts
 // permission («uploads to its encrypted cloud») are about the service: they keep «Telegram».
-static NSString * _Nonnull ggBrandedString(NSString * _Nonnull key, NSString * _Nonnull value) {
+static NSString * _Nonnull wgBrandedString(NSString * _Nonnull key, NSString * _Nonnull value) {
     static NSSet<NSString *> *brandedKeys = nil;
     static NSString *brandName = nil;
     static dispatch_once_t onceToken;
@@ -479,14 +479,14 @@ static NSString * _Nonnull ggBrandedString(NSString * _Nonnull key, NSString * _
             @"Media.LimitedAccessText",
             @"Attachment.LimitedMediaAccessText",
             @"Attachment.CameraAccessText",
-            @"Story.Camera.AccessPlaceholderTitle", // GHOST: means this app
+            @"Story.Camera.AccessPlaceholderTitle", // WRAITH: means this app
             @"Permissions.CellularDataText.v0",
             @"Notifications.PermissionsSuppressWarningText",
             @"InfoPlist.NSLocationWhenInUseUsageDescription",
             @"InfoPlist.NSLocationAlwaysAndWhenInUseUsageDescription",
             @"InfoPlist.NSLocationAlwaysUsageDescription",
             @"PasscodeSettings.EncryptDataHelp",
-            @"PasscodeSettings.LockTelegram", // GHOST: means this app
+            @"PasscodeSettings.LockTelegram", // WRAITH: means this app
             @"EnterPasscode.EnterTitle",
             @"EnterPasscode.EnterPasscode",
             @"EnterPasscode.TouchId",
@@ -502,8 +502,8 @@ static NSString * _Nonnull ggBrandedString(NSString * _Nonnull key, NSString * _
             @"Update.Title",
             @"Update.AppVersion",
             @"Update.UpdateApp",
-            @"Story.UnsupportedAction", // GHOST: means this app
-            @"Passport.UpdateRequiredError", // GHOST: means this app
+            @"Story.UnsupportedAction", // WRAITH: means this app
+            @"Passport.UpdateRequiredError", // WRAITH: means this app
             @"Conversation.UnsupportedMedia",
             @"Conversation.UnsupportedMediaPlaceholder",
             @"Conversation.UpdateTelegram",
@@ -586,7 +586,7 @@ static NSString * _Nonnull getSingle(_PresentationStrings * _Nullable strings, N
             *isFound = false;
         }
     } else {
-        result = ggBrandedString(key, result); // GHOST: client branding
+        result = wgBrandedString(key, result); // WRAITH: client branding
         if (isFound) {
             *isFound = true;
         }

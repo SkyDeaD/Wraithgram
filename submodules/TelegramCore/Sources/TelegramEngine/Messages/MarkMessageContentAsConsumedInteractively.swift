@@ -5,10 +5,10 @@ import SwiftSignalKit
 
 func _internal_markMessageContentAsConsumedInteractively(postbox: Postbox, messageId: MessageId) -> Signal<Void, NoError> {
     return postbox.transaction { transaction -> Void in
-        // GHOST: features may leave content unconsumed (GGPresenceHooks.consumeContent)
-        if let message = transaction.getMessage(messageId), message.flags.contains(.Incoming), ggShouldConsumeContent(message: message, transaction: transaction) {
-            // GHOST: the other side of a secret chat learns "listened / opened" only if features allow it (GGPresenceHooks.sendReadReceipt)
-            let ggSendsSecretContentRead = ggShouldSendSecretContentRead(message: message, transaction: transaction)
+        // WRAITH: features may leave content unconsumed (WGPresenceHooks.consumeContent)
+        if let message = transaction.getMessage(messageId), message.flags.contains(.Incoming), wgShouldConsumeContent(message: message, transaction: transaction) {
+            // WRAITH: the other side of a secret chat learns "listened / opened" only if features allow it (WGPresenceHooks.sendReadReceipt)
+            let wgSendsSecretContentRead = wgShouldSendSecretContentRead(message: message, transaction: transaction)
             var updateMessage = false
             var updatedAttributes = message.attributes
             
@@ -29,7 +29,7 @@ func _internal_markMessageContentAsConsumedInteractively(postbox: Postbox, messa
                                     case let .sequenceBasedLayer(sequenceState):
                                         layer = sequenceState.layerNegotiationState.activeLayer.secretChatLayer
                                 }
-                                if let layer = layer, ggSendsSecretContentRead { // GHOST: see ggSendsSecretContentRead
+                                if let layer = layer, wgSendsSecretContentRead { // WRAITH: see wgSendsSecretContentRead
                                     var globallyUniqueIds: [Int64] = []
                                     if let globallyUniqueId = message.globallyUniqueId {
                                         globallyUniqueIds.append(globallyUniqueId)
@@ -75,7 +75,7 @@ func _internal_markMessageContentAsConsumedInteractively(postbox: Postbox, messa
                                 }
                             }
                             
-                            if let state = state, let layer = layer, let globallyUniqueId = message.globallyUniqueId, ggSendsSecretContentRead { // GHOST: see ggSendsSecretContentRead
+                            if let state = state, let layer = layer, let globallyUniqueId = message.globallyUniqueId, wgSendsSecretContentRead { // WRAITH: see wgSendsSecretContentRead
                                 let updatedState = addSecretChatOutgoingOperation(transaction: transaction, peerId: messageId.peerId, operation: .readMessagesContent(layer: layer, actionGloballyUniqueId: Int64.random(in: Int64.min ... Int64.max), globallyUniqueIds: [globallyUniqueId]), state: state)
                                 if updatedState != state {
                                     transaction.setPeerChatState(messageId.peerId, state: updatedState)
@@ -106,7 +106,7 @@ func _internal_markMessageContentAsConsumedInteractively(postbox: Postbox, messa
                                 }
                             }
                             
-                            if let state = state, let layer = layer, let globallyUniqueId = message.globallyUniqueId, ggSendsSecretContentRead { // GHOST: see ggSendsSecretContentRead
+                            if let state = state, let layer = layer, let globallyUniqueId = message.globallyUniqueId, wgSendsSecretContentRead { // WRAITH: see wgSendsSecretContentRead
                                 let updatedState = addSecretChatOutgoingOperation(transaction: transaction, peerId: messageId.peerId, operation: .readMessagesContent(layer: layer, actionGloballyUniqueId: Int64.random(in: Int64.min ... Int64.max), globallyUniqueIds: [globallyUniqueId]), state: state)
                                 if updatedState != state {
                                     transaction.setPeerChatState(messageId.peerId, state: updatedState)
@@ -204,7 +204,7 @@ func markMessageContentAsConsumedRemotely(transaction: Transaction, messageId: M
         
         for i in 0 ..< updatedAttributes.count {
             if let attribute = updatedAttributes[i] as? AutoremoveTimeoutMessageAttribute {
-                if (attribute.countdownBeginTime == nil || attribute.countdownBeginTime == 0) && message.ggRawContainsSecretMedia { // GHOST: raw, see GGRestrictionHooks.secretMediaDisplay
+                if (attribute.countdownBeginTime == nil || attribute.countdownBeginTime == 0) && message.wgRawContainsSecretMedia { // WRAITH: raw, see WGRestrictionHooks.secretMediaDisplay
                     updatedAttributes[i] = AutoremoveTimeoutMessageAttribute(timeout: attribute.timeout, countdownBeginTime: countdownBeginTime)
                     updateMessage = true
                                  
@@ -228,7 +228,7 @@ func markMessageContentAsConsumedRemotely(transaction: Transaction, messageId: M
                     }
                 }
             } else if let attribute = updatedAttributes[i] as? AutoclearTimeoutMessageAttribute {
-                if (attribute.countdownBeginTime == nil || attribute.countdownBeginTime == 0) && message.ggRawContainsSecretMedia { // GHOST: raw, see GGRestrictionHooks.secretMediaDisplay
+                if (attribute.countdownBeginTime == nil || attribute.countdownBeginTime == 0) && message.wgRawContainsSecretMedia { // WRAITH: raw, see WGRestrictionHooks.secretMediaDisplay
                     updatedAttributes[i] = AutoclearTimeoutMessageAttribute(timeout: attribute.timeout, countdownBeginTime: countdownBeginTime)
                     updateMessage = true
                     

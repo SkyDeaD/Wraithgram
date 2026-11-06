@@ -17,7 +17,7 @@ public func chatListFilterItems(context: AccountContext) -> Signal<(Int, [(ChatL
     //
     // The association is sampled once per filter change rather than observed: a secret chat created
     // afterwards is not reflected in the badge until the filters change again or the app restarts.
-    return ggChatListFolders(context.engine.peers.updatedChatListFilters(), context: context) // GHOST: features may hide folders, e.g. a locked secret folder (GGChatListHooks.folders)
+    return wgChatListFolders(context.engine.peers.updatedChatListFilters(), context: context) // WRAITH: features may hide folders, e.g. a locked secret folder (WGChatListHooks.folders)
     |> distinctUntilChanged
     |> mapToSignal { filters -> Signal<([ChatListFilter], [EnginePeer.Id: [EnginePeer.Id]], [EnginePeer.Id: EnginePeer.Id]), NoError> in
         var folderPeerIds = Set<EnginePeer.Id>()

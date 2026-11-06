@@ -224,7 +224,7 @@ private final class RoundVideoLanczosScaler {
 final class RoundVideoFrameProcessor {
     static let outputWidth = 480
     static let outputHeight = 480
-    // GHOST: side of the square from the round video settings (upstream: 480)
+    // WRAITH: side of the square from the round video settings (upstream: 480)
     let outputSide: Int
 
     private let device: MTLDevice
@@ -240,7 +240,7 @@ final class RoundVideoFrameProcessor {
     private var primaryLanczosScaler: RoundVideoLanczosScaler?
     private var secondaryLanczosScaler: RoundVideoLanczosScaler?
 
-    init?(mediaQueue: DispatchQueue, decorationResources: RoundVideoDecorationResources?, mode: NeoCameraImpl.RoundVideoMode, outputSide: Int = RoundVideoFrameProcessor.outputWidth) { // GHOST: `outputSide` — round video resolution
+    init?(mediaQueue: DispatchQueue, decorationResources: RoundVideoDecorationResources?, mode: NeoCameraImpl.RoundVideoMode, outputSide: Int = RoundVideoFrameProcessor.outputWidth) { // WRAITH: `outputSide` — round video resolution
         guard let device = MTLCreateSystemDefaultDevice(), let commandQueue = device.makeCommandQueue() else {
             return nil
         }
@@ -278,7 +278,7 @@ final class RoundVideoFrameProcessor {
         ]
         let pixelBufferAttributes: [String: Any] = [
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
-            kCVPixelBufferWidthKey as String: outputSide, // GHOST: round video resolution
+            kCVPixelBufferWidthKey as String: outputSide, // WRAITH: round video resolution
             kCVPixelBufferHeightKey as String: outputSide,
             kCVPixelBufferMetalCompatibilityKey as String: true,
             kCVPixelBufferIOSurfacePropertiesKey as String: [:] as NSDictionary
@@ -294,7 +294,7 @@ final class RoundVideoFrameProcessor {
         }
 
         self.device = device
-        self.outputSide = outputSide // GHOST: round video resolution
+        self.outputSide = outputSide // WRAITH: round video resolution
         self.mediaQueue = mediaQueue
         self.commandQueue = commandQueue
         self.mode = mode
@@ -466,7 +466,7 @@ final class RoundVideoFrameProcessor {
             Self.dispatch(
                 encoder: compositeEncoder,
                 pipelineState: decoration.compositePipelineState,
-                width: self.outputSide, // GHOST: round video resolution
+                width: self.outputSide, // WRAITH: round video resolution
                 height: self.outputSide
             )
             compositeEncoder.endEncoding()
@@ -484,7 +484,7 @@ final class RoundVideoFrameProcessor {
             Self.dispatch(
                 encoder: encoder,
                 pipelineState: self.plainPipelineState,
-                width: self.outputSide, // GHOST: round video resolution
+                width: self.outputSide, // WRAITH: round video resolution
                 height: self.outputSide
             )
             encoder.endEncoding()
@@ -501,7 +501,7 @@ final class RoundVideoFrameProcessor {
         self.isRendering = true
         statistics.renderSubmitted += 1
         statistics.pendingRenders += 1
-        if self.mode == .hdLanczos, min(primaryInputY.width, primaryInputY.height) > self.outputSide || (secondary != nil && min(secondaryInputY.width, secondaryInputY.height) > self.outputSide) { // GHOST: round video resolution
+        if self.mode == .hdLanczos, min(primaryInputY.width, primaryInputY.height) > self.outputSide || (secondary != nil && min(secondaryInputY.width, secondaryInputY.height) > self.outputSide) { // WRAITH: round video resolution
             statistics.lanczosFrames += 1
         }
         if self.decoration != nil {
@@ -567,14 +567,14 @@ final class RoundVideoFrameProcessor {
 
     private func prepareInputTextures(y: MTLTexture, cbcr: MTLTexture, commandBuffer: MTLCommandBuffer, secondary: Bool) -> (y: MTLTexture, cbcr: MTLTexture)? {
         // VGA is already a 480-pixel square crop. Avoid a redundant filtering pass.
-        guard self.mode == .hdLanczos, min(y.width, y.height) > self.outputSide else { // GHOST: round video resolution
+        guard self.mode == .hdLanczos, min(y.width, y.height) > self.outputSide else { // WRAITH: round video resolution
             return (y, cbcr)
         }
         let scaler: RoundVideoLanczosScaler
         if let current = secondary ? self.secondaryLanczosScaler : self.primaryLanczosScaler {
             scaler = current
         } else {
-            guard let current = RoundVideoLanczosScaler(device: self.device, width: self.outputSide, height: self.outputSide) else { // GHOST: round video resolution
+            guard let current = RoundVideoLanczosScaler(device: self.device, width: self.outputSide, height: self.outputSide) else { // WRAITH: round video resolution
                 return nil
             }
             if secondary {
@@ -631,7 +631,7 @@ final class RoundVideoFrameProcessor {
             pixelBuffer,
             nil,
             .bgra8Unorm,
-            self.outputSide, // GHOST: round video resolution
+            self.outputSide, // WRAITH: round video resolution
             self.outputSide,
             0,
             &texture

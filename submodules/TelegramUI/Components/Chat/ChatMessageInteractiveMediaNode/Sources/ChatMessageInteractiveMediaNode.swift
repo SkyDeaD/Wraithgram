@@ -35,7 +35,7 @@ import RangeSet
 import GiftItemComponent
 import MediaResources
 import UIKitRuntimeUtils
-import GGHooks // GHOST: message decorations, capture protection
+import WGHooks // WRAITH: message decorations, capture protection
 
 private struct FetchControls {
     let fetch: (Bool) -> Void
@@ -946,8 +946,8 @@ public final class ChatMessageInteractiveMediaNode: ASDisplayNode, GalleryItemTr
                 }
             }
             
-            // GHOST: anti-spoiler reveals media spoilers (GGMessageDecorationHooks)
-            let hasSpoiler = message.attributes.contains(where: { $0 is MediaSpoilerMessageAttribute }) && !GGMessageDecorationHooks.decoration(for: message, context: context).revealsSpoilers
+            // WRAITH: anti-spoiler reveals media spoilers (WGMessageDecorationHooks)
+            let hasSpoiler = message.attributes.contains(where: { $0 is MediaSpoilerMessageAttribute }) && !WGMessageDecorationHooks.decoration(for: message, context: context).revealsSpoilers
             var isExtendedMediaPreview = false
             var isInlinePlayableVideo = false
             var isSticker = false
@@ -2026,7 +2026,7 @@ public final class ChatMessageInteractiveMediaNode: ASDisplayNode, GalleryItemTr
                                             autoFetchFullSizeThumbnail: true,
                                             continuePlayingWithoutSoundOnLostAudioSession: isInlinePlayableVideo,
                                             placeholderColor: emptyColor,
-                                            captureProtected: GGChatScreenHooks.captureProtection(associatedData.isCopyProtectionEnabled || message.isCopyProtected() || isExtendedMedia, context: context, chatLocation: .peer(id: message.id.peerId)), // GHOST: screenshot bypass
+                                            captureProtected: WGChatScreenHooks.captureProtection(associatedData.isCopyProtectionEnabled || message.isCopyProtected() || isExtendedMedia, context: context, chatLocation: .peer(id: message.id.peerId)), // WRAITH: screenshot bypass
                                             storeAfterDownload: { [weak context] in
                                                 guard let context, let peerId else {
                                                     return
@@ -2150,7 +2150,7 @@ public final class ChatMessageInteractiveMediaNode: ASDisplayNode, GalleryItemTr
                                 }
                             }
                             
-                            if hasSpoiler, strongSelf.extendedMediaOverlayNode == nil { // GHOST: anti-spoiler (see hasSpoiler)
+                            if hasSpoiler, strongSelf.extendedMediaOverlayNode == nil { // WRAITH: anti-spoiler (see hasSpoiler)
                                 strongSelf.internallyVisible = false
                             }
                                                         
@@ -2328,8 +2328,8 @@ public final class ChatMessageInteractiveMediaNode: ASDisplayNode, GalleryItemTr
                             }
                             
                             if let updateImageSignal = updateImageSignal {
-                                // GHOST: features may lift capture protection (GGChatScreenHooks.captureProtection)
-                                strongSelf.imageNode.captureProtected = GGChatScreenHooks.captureProtection(associatedData.isCopyProtectionEnabled || message.isCopyProtected() || isExtendedMedia, context: context, chatLocation: .peer(id: message.id.peerId))
+                                // WRAITH: features may lift capture protection (WGChatScreenHooks.captureProtection)
+                                strongSelf.imageNode.captureProtected = WGChatScreenHooks.captureProtection(associatedData.isCopyProtectionEnabled || message.isCopyProtected() || isExtendedMedia, context: context, chatLocation: .peer(id: message.id.peerId))
                                 strongSelf.imageNode.setSignal(updateImageSignal(synchronousLoads, false), attemptSynchronously: synchronousLoads)
 
                                 var imageDimensions: CGSize?
@@ -3093,7 +3093,7 @@ public final class ChatMessageInteractiveMediaNode: ASDisplayNode, GalleryItemTr
                 icon = .lock
             }
             displaySpoiler = true
-        } else if message.attributes.contains(where: { $0 is MediaSpoilerMessageAttribute }), !(self.context.flatMap { GGMessageDecorationHooks.decoration(for: message, context: $0).revealsSpoilers } ?? false) { // GHOST: anti-spoiler
+        } else if message.attributes.contains(where: { $0 is MediaSpoilerMessageAttribute }), !(self.context.flatMap { WGMessageDecorationHooks.decoration(for: message, context: $0).revealsSpoilers } ?? false) { // WRAITH: anti-spoiler
             displaySpoiler = true
         } else if isSecretMedia {
             displaySpoiler = true

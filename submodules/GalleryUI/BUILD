@@ -10,11 +10,11 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: Ghostgram hook points
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/GGHooks:GGHooks",
-        # GHOST: Swiftgram-parity settings (W5-SG)
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
+        # WRAITH: Wraithgram hook points
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/WGHooks:WGHooks",
+        # WRAITH: Swiftgram-parity settings (W5-SG)
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
         "//submodules/UrlWhitelist",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/LottieSettings:LottieSettings",

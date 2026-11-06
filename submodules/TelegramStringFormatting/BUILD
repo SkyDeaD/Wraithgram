@@ -12,8 +12,8 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: appearance snapshot (exact «last seen» time)
-        "//Ghostgram/Features/Appearance:GGAppearanceSettings",
+        # WRAITH: appearance snapshot (exact «last seen» time)
+        "//Wraithgram/Features/Appearance:WGAppearanceSettings",
         "//submodules/TelegramCore:TelegramCore",
         "//submodules/Display:Display",
         "//submodules/PlatformRestrictionMatching:PlatformRestrictionMatching",

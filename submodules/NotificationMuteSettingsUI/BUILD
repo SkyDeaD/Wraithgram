@@ -14,8 +14,8 @@ swift_library(
         "//submodules/TelegramCore:TelegramCore",
         "//submodules/TelegramPresentationData:TelegramPresentationData",
         "//submodules/TelegramStringFormatting:TelegramStringFormatting",
-        # GHOST: Swiftgram-parity settings (W5-SG)
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
+        # WRAITH: Swiftgram-parity settings (W5-SG)
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
     ],
     visibility = [
         "//visibility:public",

@@ -30,7 +30,7 @@ import PeerInfoScreen
 import PeerInfoStoryGridScreen
 import ShareWithPeersScreen
 import ChatEmptyNode
-import GGHooks // GHOST: root and lifecycle points
+import WGHooks // WRAITH: root and lifecycle points
 import NewsScreen
 
 private class DetailsChatPlaceholderNode: ASDisplayNode, NavigationDetailsPlaceholderNode {
@@ -242,11 +242,11 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
         }
         accountSettingsController.parentController = self
         controllers.append(accountSettingsController)
-        // GHOST: features may reorder, hide or add tabs (GGRootHooks.tabControllers)
-        controllers = GGRootHooks.arrangeTabs(controllers, context: GGRootTabContext(context: self.context, contacts: contactsController, calls: showCallsTab ? callListController : nil, chatList: chatListController, settings: accountSettingsController))
+        // WRAITH: features may reorder, hide or add tabs (WGRootHooks.tabControllers)
+        controllers = WGRootHooks.arrangeTabs(controllers, context: WGRootTabContext(context: self.context, contacts: contactsController, calls: showCallsTab ? callListController : nil, chatList: chatListController, settings: accountSettingsController))
                 
         let chatsIndex = controllers.firstIndex(where: { $0 === chatListController }) ?? 0
-        tabBarController.setControllers(controllers, selectedIndex: GGRootHooks.selectedIndex(controllers, preferred: restoreSettignsController != nil ? accountSettingsController : chatListController, fallback: restoreSettignsController != nil ? (controllers.count - 1) : chatsIndex)) // GHOST: selection after GGRootHooks.tabControllers
+        tabBarController.setControllers(controllers, selectedIndex: WGRootHooks.selectedIndex(controllers, preferred: restoreSettignsController != nil ? accountSettingsController : chatListController, fallback: restoreSettignsController != nil ? (controllers.count - 1) : chatsIndex)) // WRAITH: selection after WGRootHooks.tabControllers
         
         self.contactsController = contactsController
         self.callListController = callListController
@@ -255,8 +255,8 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
         self.accountSettingsController = accountSettingsController
         self.rootTabController = tabBarController
         self.pushViewController(tabBarController, animated: false)
-        // GHOST: per-account UI machinery of features starts here (GGLifecycleHooks.rootControllersDidLoad)
-        GGLifecycleHooks.notifyRootControllersDidLoad(context: self.context, navigationController: self)
+        // WRAITH: per-account UI machinery of features starts here (WGLifecycleHooks.rootControllersDidLoad)
+        WGLifecycleHooks.notifyRootControllersDidLoad(context: self.context, navigationController: self)
     }
         
     public func updateRootControllers(showCallsTab: Bool, showNewsTab: Bool) {
@@ -273,8 +273,8 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
             controllers.append(newsController)
         }
         controllers.append(self.accountSettingsController!)
-        // GHOST: features may reorder, hide or add tabs (GGRootHooks.tabControllers)
-        controllers = GGRootHooks.arrangeTabs(controllers, context: GGRootTabContext(context: self.context, contacts: self.contactsController!, calls: showCallsTab ? self.callListController : nil, chatList: self.chatListController!, settings: self.accountSettingsController!))
+        // WRAITH: features may reorder, hide or add tabs (WGRootHooks.tabControllers)
+        controllers = WGRootHooks.arrangeTabs(controllers, context: WGRootTabContext(context: self.context, contacts: self.contactsController!, calls: showCallsTab ? self.callListController : nil, chatList: self.chatListController!, settings: self.accountSettingsController!))
 
         // A removed selected tab would otherwise fall back to index 0 (Contacts): select Chats instead.
         var selectedIndex: Int?
@@ -727,7 +727,7 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
                         defer {
                             EngineTempBox.shared.dispose(tempFile)
                         }
-                        if let imageData = compressImageToJPEG(image, quality: GGOutgoingImageHooks.jpegQuality(0.7, hd: false), tempFilePath: tempFile.path) { // GHOST: photo quality setting (GGOutgoingImageHooks.parameters)
+                        if let imageData = compressImageToJPEG(image, quality: WGOutgoingImageHooks.jpegQuality(0.7, hd: false), tempFilePath: tempFile.path) { // WRAITH: photo quality setting (WGOutgoingImageHooks.parameters)
                             media = .image(dimensions: dimensions, data: imageData, stickers: result.stickers)
                         }
                     case let .video(content, firstFrameImage, values, duration, dimensions):
@@ -832,7 +832,7 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
     
         if let index = rootTabController.controllers.firstIndex(where: { $0 is ContactsController }) {
             rootTabController.selectedIndex = index
-        } else { // GHOST: the tab can be hidden (GGRootHooks.tabControllers): the screen opens over the chats, with «Back»
+        } else { // WRAITH: the tab can be hidden (WGRootHooks.tabControllers): the screen opens over the chats, with «Back»
             let contactsController = ContactsController(context: self.context)
             contactsController.navigationItem.leftBarButtonItem = nil
             self.pushViewController(contactsController, animated: true)

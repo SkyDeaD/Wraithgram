@@ -103,7 +103,7 @@ public func peerAvatarCompleteImage(account: Account, peer: EnginePeer, forcePro
 public func peerAvatarCompleteImage(postbox: Postbox, peer: EnginePeer, forceProvidedRepresentation: Bool = false, representation: TelegramMediaImageRepresentation? = nil, size: CGSize, round: Bool = true, font: UIFont = avatarPlaceholderFont(size: 13.0), drawLetters: Bool = true, fullSize: Bool = false, blurred: Bool = false) -> Signal<UIImage?, NoError> {
     let iconSignal: Signal<UIImage?, NoError>
     
-    var clipStyle: AvatarNodeClipStyle // GHOST: var — square avatars adjust it below
+    var clipStyle: AvatarNodeClipStyle // WRAITH: var — square avatars adjust it below
     if round {
         if case let .channel(channel) = peer, channel.isForumOrMonoForum {
             clipStyle = .roundedRect
@@ -113,7 +113,7 @@ public func peerAvatarCompleteImage(postbox: Postbox, peer: EnginePeer, forcePro
     } else {
         clipStyle = .none
     }
-    clipStyle = ggAvatarClipStyle(clipStyle) // GHOST: square avatars (GGAvatarHooks.shape)
+    clipStyle = wgAvatarClipStyle(clipStyle) // WRAITH: square avatars (WGAvatarHooks.shape)
     
     let thumbnailRepresentation: TelegramMediaImageRepresentation?
     if forceProvidedRepresentation {
@@ -123,7 +123,7 @@ public func peerAvatarCompleteImage(postbox: Postbox, peer: EnginePeer, forcePro
     }
     
     if let signal = peerAvatarImage(postbox: postbox, peerReference: PeerReference(peer), authorOfMessage: nil,representation: thumbnailRepresentation, displayDimensions: size, clipStyle: clipStyle, blurred: blurred, inset: 0.0, emptyColor: nil, synchronousLoad: fullSize) {
-        if fullSize, let fullSizeSignal = peerAvatarImage(postbox: postbox, peerReference: PeerReference(peer), authorOfMessage: nil,representation: peer.profileImageRepresentations.last, displayDimensions: size, clipStyle: clipStyle, emptyColor: nil, synchronousLoad: true) { // GHOST: clipStyle — the full-size version keeps the shape of the thumbnail (square avatars)
+        if fullSize, let fullSizeSignal = peerAvatarImage(postbox: postbox, peerReference: PeerReference(peer), authorOfMessage: nil,representation: peer.profileImageRepresentations.last, displayDimensions: size, clipStyle: clipStyle, emptyColor: nil, synchronousLoad: true) { // WRAITH: clipStyle — the full-size version keeps the shape of the thumbnail (square avatars)
             iconSignal = combineLatest(.single(nil) |> then(signal), .single(nil) |> then(fullSizeSignal))
             |> mapToSignal { thumbnailImage, fullSizeImage -> Signal<UIImage?, NoError> in
                 if let fullSizeImage = fullSizeImage {
@@ -207,7 +207,7 @@ public func peerAvatarImage(postbox: Postbox, peerReference: PeerReference?, aut
                                     context.clip()
                                 }
                             case .roundedRect:
-                                context.addPath(UIBezierPath(roundedRect: CGRect(x: 0.0, y: 0.0, width: displayDimensions.width, height: displayDimensions.height).insetBy(dx: inset, dy: inset), cornerRadius: ggAvatarRoundedRectRadius(displayDimensions.width - inset * 2.0, upstream: floor(displayDimensions.width * 0.25))).cgPath) // GHOST: square avatars — the corner of the drawn (inset) square: the tab bar avatar (inset 3) came out nearly round
+                                context.addPath(UIBezierPath(roundedRect: CGRect(x: 0.0, y: 0.0, width: displayDimensions.width, height: displayDimensions.height).insetBy(dx: inset, dy: inset), cornerRadius: wgAvatarRoundedRectRadius(displayDimensions.width - inset * 2.0, upstream: floor(displayDimensions.width * 0.25))).cgPath) // WRAITH: square avatars — the corner of the drawn (inset) square: the tab bar avatar (inset 3) came out nearly round
                                 context.clip()
                             case .bubble:
                                 let rect = CGRect(origin: CGPoint(), size: displayDimensions).insetBy(dx: inset, dy: inset)
@@ -284,7 +284,7 @@ public func peerAvatarImage(postbox: Postbox, peerReference: PeerReference?, aut
                                     context.fillEllipse(in: CGRect(origin: CGPoint(), size: displayDimensions).insetBy(dx: inset, dy: inset))
                                 case .roundedRect:
                                     context.beginPath()
-                                    context.addPath(UIBezierPath(roundedRect: CGRect(x: 0.0, y: 0.0, width: displayDimensions.width, height: displayDimensions.height).insetBy(dx: inset, dy: inset), cornerRadius: ggAvatarRoundedRectRadius(displayDimensions.width - inset * 2.0, upstream: floor(displayDimensions.width * 0.25))).cgPath) // GHOST: square avatars — the corner of the drawn (inset) square: the tab bar avatar (inset 3) came out nearly round
+                                    context.addPath(UIBezierPath(roundedRect: CGRect(x: 0.0, y: 0.0, width: displayDimensions.width, height: displayDimensions.height).insetBy(dx: inset, dy: inset), cornerRadius: wgAvatarRoundedRectRadius(displayDimensions.width - inset * 2.0, upstream: floor(displayDimensions.width * 0.25))).cgPath) // WRAITH: square avatars — the corner of the drawn (inset) square: the tab bar avatar (inset 3) came out nearly round
                                     context.fillPath()
                                 case .bubble:
                                     let rect = CGRect(origin: CGPoint(), size: displayDimensions).insetBy(dx: inset, dy: inset)
@@ -310,7 +310,7 @@ public func peerAvatarImage(postbox: Postbox, peerReference: PeerReference?, aut
                             context.fillEllipse(in: CGRect(origin: CGPoint(), size: displayDimensions).insetBy(dx: inset, dy: inset))
                         case .roundedRect:
                             context.beginPath()
-                            context.addPath(UIBezierPath(roundedRect: CGRect(x: 0.0, y: 0.0, width: displayDimensions.width, height: displayDimensions.height).insetBy(dx: inset, dy: inset), cornerRadius: ggAvatarRoundedRectRadius(displayDimensions.width - inset * 2.0, upstream: floor(displayDimensions.width * 0.25))).cgPath) // GHOST: square avatars — the corner of the drawn (inset) square: the tab bar avatar (inset 3) came out nearly round
+                            context.addPath(UIBezierPath(roundedRect: CGRect(x: 0.0, y: 0.0, width: displayDimensions.width, height: displayDimensions.height).insetBy(dx: inset, dy: inset), cornerRadius: wgAvatarRoundedRectRadius(displayDimensions.width - inset * 2.0, upstream: floor(displayDimensions.width * 0.25))).cgPath) // WRAITH: square avatars — the corner of the drawn (inset) square: the tab bar avatar (inset 3) came out nearly round
                             context.fillPath()
                         case .bubble:
                             let rect = CGRect(origin: CGPoint(), size: displayDimensions).insetBy(dx: inset, dy: inset)
@@ -358,7 +358,7 @@ public func peerAvatarImage(postbox: Postbox, peerReference: PeerReference?, aut
                                 context.fillEllipse(in: CGRect(origin: CGPoint(), size: displayDimensions).insetBy(dx: inset, dy: inset))
                             case .roundedRect:
                                 context.beginPath()
-                                context.addPath(UIBezierPath(roundedRect: CGRect(x: 0.0, y: 0.0, width: displayDimensions.width, height: displayDimensions.height).insetBy(dx: inset, dy: inset), cornerRadius: ggAvatarRoundedRectRadius(displayDimensions.width - inset * 2.0, upstream: floor(displayDimensions.width * 0.25))).cgPath) // GHOST: square avatars — the corner of the drawn (inset) square: the tab bar avatar (inset 3) came out nearly round
+                                context.addPath(UIBezierPath(roundedRect: CGRect(x: 0.0, y: 0.0, width: displayDimensions.width, height: displayDimensions.height).insetBy(dx: inset, dy: inset), cornerRadius: wgAvatarRoundedRectRadius(displayDimensions.width - inset * 2.0, upstream: floor(displayDimensions.width * 0.25))).cgPath) // WRAITH: square avatars — the corner of the drawn (inset) square: the tab bar avatar (inset 3) came out nearly round
                                 context.fillPath()
                             case .bubble:
                                 let rect = CGRect(origin: CGPoint(), size: displayDimensions).insetBy(dx: inset, dy: inset)
@@ -396,13 +396,13 @@ public func peerAvatarImage(postbox: Postbox, peerReference: PeerReference?, aut
 public func drawPeerAvatarLetters(context: CGContext, size: CGSize, round: Bool = true, font: UIFont, letters: [String], peerId: EnginePeer.Id, nameColor: PeerColor?) {
     if round {
         context.beginPath()
-        // GHOST: square avatars — a "round" letter avatar takes the avatar shape (comment and reaction avatars, lists)
-        if let ggClipPath = ggAvatarClipPath(in: CGRect(x: 0.0, y: 0.0, width: size.width, height: size.height)) {
-            context.addPath(ggClipPath)
+        // WRAITH: square avatars — a "round" letter avatar takes the avatar shape (comment and reaction avatars, lists)
+        if let wgClipPath = wgAvatarClipPath(in: CGRect(x: 0.0, y: 0.0, width: size.width, height: size.height)) {
+            context.addPath(wgClipPath)
         } else {
         context.addEllipse(in: CGRect(x: 0.0, y: 0.0, width: size.width, height:
             size.height))
-        } // GHOST: end
+        } // WRAITH: end
         context.clip()
     }
     

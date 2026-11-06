@@ -15,7 +15,7 @@ import ItemListAvatarAndNameInfoItem
 import OldChannelsController
 import ChatTimerScreen
 import ContextUI
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 private let rankMaxLength: Int32 = 16
 
@@ -786,11 +786,11 @@ public func channelBannedMemberController(context: AccountContext, updatedPresen
                 updatedPresentationData: updatedPresentationData,
                 configuration: ChatTimerScreen.Configuration(
                     style: .default,
-                    picker: GGExtrasPolicy.restrictsUntilTime ? .dateTime : .date, // GHOST: «Ограничение до времени» (GGExtrasPolicy.restrictsUntilTime)
+                    picker: WGExtrasPolicy.restrictsUntilTime ? .dateTime : .date, // WRAITH: «Ограничение до времени» (WGExtrasPolicy.restrictsUntilTime)
                     currentValue: Int32(Date().timeIntervalSince1970),
                     minimumDate: Date(),
                     maximumDate: Date(timeIntervalSince1970: Double(Int32.max - 1)),
-                    pickerValueMapping: GGExtrasPolicy.restrictsUntilTime ? .rawTimestamp : .roundDateToDaysUTC, // GHOST: see above
+                    pickerValueMapping: WGExtrasPolicy.restrictsUntilTime ? .rawTimestamp : .roundDateToDaysUTC, // WRAITH: see above
                     primaryActionTitle: { strings, _, _ in
                         strings.Wallpaper_Set
                     }

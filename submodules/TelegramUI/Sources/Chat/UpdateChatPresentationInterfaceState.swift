@@ -16,7 +16,7 @@ import WebUI
 import LegacyChatHeaderPanelComponent
 import ComponentFlow
 import ComponentDisplayAdapters
-import GGAppearanceSettings // GHOST: chat top bar options
+import WGAppearanceSettings // WRAITH: chat top bar options
 
 extension ChatControllerImpl {
     func updateRightNavigationButtons(presentationInterfaceState: ChatPresentationInterfaceState, transition: ContainedViewLayoutTransition) {
@@ -512,10 +512,10 @@ func updateChatPresentationInterfaceStateImpl(
         if case .messageOptions = selfController.subject {
             titleTransition = titleTransition.withAnimation(.none)
         }
-        // GHOST: no title panel in the chat header (appearance.chatTopBar.hideTitle)
-        let ggHidesTitle = GGAppearanceSnapshot.current.hideTitlePanel && selfController.presentationInterfaceState.mode == .standard(.default)
-        if chatTitleView.ggHidesContent != ggHidesTitle {
-            chatTitleView.ggHidesContent = ggHidesTitle
+        // WRAITH: no title panel in the chat header (appearance.chatTopBar.hideTitle)
+        let wgHidesTitle = WGAppearanceSnapshot.current.hideTitlePanel && selfController.presentationInterfaceState.mode == .standard(.default)
+        if chatTitleView.wgHidesContent != wgHidesTitle {
+            chatTitleView.wgHidesContent = wgHidesTitle
             chatTitleView.requestUpdate?(.immediate)
         }
         let isChatTitleViewUpdated = chatTitleView.update(

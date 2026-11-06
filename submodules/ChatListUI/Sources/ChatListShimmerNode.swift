@@ -7,7 +7,7 @@ import AccountContext
 import AnimationCache
 import MultiAnimationRenderer
 import TelegramCore
-import AvatarNode // GHOST: square avatars (ggAvatarFillShape)
+import AvatarNode // WRAITH: square avatars (wgAvatarFillShape)
 
 private final class ShimmerEffectNode: ASDisplayNode {
     private var currentBackgroundColor: UIColor?
@@ -259,7 +259,7 @@ public final class ChatListShimmerNode: ASDisplayNode {
                     
                     if !isInlineMode {
                         if !itemNodes[sampleIndex].avatarNode.isHidden {
-                            ggAvatarFillShape(context, in: itemNodes[sampleIndex].avatarNode.view.convert(itemNodes[sampleIndex].avatarNode.bounds, to: itemNodes[sampleIndex].view).offsetBy(dx: 0.0, dy: currentY)) // GHOST: square avatars
+                            wgAvatarFillShape(context, in: itemNodes[sampleIndex].avatarNode.view.convert(itemNodes[sampleIndex].avatarNode.bounds, to: itemNodes[sampleIndex].view).offsetBy(dx: 0.0, dy: currentY)) // WRAITH: square avatars
                         }
                     }
                     

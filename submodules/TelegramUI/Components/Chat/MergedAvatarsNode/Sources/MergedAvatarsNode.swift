@@ -139,7 +139,7 @@ public final class MergedAvatarsNode: ASDisplayNode {
                 switch peer {
                 case let .image(peerReference, representation):
                     if self.disposables[peer.peerId] == nil {
-                        if let signal = peerAvatarImage(account: context.account, peerReference: peerReference, authorOfMessage: nil, representation: representation, displayDimensions: CGSize(width: imageSize, height: imageSize), clipStyle: ggAvatarClipStyle(.round), synchronousLoad: synchronousLoad) { // GHOST: square avatars (clipStyle)
+                        if let signal = peerAvatarImage(account: context.account, peerReference: peerReference, authorOfMessage: nil, representation: representation, displayDimensions: CGSize(width: imageSize, height: imageSize), clipStyle: wgAvatarClipStyle(.round), synchronousLoad: synchronousLoad) { // WRAITH: square avatars (clipStyle)
                             let disposable = (signal
                             |> deliverOnMainQueue).startStrict(next: { [weak self] imageVersions in
                                 guard let strongSelf = self else {
@@ -189,7 +189,7 @@ public final class MergedAvatarsNode: ASDisplayNode {
             let imageRect = CGRect(origin: CGPoint(x: currentX, y: 0.0), size: CGSize(width: mergedImageSize, height: mergedImageSize))
             context.setBlendMode(.copy)
             context.setFillColor(UIColor.clear.cgColor)
-            ggAvatarFillShape(context, in: imageRect.insetBy(dx: -parameters.borderWidth, dy: -parameters.borderWidth)) // GHOST: square avatars — the cutout around the next avatar
+            wgAvatarFillShape(context, in: imageRect.insetBy(dx: -parameters.borderWidth, dy: -parameters.borderWidth)) // WRAITH: square avatars — the cutout around the next avatar
             context.setBlendMode(.normal)
             
             context.saveGState()
@@ -206,7 +206,7 @@ public final class MergedAvatarsNode: ASDisplayNode {
                     context.draw(image.cgImage!, in: imageRect)
                 } else {
                     context.setFillColor(UIColor.gray.cgColor)
-                    ggAvatarFillShape(context, in: imageRect) // GHOST: square avatars
+                    wgAvatarFillShape(context, in: imageRect) // WRAITH: square avatars
                 }
             }
             context.restoreGState()

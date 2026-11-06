@@ -8,8 +8,8 @@ import Vision
 import VideoToolbox
 import TelegramCore
 import Camera
-// GHOST: Ghostgram round video settings and frame processor (masks)
-import GGCameraPipeline
+// WRAITH: Wraithgram round video settings and frame processor (masks)
+import WGCameraPipeline
 
 final class CameraOutput: NSObject {
     private struct RoundVideoFormatDescriptionCacheEntry {
@@ -49,14 +49,14 @@ final class CameraOutput: NSObject {
         
     var processSampleBuffer: ((CMSampleBuffer, CVImageBuffer, AVCaptureConnection) -> Void)?
 
-    // GHOST: round video settings of this session, the frame processor (masks) and the watermark
+    // WRAITH: round video settings of this session, the frame processor (masks) and the watermark
     // of the current recording; defaults keep upstream's 400×400 H.264 1 Mbit/s
-    var ggRecording: GGRoundVideoRecordingConfig = .standard
-    var ggFrameProcessor: GGCameraFrameProcessor?
-    private var ggWatermark: GGRoundVideoWatermark?
-    private var ggFormatDescription: CMVideoFormatDescription?
-    private var ggSide: Int {
-        return self.ggRecording.outputSide(defaultSide: Int(videoMessageDimensions.width))
+    var wgRecording: WGRoundVideoRecordingConfig = .standard
+    var wgFrameProcessor: WGCameraFrameProcessor?
+    private var wgWatermark: WGRoundVideoWatermark?
+    private var wgFormatDescription: CMVideoFormatDescription?
+    private var wgSide: Int {
+        return self.wgRecording.outputSide(defaultSide: Int(videoMessageDimensions.width))
     }
     var processAudioBuffer: ((CMSampleBuffer) -> Void)?
     var processCodes: (([CameraCode]) -> Void)?
@@ -191,7 +191,7 @@ final class CameraOutput: NSObject {
     func configureVideoStabilization() {
         if let videoDataOutputConnection = self.videoOutput.connection(with: .video) {
             if videoDataOutputConnection.isVideoStabilizationSupported {
-                videoDataOutputConnection.preferredVideoStabilizationMode = self.ggStabilizationMode(connection: videoDataOutputConnection) // GHOST: stabilization setting
+                videoDataOutputConnection.preferredVideoStabilizationMode = self.wgStabilizationMode(connection: videoDataOutputConnection) // WRAITH: stabilization setting
             }
         }
     }
@@ -295,20 +295,20 @@ final class CameraOutput: NSObject {
         let dimensions: CGSize
         let videoSettings: [String: Any]
         if case .roundVideo = mode {
-            dimensions = CGSize(width: self.ggSide, height: self.ggSide) // GHOST: round video resolution
+            dimensions = CGSize(width: self.wgSide, height: self.wgSide) // WRAITH: round video resolution
             orientation = .landscapeRight
             
-            // GHOST: bitrate and codec from the round video settings (upstream: H.264, 1 Mbit/s)
-            if self.ggRecording.useHEVC {
+            // WRAITH: bitrate and codec from the round video settings (upstream: H.264, 1 Mbit/s)
+            if self.wgRecording.useHEVC {
                 videoSettings = [
                     AVVideoCodecKey: AVVideoCodecType.hevc,
-                    AVVideoCompressionPropertiesKey: [AVVideoAverageBitRateKey: self.ggRecording.bitrate(defaultKbps: 1000)],
+                    AVVideoCompressionPropertiesKey: [AVVideoAverageBitRateKey: self.wgRecording.bitrate(defaultKbps: 1000)],
                     AVVideoWidthKey: Int(dimensions.width),
                     AVVideoHeightKey: Int(dimensions.height)
                 ]
             } else {
             let compressionProperties: [String: Any] = [
-                AVVideoAverageBitRateKey: self.ggRecording.bitrate(defaultKbps: 1000), // GHOST: bitrate setting
+                AVVideoAverageBitRateKey: self.wgRecording.bitrate(defaultKbps: 1000), // WRAITH: bitrate setting
                 AVVideoProfileLevelKey: AVVideoProfileLevelH264HighAutoLevel,
                 AVVideoH264EntropyModeKey: AVVideoH264EntropyModeCABAC
             ]
@@ -319,7 +319,7 @@ final class CameraOutput: NSObject {
                 AVVideoHeightKey: Int(dimensions.height)
             ]
             }
-            self.ggWatermark = GGRoundVideoConfig.watermark(side: self.ggSide) // GHOST: round video watermark
+            self.wgWatermark = WGRoundVideoConfig.watermark(side: self.wgSide) // WRAITH: round video watermark
         } else {
             let codecType: AVVideoCodecType = hasHEVCHardwareEncoder ? .hevc : .h264
             if orientation == .landscapeLeft || orientation == .landscapeRight {
@@ -334,8 +334,8 @@ final class CameraOutput: NSObject {
         }
         
         var audioSettings = self.audioOutput.recommendedAudioSettingsForAssetWriter(writingTo: .mp4) ?? [:]
-        // GHOST: «record without sound»: no audio settings = no audio track
-        if case .roundVideo = mode, self.ggRecording.muteAudio {
+        // WRAITH: «record without sound»: no audio settings = no audio track
+        if case .roundVideo = mode, self.wgRecording.muteAudio {
             audioSettings = [:]
         } else if self.hasAudio && audioSettings.isEmpty {
             Logger.shared.log("Camera", "Audio settings are empty on recording start")
@@ -433,14 +433,14 @@ final class CameraOutput: NSObject {
 
         let mediaSubType = CMFormatDescriptionGetMediaSubType(sourceFormatDescription)
         var updatedExtensions = extensions
-        updatedExtensions["CVBytesPerRow"] = self.ggSide * 4 // GHOST: round video resolution
+        updatedExtensions["CVBytesPerRow"] = self.wgSide * 4 // WRAITH: round video resolution
 
         var outputFormatDescription: CMFormatDescription?
         let status = CMVideoFormatDescriptionCreate(
             allocator: nil,
             codecType: mediaSubType,
-            width: Int32(self.ggSide), // GHOST: round video resolution
-            height: Int32(self.ggSide),
+            width: Int32(self.wgSide), // WRAITH: round video resolution
+            height: Int32(self.wgSide),
             extensions: updatedExtensions as CFDictionary,
             formatDescriptionOut: &outputFormatDescription
         )
@@ -574,7 +574,7 @@ final class CameraOutput: NSObject {
         if let current = self.roundVideoFilter {
             filter = current
         } else {
-            filter = CameraRoundLegacyVideoFilter(ciContext: self.ciContext, colorSpace: self.colorSpace, simple: self.exclusive, side: self.ggSide) // GHOST: round video resolution
+            filter = CameraRoundLegacyVideoFilter(ciContext: self.ciContext, colorSpace: self.colorSpace, simple: self.exclusive, side: self.wgSide) // WRAITH: round video resolution
             self.roundVideoFilter = filter
         }
         if !filter.isPrepared || filter.inputFormatDescription.map({ !CFEqual($0, newFormatDescription) }) ?? true {
@@ -584,8 +584,8 @@ final class CameraOutput: NSObject {
         guard let newPixelBuffer = filter.render(pixelBuffer: videoPixelBuffer, additional: additional, captureOrientation: self.captureOrientation, transitionFactor: transitionFactor) else {
             return nil
         }
-        // GHOST: round video watermark over the finished square
-        self.ggWatermark?.draw(into: newPixelBuffer)
+        // WRAITH: round video watermark over the finished square
+        self.wgWatermark?.draw(into: newPixelBuffer)
         
         var sampleTimingInfo: CMSampleTimingInfo = .invalid
         CMSampleBufferGetSampleTimingInfo(sampleBuffer, at: 0, timingInfoOut: &sampleTimingInfo)
@@ -631,9 +631,9 @@ extension CameraOutput: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureA
         guard CMSampleBufferDataIsReady(sampleBuffer) else {
             return
         }
-        // GHOST: Ghostgram frame processor (masks): once per frame of the visible camera, before both
+        // WRAITH: Wraithgram frame processor (masks): once per frame of the visible camera, before both
         // the recorder and the preview see it
-        let sampleBuffer = self.ggProcessedSampleBuffer(sampleBuffer, connection: connection)
+        let sampleBuffer = self.wgProcessedSampleBuffer(sampleBuffer, connection: connection)
                         
         if let masterOutput = self.masterOutput {
             masterOutput.processVideoRecording(sampleBuffer, fromAdditionalOutput: true)
@@ -655,13 +655,13 @@ extension CameraOutput: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureA
     }
 }
 
-// GHOST: Ghostgram round video settings and frame processor
+// WRAITH: Wraithgram round video settings and frame processor
 extension CameraOutput {
-    private func ggStabilizationMode(connection: AVCaptureConnection) -> AVCaptureVideoStabilizationMode {
+    private func wgStabilizationMode(connection: AVCaptureConnection) -> AVCaptureVideoStabilizationMode {
         guard self.isVideoMessage else {
             return .standard
         }
-        switch self.ggRecording.stabilization {
+        switch self.wgRecording.stabilization {
         case .standard:
             return .standard
         case .off:
@@ -675,8 +675,8 @@ extension CameraOutput {
         }
     }
 
-    private func ggProcessedSampleBuffer(_ sampleBuffer: CMSampleBuffer, connection: AVCaptureConnection) -> CMSampleBuffer {
-        guard let processor = self.ggFrameProcessor, let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+    private func wgProcessedSampleBuffer(_ sampleBuffer: CMSampleBuffer, connection: AVCaptureConnection) -> CMSampleBuffer {
+        guard let processor = self.wgFrameProcessor, let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return sampleBuffer
         }
         let position = (connection.inputPorts.first?.input as? AVCaptureDeviceInput)?.device.position ?? .front
@@ -696,23 +696,23 @@ extension CameraOutput {
         default:
             quarterTurns = 1
         }
-        let info = GGCameraFrameInfo(
+        let info = WGCameraFrameInfo(
             facing: position == .front ? .front : .back,
             timestamp: CMSampleBufferGetPresentationTimeStamp(sampleBuffer),
-            orientation: GGCameraFrameInfo.orientation(quarterTurns: quarterTurns, mirrored: position == .front)
+            orientation: WGCameraFrameInfo.orientation(quarterTurns: quarterTurns, mirrored: position == .front)
         )
         guard let processed = processor.process(pixelBuffer, info: info) else {
             return sampleBuffer
         }
-        if let current = self.ggFormatDescription, CMVideoFormatDescriptionMatchesImageBuffer(current, imageBuffer: processed) {
+        if let current = self.wgFormatDescription, CMVideoFormatDescriptionMatchesImageBuffer(current, imageBuffer: processed) {
         } else {
             var formatDescription: CMVideoFormatDescription?
             guard CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: processed, formatDescriptionOut: &formatDescription) == noErr, let formatDescription else {
                 return sampleBuffer
             }
-            self.ggFormatDescription = formatDescription
+            self.wgFormatDescription = formatDescription
         }
-        guard let formatDescription = self.ggFormatDescription else {
+        guard let formatDescription = self.wgFormatDescription else {
             return sampleBuffer
         }
         var timing = CMSampleTimingInfo(

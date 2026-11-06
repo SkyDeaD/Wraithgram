@@ -19,9 +19,9 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: Ghostgram hook points
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/GGHooks:GGHooks",
+        # WRAITH: Wraithgram hook points
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/WGHooks:WGHooks",
         "//submodules/Display",
         "//submodules/LottieSettings:LottieSettings",
         "//submodules/AsyncDisplayKit",

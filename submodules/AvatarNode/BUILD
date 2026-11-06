@@ -6,8 +6,8 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: avatar shape point (square avatars, W2-5)
-        "//Ghostgram/Features/Interface:AvatarNodePointSources",
+        # WRAITH: avatar shape point (square avatars, W2-5)
+        "//Wraithgram/Features/Interface:AvatarNodePointSources",
     ],
     copts = [
         "-warnings-as-errors",
@@ -27,8 +27,8 @@ swift_library(
         "//submodules/ComponentFlow",
         "//submodules/TelegramUI/Components/Stories/AvatarStoryIndicatorComponent",
         "//submodules/DirectMediaImageCache",
-        # GHOST: hook points
-        "//Ghostgram/GGCore:GGCore",
+        # WRAITH: hook points
+        "//Wraithgram/WGCore:WGCore",
     ],
     visibility = [
         "//visibility:public",

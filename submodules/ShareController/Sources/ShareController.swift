@@ -22,7 +22,7 @@ import MultiAnimationRenderer
 import ObjectiveC
 import UndoUI
 import ChatMessagePaymentAlertController
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 private var ObjCKey_DeinitWatcher: Int?
 
@@ -398,7 +398,7 @@ public final class ShareController: ViewController {
             fromForeignApp: fromForeignApp,
             segmentedValues: segmentedValues,
             externalShare: externalShare,
-            immediateExternalShare: immediateExternalShare || (immediatePeerId == nil && GGExtrasPolicy.opensSystemShareSheet(externalShare: externalShare)), // GHOST: «Системное меню «Поделиться»» — only where sharing outside the app is allowed (GGExtrasPolicy)
+            immediateExternalShare: immediateExternalShare || (immediatePeerId == nil && WGExtrasPolicy.opensSystemShareSheet(externalShare: externalShare)), // WRAITH: «Системное меню «Поделиться»» — only where sharing outside the app is allowed (WGExtrasPolicy)
             switchableAccounts: switchableAccounts.map { info in
                 return ShareControllerSwitchableAccount(account: ShareControllerAppAccountContext(context: context.sharedContext.makeTempAccountContext(account: info.account)), peer: info.peer)
             },
@@ -1026,7 +1026,7 @@ public final class ShareController: ViewController {
                             var restrictedText: String?
                             for attribute in message.attributes {
                                 if let attribute = attribute as? RestrictedContentMessageAttribute {
-                                    restrictedText = attribute.platformText(platform: "ios", contentSettings: strongSelf.currentContext.contentSettings) ?? (GGRestrictionHooks.messageRestrictionApplies(message) ? "" : nil) // GHOST: a lifted restriction copies / shares the message itself (GGRestrictionHooks.messageRestriction)
+                                    restrictedText = attribute.platformText(platform: "ios", contentSettings: strongSelf.currentContext.contentSettings) ?? (WGRestrictionHooks.messageRestrictionApplies(message) ? "" : nil) // WRAITH: a lifted restriction copies / shares the message itself (WGRestrictionHooks.messageRestriction)
                                 }
                             }
                             

@@ -152,23 +152,23 @@ public:
 
     virtual ~WrappedAudioDeviceModuleIOS() {
         ActualStop();
-        GGCallAudioCoreRelease(_ggAudioCore); // GHOST: see ggSetAudioCore
+        WGCallAudioCoreRelease(_ggAudioCore); // WRAITH: see wgSetAudioCore
     }
 
-    // GHOST: Ghostgram call audio effects (silent mute, soundboard, voice effect, recording tap), set
+    // WRAITH: Wraithgram call audio effects (silent mute, soundboard, voice effect, recording tap), set
     // once on the worker thread before the device starts; every block below passes through it.
-    void ggSetAudioCore(GGCallAudioCore *core) {
-        GGCallAudioCoreRetain(core);
-        GGCallAudioCoreRelease(_ggAudioCore);
+    void wgSetAudioCore(WGCallAudioCore *core) {
+        WGCallAudioCoreRetain(core);
+        WGCallAudioCoreRelease(_ggAudioCore);
         _ggAudioCore = core;
     }
 
-    // GHOST: see ggSetAudioCore; returns the block to hand to the transports
-    const void *ggProcessCapture(const void *samples, size_t frames, size_t bytesPerFrame, size_t channels, uint32_t sampleRate) {
+    // WRAITH: see wgSetAudioCore; returns the block to hand to the transports
+    const void *wgProcessCapture(const void *samples, size_t frames, size_t bytesPerFrame, size_t channels, uint32_t sampleRate) {
         if (_ggAudioCore == nullptr || bytesPerFrame != channels * sizeof(int16_t)) {
             return samples;
         }
-        return GGCallAudioCoreProcessCapture(_ggAudioCore, (const int16_t *)samples, frames, channels, sampleRate);
+        return WGCallAudioCoreProcessCapture(_ggAudioCore, (const int16_t *)samples, frames, channels, sampleRate);
     }
 
     virtual int32_t ActiveAudioLayer(AudioLayer *audioLayer) const override {
@@ -512,7 +512,7 @@ public:
         uint32_t& newMicLevel
     ) override {
         _mutex.Lock();
-        audioSamples = ggProcessCapture(audioSamples, nSamples, nBytesPerSample, nChannels, samplesPerSec); // GHOST: call audio effects
+        audioSamples = wgProcessCapture(audioSamples, nSamples, nBytesPerSample, nChannels, samplesPerSec); // WRAITH: call audio effects
         if (!_audioTransports.empty()) {
             for (size_t i = 0; i < _audioTransports.size(); i++) {
                 _audioTransports[i].first->RecordedDataIsAvailable(
@@ -547,7 +547,7 @@ public:
         absl::optional<int64_t> estimatedCaptureTimeNS
     ) override {
         _mutex.Lock();
-        audioSamples = ggProcessCapture(audioSamples, nSamples, nBytesPerSample, nChannels, samplesPerSec); // GHOST: call audio effects
+        audioSamples = wgProcessCapture(audioSamples, nSamples, nBytesPerSample, nChannels, samplesPerSec); // WRAITH: call audio effects
         if (!_audioTransports.empty()) {
             for (size_t i = 0; i < _audioTransports.size(); i++) {
                 _audioTransports[i].first->RecordedDataIsAvailable(
@@ -643,9 +643,9 @@ public:
         } else {
             nSamplesOut = 0;
         }
-        // GHOST: what is played goes to the call recording tap (GGCallAudio)
+        // WRAITH: what is played goes to the call recording tap (WGCallAudio)
         if (_ggAudioCore != nullptr && nSamplesOut != 0 && nBytesPerSample == nChannels * sizeof(int16_t)) {
-            GGCallAudioCoreTapPlayout(_ggAudioCore, (const int16_t *)audioSamples, nSamplesOut, nChannels, samplesPerSec);
+            WGCallAudioCoreTapPlayout(_ggAudioCore, (const int16_t *)audioSamples, nSamplesOut, nChannels, samplesPerSec);
         }
         
         _mutex.Unlock();
@@ -786,7 +786,7 @@ private:
     std::vector<std::pair<webrtc::AudioTransport *, bool>> _audioTransports;
     webrtc::Mutex _mutex;
     std::vector<int16_t> _mixAudioSamples;
-    GGCallAudioCore *_ggAudioCore = nullptr; // GHOST: see ggSetAudioCore
+    WGCallAudioCore *_ggAudioCore = nullptr; // WRAITH: see wgSetAudioCore
 };
 
 class WrappedChildAudioDeviceModule : public tgcalls::DefaultWrappedAudioDeviceModule {
@@ -870,9 +870,9 @@ public:
         return rtc::make_ref_counted<WrappedChildAudioDeviceModule>(_audioDeviceModule, isActive);
     }
     
-    // GHOST: Ghostgram call audio effects of the owning SharedCallAudioDevice
-    void ggSetAudioCore(GGCallAudioCore *core) {
-        _audioDeviceModule->ggSetAudioCore(core);
+    // WRAITH: Wraithgram call audio effects of the owning SharedCallAudioDevice
+    void wgSetAudioCore(WGCallAudioCore *core) {
+        _audioDeviceModule->wgSetAudioCore(core);
     }
     
     virtual void start() override {
@@ -946,7 +946,7 @@ static std::atomic<bool> sharedCallAudioDeviceLegacyBehavior{false};
 
 @implementation SharedCallAudioDevice {
     std::shared_ptr<tgcalls::ThreadLocalObject<tgcalls::SharedAudioDeviceModule>> _audioDeviceModule;
-    GGCallAudioEffects *_ggAudioEffects; // GHOST: call audio effects of this device
+    WGCallAudioEffects *_ggAudioEffects; // WRAITH: call audio effects of this device
     bool _legacyBehavior;
     bool _didReceiveAudioSessionState;
     bool _isAudioSessionActive;
@@ -978,20 +978,20 @@ static std::atomic<bool> sharedCallAudioDeviceLegacyBehavior{false};
                 handler(started, failure.empty() ? nil : [NSString stringWithUTF8String:failure.c_str()], failedAttempts);
             }
         };
-        // GHOST: the device's call audio effects (GGCallAudio)
-        _ggAudioEffects = [[GGCallAudioEffects alloc] init];
-        GGCallAudioEffects *ggAudioEffects = _ggAudioEffects;
-        _audioDeviceModule.reset(new tgcalls::ThreadLocalObject<tgcalls::SharedAudioDeviceModule>(tgcalls::StaticThreads::getThreads()->getWorkerThread(), [disableRecording, enableSystemMute, legacyBehavior, onStartResult, ggAudioEffects]() mutable {
+        // WRAITH: the device's call audio effects (WGCallAudio)
+        _ggAudioEffects = [[WGCallAudioEffects alloc] init];
+        WGCallAudioEffects *wgAudioEffects = _ggAudioEffects;
+        _audioDeviceModule.reset(new tgcalls::ThreadLocalObject<tgcalls::SharedAudioDeviceModule>(tgcalls::StaticThreads::getThreads()->getWorkerThread(), [disableRecording, enableSystemMute, legacyBehavior, onStartResult, wgAudioEffects]() mutable {
             auto impl = std::make_shared<SharedAudioDeviceModuleImpl>(disableRecording, enableSystemMute, legacyBehavior, onStartResult);
-            impl->ggSetAudioCore(ggAudioEffects.core); // GHOST: see above
+            impl->wgSetAudioCore(wgAudioEffects.core); // WRAITH: see above
             return std::static_pointer_cast<tgcalls::SharedAudioDeviceModule>(impl);
         }));
     }
     return self;
 }
 
-// GHOST: see _ggAudioEffects
-- (GGCallAudioEffects * _Nonnull)ggAudioEffects {
+// WRAITH: see _ggAudioEffects
+- (WGCallAudioEffects * _Nonnull)wgAudioEffects {
     return _ggAudioEffects;
 }
 

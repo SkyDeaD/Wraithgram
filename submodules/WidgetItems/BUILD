@@ -10,7 +10,7 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        "//submodules/BuildConfig:BuildConfig", # GHOST: app group of a re-signed app
+        "//submodules/BuildConfig:BuildConfig", # WRAITH: app group of a re-signed app
     ],
     visibility = [
         "//visibility:public",
@@ -27,7 +27,7 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        "//submodules/BuildConfig:BuildConfig", # GHOST: app group of a re-signed app
+        "//submodules/BuildConfig:BuildConfig", # WRAITH: app group of a re-signed app
     ],
     visibility = [
         "//visibility:public",

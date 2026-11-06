@@ -8,8 +8,8 @@ swift_library(
     srcs = glob([
         "Source/**/*.swift",
     ]) + [
-        # GHOST: font substitution point (GGFontHooks)
-        "//Ghostgram/GGHooks:DisplayHookSources",
+        # WRAITH: font substitution point (WGFontHooks)
+        "//Wraithgram/WGHooks:DisplayHookSources",
     ],
     copts = [
         "-warnings-as-errors",
@@ -21,8 +21,8 @@ swift_library(
     	"//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/Markdown:Markdown",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
-        # GHOST: hook points
-        "//Ghostgram/GGCore:GGCore",
+        # WRAITH: hook points
+        "//Wraithgram/WGCore:WGCore",
     ],
     visibility = [
         "//visibility:public",

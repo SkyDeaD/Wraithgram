@@ -7,7 +7,7 @@ import ChatControllerInteraction
 import ComponentFlow
 import ChatSideTopicsPanel
 import LegacyChatHeaderPanelComponent
-import GGAppearanceSettings // GHOST: chat top bar options
+import WGAppearanceSettings // WRAITH: chat top bar options
 
 func titlePanelForChatPresentationInterfaceState(_ chatPresentationInterfaceState: ChatPresentationInterfaceState, context: AccountContext, currentPanel: ChatTitleAccessoryPanelNode?, controllerInteraction: ChatControllerInteraction?, interfaceInteraction: ChatPanelInterfaceInteraction?, force: Bool) -> ChatTitleAccessoryPanelNode? {
     if !force, case .standard(.embedded) = chatPresentationInterfaceState.mode {
@@ -87,8 +87,8 @@ func titlePanelForChatPresentationInterfaceState(_ chatPresentationInterfaceStat
             switch context {
                 case .pinnedMessage:
                     if case .pinnedMessages = chatPresentationInterfaceState.subject {
-                    } else if GGAppearanceSnapshot.current.hidePinnedMessages {
-                        // GHOST: no pinned-message panel (appearance.chatTopBar.hidePinned); other panels still show
+                    } else if WGAppearanceSnapshot.current.hidePinnedMessages {
+                        // WRAITH: no pinned-message panel (appearance.chatTopBar.hidePinned); other panels still show
                     } else {
                         if chatPinnedPanelIsVisible(pinnedMessageTopId: chatPresentationInterfaceState.pinnedMessage?.topMessageId, skeletonId: chatPresentationInterfaceState.pinnedMessageSkeletonId, closedPinnedMessageId: chatPresentationInterfaceState.interfaceState.messageActionsState.closedPinnedMessageId, pendingUnpinnedAllMessages: chatPresentationInterfaceState.pendingUnpinnedAllMessages) {
                             selectedContext = context

@@ -1,5 +1,5 @@
 import Foundation
-import GGCore // GHOST: hook points (GGHookPoint.isEmpty)
+import WGCore // WRAITH: hook points (WGHookPoint.isEmpty)
 import Postbox
 import SwiftSignalKit
 internal import TelegramApi
@@ -4623,8 +4623,8 @@ func replayFinalState(
             case let .DeleteEphemeralMessages(peerId, ids):
                 deleteEphemeralMessages(transaction: transaction, peerId: peerId, ids: ids)
             case let .DeleteMessagesWithGlobalIds(ids):
-                // GHOST: features may keep deleted messages (GGUpdateHooks.messagesWillBeDeleted)
-                let ids = GGUpdateHooks.messagesWillBeDeleted.isEmpty ? ids : ggGlobalMessageIdsToDelete(ids, source: .remoteUpdate, transaction: transaction, accountPeerId: accountPeerId)
+                // WRAITH: features may keep deleted messages (WGUpdateHooks.messagesWillBeDeleted)
+                let ids = WGUpdateHooks.messagesWillBeDeleted.isEmpty ? ids : wgGlobalMessageIdsToDelete(ids, source: .remoteUpdate, transaction: transaction, accountPeerId: accountPeerId)
                 var resourceIds: [MediaResourceId] = []
                 transaction.deleteMessagesWithGlobalIds(ids, forEachMedia: { media in
                     addMessageMediaResourceIdsToRemove(media: media, resourceIds: &resourceIds)
@@ -4634,8 +4634,8 @@ func replayFinalState(
                 }
                 deletedMessageIds.append(contentsOf: ids.map { .global($0) })
             case let .DeleteMessages(ids):
-                // GHOST: features may keep deleted messages (GGUpdateHooks.messagesWillBeDeleted)
-                let ids = GGUpdateHooks.messagesWillBeDeleted.isEmpty ? ids : ggMessageIdsToDelete(ids, source: .remoteUpdate, transaction: transaction, accountPeerId: accountPeerId)
+                // WRAITH: features may keep deleted messages (WGUpdateHooks.messagesWillBeDeleted)
+                let ids = WGUpdateHooks.messagesWillBeDeleted.isEmpty ? ids : wgMessageIdsToDelete(ids, source: .remoteUpdate, transaction: transaction, accountPeerId: accountPeerId)
                 _internal_deleteMessages(transaction: transaction, mediaBox: mediaBox, ids: ids, manualAddMessageThreadStatsDifference: { id, add, remove in
                     addMessageThreadStatsDifference(threadKey: id, remove: remove, addedMessagePeer: nil, addedMessageId: nil, isOutgoing: false)
                 })
@@ -4645,8 +4645,8 @@ func replayFinalState(
                     updatePeerChatInclusionWithMinTimestamp(transaction: transaction, id: id.peerId, minTimestamp: message.timestamp, forceRootGroupIfNotExists: false)
                 }
                 var resourceIds: [MediaResourceId] = []
-                // GHOST: features may keep messages of a cleared history (GGUpdateHooks.historyWillBeCleared)
-                ggDeleteMessagesInRange(transaction: transaction, peerId: id.peerId, namespace: id.namespace, minId: 1, maxId: id.id, source: .remoteUpdate, forEachMedia: { media in
+                // WRAITH: features may keep messages of a cleared history (WGUpdateHooks.historyWillBeCleared)
+                wgDeleteMessagesInRange(transaction: transaction, peerId: id.peerId, namespace: id.namespace, minId: 1, maxId: id.id, source: .remoteUpdate, forEachMedia: { media in
                     addMessageMediaResourceIdsToRemove(media: media, resourceIds: &resourceIds)
                 })
                 if !resourceIds.isEmpty {
@@ -4687,8 +4687,8 @@ func replayFinalState(
                     }
                     
                     var updatedMessage = mergedServerMessageUpdate(previous: previousMessage, updated: message)
-                    // GHOST: features may keep the previous version (GGUpdateHooks.messageWillBeEdited)
-                    if !GGUpdateHooks.messageWillBeEdited.isEmpty { updatedMessage = updatedMessage.withUpdatedAttributes(ggEditedMessageAttributes(previous: previousMessage, updatedText: updatedMessage.text, updatedMedia: updatedMessage.media, attributes: updatedMessage.attributes, accountPeerId: accountPeerId, transaction: transaction)) }
+                    // WRAITH: features may keep the previous version (WGUpdateHooks.messageWillBeEdited)
+                    if !WGUpdateHooks.messageWillBeEdited.isEmpty { updatedMessage = updatedMessage.withUpdatedAttributes(wgEditedMessageAttributes(previous: previousMessage, updatedText: updatedMessage.text, updatedMedia: updatedMessage.media, attributes: updatedMessage.attributes, accountPeerId: accountPeerId, transaction: transaction)) }
                     return .update(updatedMessage)
                 })
                 if let generatedEvent = generatedEvent {
@@ -5221,10 +5221,10 @@ func replayFinalState(
                         }
                     })
                     let currentItemIds = transaction.getPeerPinnedThreads(peerId: accountPeerId)
-                    // GHOST: features keep a local tail of Saved Messages pins (GGPinnedChatsHooks.listFromServer)
-                    let storedItemIds = ggPinnedSavedPeerIdsFromServer(itemIds, accountPeerId: accountPeerId, transaction: transaction)
-                    if Set(storedItemIds) == Set(currentItemIds.map(PeerId.init)) { // GHOST: see above
-                        transaction.setPeerPinnedThreads(peerId: accountPeerId, threadIds: storedItemIds.map { $0.toInt64() }) // GHOST: see above
+                    // WRAITH: features keep a local tail of Saved Messages pins (WGPinnedChatsHooks.listFromServer)
+                    let storedItemIds = wgPinnedSavedPeerIdsFromServer(itemIds, accountPeerId: accountPeerId, transaction: transaction)
+                    if Set(storedItemIds) == Set(currentItemIds.map(PeerId.init)) { // WRAITH: see above
+                        transaction.setPeerPinnedThreads(peerId: accountPeerId, threadIds: storedItemIds.map { $0.toInt64() }) // WRAITH: see above
                     } else {
                         addSynchronizePinnedSavedChatsOperation(transaction: transaction, accountPeerId: accountPeerId)
                     }

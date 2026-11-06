@@ -123,7 +123,7 @@ enum ChatListNodeEntry: Comparable, Identifiable {
         var storyState: ChatListNodeState.StoryState?
         var requiresPremiumForMessaging: Bool
         var displayAsTopicList: Bool
-        var ggHasAccessory: Bool = false // GHOST: a feature decorates this row (ChatListNodeState.ggAccessoryPeerIds)
+        var wgHasAccessory: Bool = false // WRAITH: a feature decorates this row (ChatListNodeState.wgAccessoryPeerIds)
         
         init(
             index: EngineChatList.Item.Index,
@@ -310,7 +310,7 @@ enum ChatListNodeEntry: Comparable, Identifiable {
             if lhs.displayAsTopicList != rhs.displayAsTopicList {
                 return false
             }
-            if lhs.ggHasAccessory != rhs.ggHasAccessory { // GHOST: see ggHasAccessory
+            if lhs.wgHasAccessory != rhs.wgHasAccessory { // WRAITH: see wgHasAccessory
                 return false
             }
             return true
@@ -608,7 +608,7 @@ struct ChatListContactPeer {
     }
 }
 
-func chatListNodeEntriesForView(view: EngineChatList, state: ChatListNodeState, savedMessagesPeer: EnginePeer?, foundPeers: [(EnginePeer, EnginePeer?)], hideArchivedFolderByDefault: Bool, displayArchiveIntro: Bool, mode: ChatListNodeMode, chatListLocation: ChatListControllerLocation, contacts: [ChatListContactPeer], accountPeerId: EnginePeer.Id, isMainTab: Bool, ggContext: AccountContext? = nil /* GHOST: promoted chat policy (GGChatListHooks.hidesPromoChat) */) -> (entries: [ChatListNodeEntry], loading: Bool) {
+func chatListNodeEntriesForView(view: EngineChatList, state: ChatListNodeState, savedMessagesPeer: EnginePeer?, foundPeers: [(EnginePeer, EnginePeer?)], hideArchivedFolderByDefault: Bool, displayArchiveIntro: Bool, mode: ChatListNodeMode, chatListLocation: ChatListControllerLocation, contacts: [ChatListContactPeer], accountPeerId: EnginePeer.Id, isMainTab: Bool, wgContext: AccountContext? = nil /* WRAITH: promoted chat policy (WGChatListHooks.hidesPromoChat) */) -> (entries: [ChatListNodeEntry], loading: Bool) {
     var groupItems = view.groupItems
     if isMainTab && state.archiveStoryState != nil && groupItems.isEmpty {
         groupItems.append(EngineChatList.GroupItem(
@@ -654,11 +654,11 @@ func chatListNodeEntriesForView(view: EngineChatList, state: ChatListNodeState, 
         pinnedIndexOffset += UInt16(groupEntryCount)
     }
     
-    // GHOST: a feature may leave the promoted chat out (GGChatListHooks.hidesPromoChat, asked once per kind)
-    var ggHidesPromo: (proxy: Bool, psa: Bool) = (false, false)
-    if let ggContext, !view.additionalItems.isEmpty { ggHidesPromo = (ggChatListHidesPromoChat(context: ggContext, isProxy: true), ggChatListHidesPromoChat(context: ggContext, isProxy: false)) }
+    // WRAITH: a feature may leave the promoted chat out (WGChatListHooks.hidesPromoChat, asked once per kind)
+    var wgHidesPromo: (proxy: Bool, psa: Bool) = (false, false)
+    if let wgContext, !view.additionalItems.isEmpty { wgHidesPromo = (wgChatListHidesPromoChat(context: wgContext, isProxy: true), wgChatListHidesPromoChat(context: wgContext, isProxy: false)) }
     let filteredAdditionalItemEntries = view.additionalItems.filter { item -> Bool in
-        if case .proxy = item.promoInfo.content { if ggHidesPromo.proxy { return false } } else if ggHidesPromo.psa { return false } // GHOST: see ggHidesPromo
+        if case .proxy = item.promoInfo.content { if wgHidesPromo.proxy { return false } } else if wgHidesPromo.psa { return false } // WRAITH: see wgHidesPromo
         return item.item.renderedPeer.peerId != state.hiddenPsaPeerId
     }
     
@@ -1001,9 +1001,9 @@ func chatListNodeEntriesForView(view: EngineChatList, state: ChatListNodeState, 
     } else if result.count == 1, case .HoleEntry = result[0] {
         return ([.HeaderEntry], true)
     }
-    // GHOST: mark rows a feature decorates so they re-lay out when that changes (ChatListNodeState.ggAccessoryPeerIds)
-    if !state.ggAccessoryPeerIds.isEmpty {
-        for i in result.indices { if case var .PeerEntry(data) = result[i], state.ggAccessoryPeerIds.contains(data.peer.peerId) { data.ggHasAccessory = true; result[i] = .PeerEntry(data) } }
+    // WRAITH: mark rows a feature decorates so they re-lay out when that changes (ChatListNodeState.wgAccessoryPeerIds)
+    if !state.wgAccessoryPeerIds.isEmpty {
+        for i in result.indices { if case var .PeerEntry(data) = result[i], state.wgAccessoryPeerIds.contains(data.peer.peerId) { data.wgHasAccessory = true; result[i] = .PeerEntry(data) } }
     }
     return (result, view.isLoading)
 }

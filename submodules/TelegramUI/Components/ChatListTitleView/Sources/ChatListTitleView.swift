@@ -82,7 +82,7 @@ public final class ChatListTitleView: UIView, NavigationBarTitleView, Navigation
         self._title = title
         
         if self._title != oldValue {
-            self.titleNode.attributedText = NSAttributedString(string: ggChatListTitleText(self.title), font: titleFont, textColor: self.theme.rootController.navigationBar.primaryTextColor) // GHOST: connection text can be hidden (GGChatListTitleHooks)
+            self.titleNode.attributedText = NSAttributedString(string: wgChatListTitleText(self.title), font: titleFont, textColor: self.theme.rootController.navigationBar.primaryTextColor) // WRAITH: connection text can be hidden (WGChatListTitleHooks)
             self.buttonView.accessibilityLabel = self.title.text
             self.activityIndicator.isHidden = !self.title.activity
            
@@ -211,7 +211,7 @@ public final class ChatListTitleView: UIView, NavigationBarTitleView, Navigation
     public var theme: PresentationTheme {
         didSet {
             if self.theme !== oldValue {
-                self.titleNode.attributedText = NSAttributedString(string: ggChatListTitleText(self.title), font: titleFont, textColor: self.theme.rootController.navigationBar.primaryTextColor) // GHOST: connection text can be hidden (GGChatListTitleHooks)
+                self.titleNode.attributedText = NSAttributedString(string: wgChatListTitleText(self.title), font: titleFont, textColor: self.theme.rootController.navigationBar.primaryTextColor) // WRAITH: connection text can be hidden (WGChatListTitleHooks)
                 
                 self.lockView.updateTheme(self.theme)
                 

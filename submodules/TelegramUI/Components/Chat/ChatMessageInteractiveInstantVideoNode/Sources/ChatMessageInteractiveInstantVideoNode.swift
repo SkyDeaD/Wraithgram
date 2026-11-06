@@ -29,7 +29,7 @@ import ChatControllerInteraction
 import WallpaperBackgroundNode
 import TelegramStringFormatting
 import InvisibleInkDustNode
-import GGHooks // GHOST: message decorations
+import WGHooks // WRAITH: message decorations
 
 public struct ChatMessageInstantVideoItemLayoutResult {
     public let contentSize: CGSize
@@ -356,8 +356,8 @@ public class ChatMessageInteractiveInstantVideoNode: ASDisplayNode {
                 var replyInnerSubject: EngineMessageReplyInnerSubject?
                 var replyStory: EngineStoryId?
                 for attribute in item.message.attributes {
-                    // GHOST: features may hide "via @bot" (GGMessageDecorationHooks)
-                    if let attribute = attribute as? InlineBotMessageAttribute, !GGMessageDecorationHooks.hidesViaBot(item.message, context: item.context) {
+                    // WRAITH: features may hide "via @bot" (WGMessageDecorationHooks)
+                    if let attribute = attribute as? InlineBotMessageAttribute, !WGMessageDecorationHooks.hidesViaBot(item.message, context: item.context) {
                         if let peerId = attribute.peerId, let bot = item.message.peers[peerId] as? TelegramUser {
                             inlineBotNameString = bot.addressName
                         } else {
@@ -769,7 +769,7 @@ public class ChatMessageInteractiveInstantVideoNode: ASDisplayNode {
                                         }
                                     }
                                 }
-                            }), content: NativeVideoContent(id: .message(item.message.stableId, telegramFile.fileId), userLocation: .peer(item.message.id.peerId), fileReference: .message(message: MessageReference(item.message), media: telegramFile), streamVideo: streamVideo ? .conservative : .none, enableSound: false, fetchAutomatically: false, isAudioVideoMessage: true, captureProtected: GGChatScreenHooks.captureProtection(item.associatedData.isCopyProtectionEnabled || item.message.isCopyProtected(), context: item.context, chatLocation: .peer(id: item.message.id.peerId)), storeAfterDownload: nil), priority: item.associatedData.isStandalone ? .overlay : .embedded, autoplay: item.context.sharedContext.energyUsageSettings.autoplayVideo && !isViewOnceMessage) // GHOST: features may change capture protection (GGChatScreenHooks.captureProtection)
+                            }), content: NativeVideoContent(id: .message(item.message.stableId, telegramFile.fileId), userLocation: .peer(item.message.id.peerId), fileReference: .message(message: MessageReference(item.message), media: telegramFile), streamVideo: streamVideo ? .conservative : .none, enableSound: false, fetchAutomatically: false, isAudioVideoMessage: true, captureProtected: WGChatScreenHooks.captureProtection(item.associatedData.isCopyProtectionEnabled || item.message.isCopyProtected(), context: item.context, chatLocation: .peer(id: item.message.id.peerId)), storeAfterDownload: nil), priority: item.associatedData.isStandalone ? .overlay : .embedded, autoplay: item.context.sharedContext.energyUsageSettings.autoplayVideo && !isViewOnceMessage) // WRAITH: features may change capture protection (WGChatScreenHooks.captureProtection)
                             if let previousVideoNode = previousVideoNode {
                                 videoNode.bounds = previousVideoNode.bounds
                                 videoNode.position = previousVideoNode.position

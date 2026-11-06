@@ -6,8 +6,8 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: chat list chrome points of W2-5 (title, search by id)
-        "//Ghostgram/Features/Interface:ChatListTitleViewPointSources",
+        # WRAITH: chat list chrome points of W2-5 (title, search by id)
+        "//Wraithgram/Features/Interface:ChatListTitleViewPointSources",
     ],
     copts = [
         "-warnings-as-errors",
@@ -26,8 +26,8 @@ swift_library(
         "//submodules/TelegramUI/Components/AnimationCache:AnimationCache",
         "//submodules/TelegramUI/Components/MultiAnimationRenderer:MultiAnimationRenderer",
         "//submodules/Components/ComponentDisplayAdapters:ComponentDisplayAdapters",
-        # GHOST: hook points
-        "//Ghostgram/GGCore:GGCore",
+        # WRAITH: hook points
+        "//Wraithgram/WGCore:WGCore",
     ],
     visibility = [
         "//visibility:public",

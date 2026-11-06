@@ -27,7 +27,7 @@ import ChatMessageShareButton
 import ChatMessageActionButtonsNode
 import ChatSwipeToReplyRecognizer
 import ChatMessageReactionsFooterContentNode
-import GGHooks // GHOST: message decorations
+import WGHooks // WRAITH: message decorations
 
 private let nameFont = Font.medium(14.0)
 
@@ -468,8 +468,8 @@ public class ChatMessageInstantVideoItemNode: ChatMessageItemView, ASGestureReco
             var replyStory: EngineStoryId?
             var inlineBotNameString: String?
             for attribute in item.message.attributes {
-                // GHOST: features may hide "via @bot" (GGMessageDecorationHooks)
-                if let attribute = attribute as? InlineBotMessageAttribute, !GGMessageDecorationHooks.hidesViaBot(item.message, context: item.context) {
+                // WRAITH: features may hide "via @bot" (WGMessageDecorationHooks)
+                if let attribute = attribute as? InlineBotMessageAttribute, !WGMessageDecorationHooks.hidesViaBot(item.message, context: item.context) {
                     if let peerId = attribute.peerId, let bot = item.message.peers[peerId] as? TelegramUser {
                         inlineBotNameString = bot.addressName
                     } else {

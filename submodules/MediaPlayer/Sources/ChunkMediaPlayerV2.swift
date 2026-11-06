@@ -170,8 +170,8 @@ public final class ChunkMediaPlayerV2: ChunkMediaPlayer {
         var seekFromMinTimestamp: Double?
         var audioBufferTimingState: AudioBufferTimingState?
         var videoRotationAngle: Double = 0.0
-        // GHOST: playback equalizer of this player's audio (GGPlaybackEqualizer)
-        var ggEqualizer: GGPlaybackEqualizer?
+        // WRAITH: playback equalizer of this player's audio (WGPlaybackEqualizer)
+        var wgEqualizer: WGPlaybackEqualizer?
     }
     
     private static let sharedDataQueue = Queue(name: "ChunkMediaPlayerV2-DataQueue")
@@ -270,11 +270,11 @@ public final class ChunkMediaPlayerV2: ChunkMediaPlayer {
         self.playerNode = playerNode
         playerNode.externalVideoRotationAngle = 0.0
         
-        // GHOST: playback equalizer kind: audio, round video or video (GGPlaybackEqualizer)
-        let ggEqualizerKind: GGPlaybackEqualizerKind = !video ? .audio : (isAudioVideoMessage ? .roundVideo : .video)
+        // WRAITH: playback equalizer kind: audio, round video or video (WGPlaybackEqualizer)
+        let wgEqualizerKind: WGPlaybackEqualizerKind = !video ? .audio : (isAudioVideoMessage ? .roundVideo : .video)
         self.loadedPartsMediaData = QueueLocalObject(queue: self.dataQueue, generate: {
             let data = LoadedPartsMediaData()
-            data.ggEqualizer = GGPlaybackEqualizer(kind: ggEqualizerKind) // GHOST: playback equalizer
+            data.wgEqualizer = WGPlaybackEqualizer(kind: wgEqualizerKind) // WRAITH: playback equalizer
             return data
         })
         
@@ -1244,7 +1244,7 @@ public final class ChunkMediaPlayerV2: ChunkMediaPlayer {
                             sampleBuffer,
                             state: &loadedPartsMediaData.audioBufferTimingState
                         )
-                        loadedPartsMediaData.ggEqualizer?.process(sampleBuffer: sampleBuffer) // GHOST: playback equalizer, in place
+                        loadedPartsMediaData.wgEqualizer?.process(sampleBuffer: sampleBuffer) // WRAITH: playback equalizer, in place
                     }
                     /*if !isVideo {
                         print("Enqueue audio \(CMSampleBufferGetPresentationTimeStamp(sampleBuffer).value) next: \(CMSampleBufferGetPresentationTimeStamp(sampleBuffer).value + 1024)")
@@ -1305,7 +1305,7 @@ public final class ChunkMediaPlayerV2: ChunkMediaPlayer {
                         print("Enqueue video \(CMSampleBufferGetPresentationTimeStamp(sampleBuffer).value)")
                     }*/
                     if !isVideo {
-                        loadedPartsMediaData.ggEqualizer?.process(sampleBuffer: sampleBuffer) // GHOST: playback equalizer, in place
+                        loadedPartsMediaData.wgEqualizer?.process(sampleBuffer: sampleBuffer) // WRAITH: playback equalizer, in place
                     }
                     /*if !isVideo {
                         print("Enqueue audio \(CMSampleBufferGetPresentationTimeStamp(sampleBuffer).value) next: \(CMSampleBufferGetPresentationTimeStamp(sampleBuffer).value + 1024)")

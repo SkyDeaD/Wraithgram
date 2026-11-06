@@ -10,8 +10,8 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: appearance snapshot (hidden channel comments) — W2-4
-        "//Ghostgram/Features/Appearance:GGAppearanceSettings",
+        # WRAITH: appearance snapshot (hidden channel comments) — W2-4
+        "//Wraithgram/Features/Appearance:WGAppearanceSettings",
         "//submodules/AsyncDisplayKit",
         "//submodules/Display",
         "//submodules/SSignalKit/SwiftSignalKit",

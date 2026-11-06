@@ -145,7 +145,7 @@ class DefaultIntentHandler: INExtension, INSendMessageIntentHandling, INSearchFo
         let apiHash: String = buildConfig.apiHash
         let languagesCategory = "ios"
         
-        let appGroupName = BuildConfig.appGroupName(baseAppBundleId: baseAppBundleId) // GHOST: app group of a re-signed app (BuildConfig.h)
+        let appGroupName = BuildConfig.appGroupName(baseAppBundleId: baseAppBundleId) // WRAITH: app group of a re-signed app (BuildConfig.h)
         try! PasscodeEnvironment.shared.configure(PasscodeConfiguration(appGroupIdentifier: appGroupName, processRole: .appExtension))
         let maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
         
@@ -154,7 +154,7 @@ class DefaultIntentHandler: INExtension, INSendMessageIntentHandling, INSearchFo
         }
         
         self.appGroupUrl = appGroupUrl
-        ggSiriIntentsDidStart(appGroupPath: appGroupUrl.path) // GHOST: Ghostgram core and the shared part of the features (ghost mode for Siri reads), before any account opens
+        wgSiriIntentsDidStart(appGroupPath: appGroupUrl.path) // WRAITH: Wraithgram core and the shared part of the features (ghost mode for Siri reads), before any account opens
         
         let rootPath = rootPathForBasePath(appGroupUrl.path)
         performAppGroupUpgrades(appGroupPath: appGroupUrl.path, rootPath: rootPath)
@@ -699,7 +699,7 @@ class DefaultIntentHandler: INExtension, INSendMessageIntentHandling, INSearchFo
                         }
                     }
                 }
-                return ggSiriHidingProtectedMessages(messages, accountId: account.id) // GHOST: Siri reads nothing from protected chats (GGContentPrivacyHooks.hidesContent)
+                return wgSiriHidingProtectedMessages(messages, accountId: account.id) // WRAITH: Siri reads nothing from protected chats (WGContentPrivacyHooks.hidesContent)
                 |> castError(IntentHandlingError.self)
                 |> afterDisposed {
                     account.shouldBeServiceTaskMaster.set(.single(.never))
@@ -987,7 +987,7 @@ private final class WidgetIntentHandler {
         
         let baseAppBundleId = String(appBundleIdentifier[..<lastDotRange.lowerBound])
         
-        let appGroupName = BuildConfig.appGroupName(baseAppBundleId: baseAppBundleId) // GHOST: app group of a re-signed app (BuildConfig.h)
+        let appGroupName = BuildConfig.appGroupName(baseAppBundleId: baseAppBundleId) // WRAITH: app group of a re-signed app (BuildConfig.h)
         let maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
         
         guard let appGroupUrl = maybeAppGroupUrl else {

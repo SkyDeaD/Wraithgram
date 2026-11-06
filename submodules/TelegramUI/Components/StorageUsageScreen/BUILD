@@ -23,8 +23,8 @@ swift_library(
         "//submodules/TelegramUI/Components/ButtonComponent",
         "//submodules/TelegramPresentationData:TelegramPresentationData",
         "//submodules/AccountContext:AccountContext",
-        # GHOST: Swiftgram-parity settings (W5-SG)
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
+        # WRAITH: Swiftgram-parity settings (W5-SG)
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
         "//submodules/AppBundle:AppBundle",
         "//submodules/TelegramStringFormatting:TelegramStringFormatting",
         "//submodules/PresentationDataUtils:PresentationDataUtils",

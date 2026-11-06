@@ -123,8 +123,8 @@ public let telegramPostboxSeedConfiguration: SeedConfiguration = {
             if previous.isEmpty {
                 return
             }
-            // GHOST: features keep their local attributes when the server stores a message again (GGMessageAttributeHooks.mergeAttributes)
-            ggMergeFeatureAttributes(previous, &updated)
+            // WRAITH: features keep their local attributes when the server stores a message again (WGMessageAttributeHooks.mergeAttributes)
+            wgMergeFeatureAttributes(previous, &updated)
             var audioTranscription: AudioTranscriptionMessageAttribute?
             for attribute in previous {
                 if let attribute = attribute as? AudioTranscriptionMessageAttribute {

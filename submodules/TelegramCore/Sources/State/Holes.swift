@@ -1377,8 +1377,8 @@ func fetchChatListHole(postbox: Postbox, network: Network, accountPeerId: PeerId
             }
             
             if let replacePinnedItemIds = fetchedChats.pinnedItemIds {
-                // GHOST: features keep a local tail of pins (GGPinnedChatsHooks.listFromServer)
-                transaction.setPinnedItemIds(groupId: groupId, itemIds: ggPinnedItemIdsFromServer(replacePinnedItemIds.map(PinnedItemId.peer), groupId: groupId, transaction: transaction))
+                // WRAITH: features keep a local tail of pins (WGPinnedChatsHooks.listFromServer)
+                transaction.setPinnedItemIds(groupId: groupId, itemIds: wgPinnedItemIdsFromServer(replacePinnedItemIds.map(PinnedItemId.peer), groupId: groupId, transaction: transaction))
             }
             
             for (peerId, summary) in fetchedChats.mentionTagSummaries {

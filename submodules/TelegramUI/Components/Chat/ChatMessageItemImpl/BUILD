@@ -6,15 +6,15 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: online dot on authors' avatars (W2-4)
-        "//Ghostgram/Features/Appearance:ChatMessageItemImplSources",
+        # WRAITH: online dot on authors' avatars (W2-4)
+        "//Wraithgram/Features/Appearance:ChatMessageItemImplSources",
     ],
     copts = [
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: appearance snapshot, online dot (W2-4)
-        "//Ghostgram/Features/Appearance:GGAppearanceSettings",
+        # WRAITH: appearance snapshot, online dot (W2-4)
+        "//Wraithgram/Features/Appearance:WGAppearanceSettings",
         "//submodules/PeerOnlineMarkerNode:PeerOnlineMarkerNode",
         "//submodules/AsyncDisplayKit",
         "//submodules/Display",

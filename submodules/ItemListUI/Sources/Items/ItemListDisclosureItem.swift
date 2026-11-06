@@ -65,7 +65,7 @@ public class ItemListDisclosureItem: ListViewItem, ItemListItem, ListItemCompone
     let labelStyle: ItemListDisclosureLabelStyle
     let additionalDetailLabel: String?
     let additionalDetailLabelColor: ItemListDisclosureItemDetailLabelColor
-    let ggAdditionalDetailMaximumNumberOfLines: Int // GHOST: Ghostgram menu rows wrap their description
+    let wgAdditionalDetailMaximumNumberOfLines: Int // WRAITH: Wraithgram menu rows wrap their description
     public let sectionId: ItemListSectionId
     let style: ItemListStyle
     let disclosureStyle: ItemListDisclosureStyle
@@ -93,7 +93,7 @@ public class ItemListDisclosureItem: ListViewItem, ItemListItem, ListItemCompone
         labelStyle: ItemListDisclosureLabelStyle = .text,
         additionalDetailLabel: String? = nil,
         additionalDetailLabelColor: ItemListDisclosureItemDetailLabelColor = .generic,
-        ggAdditionalDetailMaximumNumberOfLines: Int = 1, // GHOST: Ghostgram menu rows wrap their description
+        wgAdditionalDetailMaximumNumberOfLines: Int = 1, // WRAITH: Wraithgram menu rows wrap their description
         sectionId: ItemListSectionId,
         style: ItemListStyle,
         disclosureStyle: ItemListDisclosureStyle = .arrow,
@@ -120,7 +120,7 @@ public class ItemListDisclosureItem: ListViewItem, ItemListItem, ListItemCompone
         self.attributedLabel = attributedLabel
         self.additionalDetailLabel = additionalDetailLabel
         self.additionalDetailLabelColor = additionalDetailLabelColor
-        self.ggAdditionalDetailMaximumNumberOfLines = ggAdditionalDetailMaximumNumberOfLines // GHOST: see the property
+        self.wgAdditionalDetailMaximumNumberOfLines = wgAdditionalDetailMaximumNumberOfLines // WRAITH: see the property
         self.sectionId = sectionId
         self.style = style
         self.disclosureStyle = disclosureStyle
@@ -516,7 +516,7 @@ public class ItemListDisclosureItemNode: ListViewItemNode, ItemListItemNode {
                 case .destructive:
                     additionalDetailColor = item.presentationData.theme.list.itemDestructiveColor
                 }
-                additionalDetailLabelInfo = makeAdditionalDetailLabelLayout(TextNodeLayoutArguments(attributedString: NSAttributedString(string: additionalDetailLabel, font: detailFont, textColor: additionalDetailColor), backgroundColor: nil, maximumNumberOfLines: item.ggAdditionalDetailMaximumNumberOfLines /* GHOST: was 1 */, truncationType: .end, constrainedSize: CGSize(width: params.width - leftInset - detailRightInset, height: CGFloat.greatestFiniteMagnitude), alignment: .natural, cutout: nil, insets: UIEdgeInsets()))
+                additionalDetailLabelInfo = makeAdditionalDetailLabelLayout(TextNodeLayoutArguments(attributedString: NSAttributedString(string: additionalDetailLabel, font: detailFont, textColor: additionalDetailColor), backgroundColor: nil, maximumNumberOfLines: item.wgAdditionalDetailMaximumNumberOfLines /* WRAITH: was 1 */, truncationType: .end, constrainedSize: CGSize(width: params.width - leftInset - detailRightInset, height: CGFloat.greatestFiniteMagnitude), alignment: .natural, cutout: nil, insets: UIEdgeInsets()))
             }
             
             let verticalInset: CGFloat

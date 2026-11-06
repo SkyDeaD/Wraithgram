@@ -26,8 +26,8 @@ private final class AudioPlayerRendererBufferContext {
     var overflowData = Data()
     var overflowDataMaxChannelSampleIndex: Int64 = 0
     var renderTimestampTick: Int64 = 0
-    // GHOST: playback equalizer of this renderer; nil for service sounds (GGPlaybackEqualizer)
-    var ggEqualizer: GGPlaybackEqualizer?
+    // WRAITH: playback equalizer of this renderer; nil for service sounds (WGPlaybackEqualizer)
+    var wgEqualizer: WGPlaybackEqualizer?
     
     init(timebase: CMTimebase, buffer: RingByteBuffer, lowWaterSize: Int, notifyLowWater: @escaping () -> Void, updatedRate: @escaping () -> Void, updatedLevel: @escaping (Float) -> Void) {
         self.timebase = timebase
@@ -131,8 +131,8 @@ private func rendererInputProc(refCon: UnsafeMutableRawPointer, ioActionFlags: U
                                 let consumeCount = bufferDataSize - dataOffset
                                 
                                 let actualConsumedCount = rendererBuffer.dequeue(bufferData.advanced(by: dataOffset), count: consumeCount)
-                                // GHOST: playback equalizer, in place (44.1 kHz stereo Int16) (GGPlaybackEqualizer)
-                                context.ggEqualizer?.process(samples: bufferData.advanced(by: dataOffset), byteCount: actualConsumedCount, channels: 2, sampleRate: 44100)
+                                // WRAITH: playback equalizer, in place (44.1 kHz stereo Int16) (WGPlaybackEqualizer)
+                                context.wgEqualizer?.process(samples: bufferData.advanced(by: dataOffset), byteCount: actualConsumedCount, channels: 2, sampleRate: 44100)
                                 
                                 var samplePtr = bufferData.advanced(by: dataOffset).assumingMemoryBound(to: Int16.self)
                                 for _ in 0 ..< actualConsumedCount / 4 {
@@ -267,7 +267,7 @@ private final class AudioPlayerRendererContext {
         }
     }
     
-    init(controlTimebase: CMTimebase, audioSession: MediaPlayerAudioSessionControl, forAudioVideoMessage: Bool, playAndRecord: Bool, useVoiceProcessingMode: Bool, soundMuted: Bool, ambient: Bool, mixWithOthers: Bool, forceAudioToSpeaker: Bool, baseRate: Double, audioLevelPipe: ValuePipe<Float>, updatedRate: @escaping () -> Void, audioPaused: @escaping () -> Void, ggEqualizerKind: GGPlaybackEqualizerKind? = nil) { // GHOST: playback equalizer kind (W3-1)
+    init(controlTimebase: CMTimebase, audioSession: MediaPlayerAudioSessionControl, forAudioVideoMessage: Bool, playAndRecord: Bool, useVoiceProcessingMode: Bool, soundMuted: Bool, ambient: Bool, mixWithOthers: Bool, forceAudioToSpeaker: Bool, baseRate: Double, audioLevelPipe: ValuePipe<Float>, updatedRate: @escaping () -> Void, audioPaused: @escaping () -> Void, wgEqualizerKind: WGPlaybackEqualizerKind? = nil) { // WRAITH: playback equalizer kind (W3-1)
         assert(audioPlayerRendererQueue.isCurrent())
         
         self.audioSession = audioSession
@@ -300,9 +300,9 @@ private final class AudioPlayerRendererContext {
         }, updatedLevel: { level in
             audioLevelPipe.putNext(level)
         }))
-        // GHOST: playback equalizer for media renderers only (GGPlaybackEqualizer)
-        if let ggEqualizer = GGPlaybackEqualizer(kind: ggEqualizerKind) {
-            self.bufferContext.with { $0.ggEqualizer = ggEqualizer }
+        // WRAITH: playback equalizer for media renderers only (WGPlaybackEqualizer)
+        if let wgEqualizer = WGPlaybackEqualizer(kind: wgEqualizerKind) {
+            self.bufferContext.with { $0.wgEqualizer = wgEqualizer }
         }
         self.bufferContextId = registerPlayerRendererBufferContext(self.bufferContext)
         
@@ -883,7 +883,7 @@ public final class MediaPlayerAudioRenderer {
     private let audioClock: CMClock
     public let audioTimebase: CMTimebase
     
-    public init(audioSession: MediaPlayerAudioSessionControl, forAudioVideoMessage: Bool = false, playAndRecord: Bool, useVoiceProcessingMode: Bool = false, soundMuted: Bool, ambient: Bool, mixWithOthers: Bool, forceAudioToSpeaker: Bool, baseRate: Double, audioLevelPipe: ValuePipe<Float>, updatedRate: @escaping () -> Void, audioPaused: @escaping () -> Void, ggEqualizerKind: GGPlaybackEqualizerKind? = nil) { // GHOST: playback equalizer kind (W3-1)
+    public init(audioSession: MediaPlayerAudioSessionControl, forAudioVideoMessage: Bool = false, playAndRecord: Bool, useVoiceProcessingMode: Bool = false, soundMuted: Bool, ambient: Bool, mixWithOthers: Bool, forceAudioToSpeaker: Bool, baseRate: Double, audioLevelPipe: ValuePipe<Float>, updatedRate: @escaping () -> Void, audioPaused: @escaping () -> Void, wgEqualizerKind: WGPlaybackEqualizerKind? = nil) { // WRAITH: playback equalizer kind (W3-1)
         var audioClock: CMClock?
         CMAudioClockCreate(allocator: nil, clockOut: &audioClock)
         if audioClock == nil {
@@ -900,7 +900,7 @@ public final class MediaPlayerAudioRenderer {
         self.audioTimebase = audioTimebase!
         
         audioPlayerRendererQueue.async {
-            let context = AudioPlayerRendererContext(controlTimebase: audioTimebase!, audioSession: audioSession, forAudioVideoMessage: forAudioVideoMessage, playAndRecord: playAndRecord, useVoiceProcessingMode: useVoiceProcessingMode, soundMuted: soundMuted, ambient: ambient, mixWithOthers: mixWithOthers, forceAudioToSpeaker: forceAudioToSpeaker, baseRate: baseRate, audioLevelPipe: audioLevelPipe, updatedRate: updatedRate, audioPaused: audioPaused, ggEqualizerKind: ggEqualizerKind) // GHOST: playback equalizer kind
+            let context = AudioPlayerRendererContext(controlTimebase: audioTimebase!, audioSession: audioSession, forAudioVideoMessage: forAudioVideoMessage, playAndRecord: playAndRecord, useVoiceProcessingMode: useVoiceProcessingMode, soundMuted: soundMuted, ambient: ambient, mixWithOthers: mixWithOthers, forceAudioToSpeaker: forceAudioToSpeaker, baseRate: baseRate, audioLevelPipe: audioLevelPipe, updatedRate: updatedRate, audioPaused: audioPaused, wgEqualizerKind: wgEqualizerKind) // WRAITH: playback equalizer kind
             self.contextRef = Unmanaged.passRetained(context)
         }
     }

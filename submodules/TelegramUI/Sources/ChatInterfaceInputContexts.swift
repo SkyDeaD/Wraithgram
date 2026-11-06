@@ -10,7 +10,7 @@ import SwiftSignalKit
 import TextFormat
 import ChatContextQuery
 import ChatTextInputPanelNode
-import EntityKeyboard // GHOST: SG-G9 (ggEmojiKeyboardStyle)
+import EntityKeyboard // WRAITH: SG-G9 (wgEmojiKeyboardStyle)
 
 func serviceTasksForChatPresentationIntefaceState(context: AccountContext, chatPresentationInterfaceState: ChatPresentationInterfaceState, updateState: @escaping ((ChatPresentationInterfaceState) -> ChatPresentationInterfaceState) -> Void) -> [AnyHashable: () -> Disposable] {
     // Read the STRUCTURAL model, not the derived `inputText`: the flat projection drops whole blocks
@@ -260,7 +260,7 @@ func inputTextPanelStateForChatPresentationInterfaceState(_ chatPresentationInte
                     }
                 } else {
                     stickersAreEmoji = stickersAreEmoji || hasForward
-                    if stickersEnabled && !ggEmojiKeyboardStyle().emojiTabFirst { // GHOST: the emoji button instead of stickers (SG-G9)
+                    if stickersEnabled && !wgEmojiKeyboardStyle().emojiTabFirst { // WRAITH: the emoji button instead of stickers (SG-G9)
                         accessoryItems.append(.input(isEnabled: true, inputMode: stickersAreEmoji ? .emoji : .stickers))
                     } else {
                         accessoryItems.append(.input(isEnabled: true, inputMode: .emoji))

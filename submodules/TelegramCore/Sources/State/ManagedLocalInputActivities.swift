@@ -147,8 +147,8 @@ private func requestActivity(postbox: Postbox, network: Network, accountPeerId: 
             if peerId == accountPeerId {
                 return .complete()
             }
-            // GHOST: features may keep "typing" from being sent (GGPresenceHooks.sendTyping)
-            if !ggShouldSendTyping(peer: peer, threadId: threadId, activity: activity, accountPeerId: accountPeerId) { return .complete() }
+            // WRAITH: features may keep "typing" from being sent (WGPresenceHooks.sendTyping)
+            if !wgShouldSendTyping(peer: peer, threadId: threadId, activity: activity, accountPeerId: accountPeerId) { return .complete() }
             if let channel = peer as? TelegramChannel, case .broadcast = channel.info {
                 if let activity = activity {
                     switch activity {

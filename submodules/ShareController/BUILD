@@ -29,8 +29,8 @@ swift_library(
         "//submodules/TelegramStringFormatting:TelegramStringFormatting",
         "//submodules/TelegramIntents:TelegramIntents",
         "//submodules/AccountContext:AccountContext",
-        # GHOST: Swiftgram-parity settings (W5-SG)
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
+        # WRAITH: Swiftgram-parity settings (W5-SG)
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
         "//submodules/SegmentedControlNode:SegmentedControlNode",
         "//submodules/WallpaperBackgroundNode:WallpaperBackgroundNode",
         "//submodules/ShimmerEffect:ShimmerEffect",

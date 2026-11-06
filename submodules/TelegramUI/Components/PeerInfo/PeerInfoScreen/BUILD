@@ -6,19 +6,19 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: Ghostgram hook points and menu
-        "//Ghostgram/GGHooks:PeerInfoScreenHookSources",
+        # WRAITH: Wraithgram hook points and menu
+        "//Wraithgram/WGHooks:PeerInfoScreenHookSources",
     ],
     copts = [
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: Ghostgram hook points and menu
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/GGHooks:GGHooks",
-        "//Ghostgram/GGSettingsUI:GGSettingsUI",
-        # GHOST: Swiftgram-parity settings (W5-SG)
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
+        # WRAITH: Wraithgram hook points and menu
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/WGHooks:WGHooks",
+        "//Wraithgram/WGSettingsUI:WGSettingsUI",
+        # WRAITH: Swiftgram-parity settings (W5-SG)
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
         "//submodules/UrlWhitelist",
         "//submodules/TelegramUI/Components/NavigationBarNode",
         "//submodules/TelegramUI/Components/NavigationBarComponent",

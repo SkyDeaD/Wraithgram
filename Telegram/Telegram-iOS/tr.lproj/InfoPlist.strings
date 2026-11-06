@@ -1,9 +1,9 @@
 /* Localized versions of Info.plist keys */
 
-"NSContactsUsageDescription" = "Telegram, arkadaşlarınızla tüm cihazlarınız arasında bağlantı kurmanızı sağlamak için kişilerinizi sürekli olarak şifreli bulut sunucularına yükleyecek."; /* GHOST: Telegram's cloud, the name stays */
-"NSLocationWhenInUseUsageDescription" = "Konumunuzu arkadaşlarınıza gönderdiğinizde, Ghostgram'ın onlara bir harita göstermesi için erişmesi gerekiyor."; /* GHOST: app name */
-"NSLocationAlwaysAndWhenInUseUsageDescription" = "Canlı Konumunuzu arkadaşlarınızla bir sohbette paylaşmayı seçtiğinizde, Ghostgram'ın canlı paylaşım süresince onları güncel tutmak için konumunuza arka plan erişimi olması gerekir."; /* GHOST: app name */
-"NSLocationAlwaysUsageDescription" = "Canlı konumunuzu bir sohbette arkadaşlarınızla paylaşmayı seçtiğinizde, Ghostgram'ın canlı paylaşım süresince konumunuzu güncel tutması için bir arka plan erişimi gerekir. Ayrıca Apple Watch'dan konum göndermek için de buna ihtiyacınız var."; /* GHOST: app name */
+"NSContactsUsageDescription" = "Telegram, arkadaşlarınızla tüm cihazlarınız arasında bağlantı kurmanızı sağlamak için kişilerinizi sürekli olarak şifreli bulut sunucularına yükleyecek."; /* WRAITH: Telegram's cloud, the name stays */
+"NSLocationWhenInUseUsageDescription" = "Konumunuzu arkadaşlarınıza gönderdiğinizde, Wraithgram'ın onlara bir harita göstermesi için erişmesi gerekiyor."; /* WRAITH: app name */
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Canlı Konumunuzu arkadaşlarınızla bir sohbette paylaşmayı seçtiğinizde, Wraithgram'ın canlı paylaşım süresince onları güncel tutmak için konumunuza arka plan erişimi olması gerekir."; /* WRAITH: app name */
+"NSLocationAlwaysUsageDescription" = "Canlı konumunuzu bir sohbette arkadaşlarınızla paylaşmayı seçtiğinizde, Wraithgram'ın canlı paylaşım süresince konumunuzu güncel tutması için bir arka plan erişimi gerekir. Ayrıca Apple Watch'dan konum göndermek için de buna ihtiyacınız var."; /* WRAITH: app name */
 "NSCameraUsageDescription" = "Fotoğraf ve video çekip paylaşabilmeniz ve görüntülü arama yapabilmeniz için buna ihtiyacımız var.";
 "NSPhotoLibraryUsageDescription" = "Fotoğraf arşivinizdeki fotoğraf ve videoları paylaşabilmeniz için buna ihtiyacımız var.";
 "NSPhotoLibraryAddUsageDescription" = "Fotoğraf arşivine fotoğraf ve video kaydedebilmeniz için buna ihtiyacımız var.";

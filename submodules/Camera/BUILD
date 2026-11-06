@@ -53,8 +53,8 @@ swift_library(
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/Utils/DeviceModel",
-        # GHOST: Ghostgram camera pipeline (frame processor, round video settings)
-        "//Ghostgram/Features/CameraMasks:GGCameraPipeline",
+        # WRAITH: Wraithgram camera pipeline (frame processor, round video settings)
+        "//Wraithgram/Features/CameraMasks:WGCameraPipeline",
     ],
     visibility = [
         "//visibility:public",

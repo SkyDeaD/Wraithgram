@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 import TelegramCore
-import GGAppearanceSettings // GHOST: name color saturation
+import WGAppearanceSettings // WRAITH: name color saturation
 
 private extension PeerNameColors.Colors {
     init?(colors: EngineAvailableColorOptions.MultiColorPack) {
@@ -113,21 +113,21 @@ public class PeerNameColors: Equatable {
     public let profileColorsChannelMinRequiredBoostLevel: [Int32: Int32]
     public let profileColorsGroupMinRequiredBoostLevel: [Int32: Int32]
     
-    // GHOST: desaturated name colors, made once per (color, saturation) and not on every `get`
-    private let ggCache = GGNameColorCache()
+    // WRAITH: desaturated name colors, made once per (color, saturation) and not on every `get`
+    private let wgCache = WGNameColorCache()
     
     public func get(_ color: PeerNameColor, dark: Bool = false) -> Colors {
-        let colors = self.ggUpstreamGet(color, dark: dark)
-        // GHOST: name color saturation (appearance.theme.nameSaturation); 1 = the server's colors
-        let saturation = GGAppearanceSnapshot.current.nameColorSaturation
+        let colors = self.wgUpstreamGet(color, dark: dark)
+        // WRAITH: name color saturation (appearance.theme.nameSaturation); 1 = the server's colors
+        let saturation = WGAppearanceSnapshot.current.nameColorSaturation
         if saturation >= 1.0 {
             return colors
         }
-        return self.ggCache.colors(colors, key: Int64(color.rawValue) << 1 | (dark ? 1 : 0), saturation: saturation)
+        return self.wgCache.colors(colors, key: Int64(color.rawValue) << 1 | (dark ? 1 : 0), saturation: saturation)
     }
     
-    // GHOST: the upstream body of `get`
-    private func ggUpstreamGet(_ color: PeerNameColor, dark: Bool) -> Colors {
+    // WRAITH: the upstream body of `get`
+    private func wgUpstreamGet(_ color: PeerNameColor, dark: Bool) -> Colors {
         if dark, let colors = self.darkColors[color.rawValue] {
             return colors
         } else if let colors = self.colors[color.rawValue] {
@@ -377,8 +377,8 @@ public extension PeerCollectibleColor {
     }
 }
 
-// GHOST: cache of name colors with reduced saturation (appearance.theme.nameSaturation)
-private final class GGNameColorCache {
+// WRAITH: cache of name colors with reduced saturation (appearance.theme.nameSaturation)
+private final class WGNameColorCache {
     private let lock = NSLock()
     private var saturation: Double = 1.0
     private var values: [Int64: PeerNameColors.Colors] = [:]
@@ -395,13 +395,13 @@ private final class GGNameColorCache {
         if let value = self.values[key] {
             return value
         }
-        let value = PeerNameColors.Colors(main: ggDesaturated(colors.main, saturation), secondary: colors.secondary.flatMap { ggDesaturated($0, saturation) }, tertiary: colors.tertiary.flatMap { ggDesaturated($0, saturation) })
+        let value = PeerNameColors.Colors(main: wgDesaturated(colors.main, saturation), secondary: colors.secondary.flatMap { wgDesaturated($0, saturation) }, tertiary: colors.tertiary.flatMap { wgDesaturated($0, saturation) })
         self.values[key] = value
         return value
     }
 }
 
-private func ggDesaturated(_ color: UIColor, _ saturation: Double) -> UIColor {
+private func wgDesaturated(_ color: UIColor, _ saturation: Double) -> UIColor {
     var hue: CGFloat = 0.0
     var currentSaturation: CGFloat = 0.0
     var brightness: CGFloat = 0.0

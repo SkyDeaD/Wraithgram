@@ -13,9 +13,9 @@ import DeviceAccess
 import TelegramStringFormatting
 import PeerNameColorItem
 import WalletContext
-import GGHooks // GHOST: settings tab points
-import GGCore // GHOST: text of the account limit
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGHooks // WRAITH: settings tab points
+import WGCore // WRAITH: text of the account limit
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 enum SettingsSection: Int, CaseIterable {
     case edit
@@ -150,7 +150,7 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
             items[.accounts]!.append(PeerInfoScreenActionItem(id: 100, text: presentationData.strings.Settings_AddAccount, icon: PresentationResourcesItemList.plusIconImage(presentationData.theme), action: {
                 interaction.openSettings(.addAccount)
             }))
-        } else if GGExtrasPolicy.alwaysShowsAddAccount { // GHOST: «Добавить аккаунт» with a single account too (GGExtrasPolicy.alwaysShowsAddAccount)
+        } else if WGExtrasPolicy.alwaysShowsAddAccount { // WRAITH: «Добавить аккаунт» with a single account too (WGExtrasPolicy.alwaysShowsAddAccount)
             items[.accounts]!.append(PeerInfoScreenActionItem(id: 100, text: presentationData.strings.Settings_AddAccount, icon: PresentationResourcesItemList.plusIconImage(presentationData.theme), action: {
                 interaction.openSettings(.addAccount)
             }))
@@ -359,16 +359,16 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
         interaction.openSettings(.tips)
     }))
     
-    // GHOST: Ghostgram rows and hidden Telegram rows of the Settings tab (GGSettingsTabHooks)
-    let ggBottomSections = ggApplySettingsTabHooks(&items, context: context, presentationData: presentationData)
+    // WRAITH: Wraithgram rows and hidden Telegram rows of the Settings tab (WGSettingsTabHooks)
+    let wgBottomSections = wgApplySettingsTabHooks(&items, context: context, presentationData: presentationData)
     var result: [(AnyHashable, [PeerInfoScreenItem])] = []
     for section in SettingsSection.allCases {
         if let sectionItems = items[section], !sectionItems.isEmpty {
             result.append((section, sectionItems))
         }
     }
-    // GHOST: see GGSettingsTabHooks above (shortcuts under «Мой профиль», rows at the bottom)
-    ggInsertSettingsTabSections(&result, ggBottomSections)
+    // WRAITH: see WGSettingsTabHooks above (shortcuts under «Мой профиль», rows at the bottom)
+    wgInsertSettingsTabSections(&result, wgBottomSections)
     return result
 }
 
@@ -481,8 +481,8 @@ func settingsEditingItems(data: PeerInfoScreenData?, state: PeerInfoState, conte
     }
     
     if case let .user(user) = data.peer {
-        // GHOST: features may hide or replace the shown number (GGPeerInfoHooks.displayedPhoneNumber)
-        items[.info]!.append(PeerInfoScreenDisclosureItem(id: ItemPhoneNumber, label: .text(GGPeerInfoHooks.phone(user.phone, peerId: user.id, context: context).flatMap({ formatPhoneNumber(context: context, number: $0) }) ?? ""), text: presentationData.strings.Settings_PhoneNumber, icon: PresentationResourcesSettings.recentCalls, action: {
+        // WRAITH: features may hide or replace the shown number (WGPeerInfoHooks.displayedPhoneNumber)
+        items[.info]!.append(PeerInfoScreenDisclosureItem(id: ItemPhoneNumber, label: .text(WGPeerInfoHooks.phone(user.phone, peerId: user.id, context: context).flatMap({ formatPhoneNumber(context: context, number: $0) }) ?? ""), text: presentationData.strings.Settings_PhoneNumber, icon: PresentationResourcesSettings.recentCalls, action: {
             interaction.openSettings(.phoneNumber)
         }))
     }
@@ -564,9 +564,9 @@ func settingsEditingItems(data: PeerInfoScreenData?, state: PeerInfoState, conte
         }
     }
     
-    // GHOST: the help names the account limit when Premium no longer changes it (GGLimitHooks.accountLimit), not Telegram's "three / four"
-    let ggAddAccountHelp: String? = GGLimitHooks.premiumRaisesAccountLimit ? nil : GGStrings.AccountLimit.addAccountHelp(count: GGLimitHooks.maximumNumberOfAccounts(isPremium: false))
-    items[.account]!.append(PeerInfoScreenCommentItem(id: ItemAddAccountHelp, text: ggAddAccountHelp ?? (hasPremiumAccounts ? presentationData.strings.Settings_AddAnotherAccount_PremiumHelp : presentationData.strings.Settings_AddAnotherAccount_Help)))
+    // WRAITH: the help names the account limit when Premium no longer changes it (WGLimitHooks.accountLimit), not Telegram's "three / four"
+    let wgAddAccountHelp: String? = WGLimitHooks.premiumRaisesAccountLimit ? nil : WGStrings.AccountLimit.addAccountHelp(count: WGLimitHooks.maximumNumberOfAccounts(isPremium: false))
+    items[.account]!.append(PeerInfoScreenCommentItem(id: ItemAddAccountHelp, text: wgAddAccountHelp ?? (hasPremiumAccounts ? presentationData.strings.Settings_AddAnotherAccount_PremiumHelp : presentationData.strings.Settings_AddAnotherAccount_Help)))
     
     items[.logout]!.append(PeerInfoScreenActionItem(id: ItemLogout, text: presentationData.strings.Settings_Logout, color: .destructive, alignment: .center, action: {
         interaction.openSettings(.logout)

@@ -19,7 +19,7 @@ import WallpaperPreviewMedia
 import ChatMessageInteractiveMediaNode
 import ChatMessageAttachedContentNode
 import ChatControllerInteraction
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 private let titleFont: UIFont = Font.semibold(15.0)
 
@@ -56,7 +56,7 @@ public final class ChatMessageWebpageBubbleContentNode: ChatMessageBubbleContent
                         return
                     } else {
                         if content.embedUrl == nil && (content.title != nil || content.text != nil) && content.story == nil {
-                            var shouldOpenUrl = !GGExtrasPolicy.linkPreviewOpensMedia // GHOST: «Картинка превью — в галерее»: the picture opens, not the link (GGExtrasPolicy)
+                            var shouldOpenUrl = !WGExtrasPolicy.linkPreviewOpensMedia // WRAITH: «Картинка превью — в галерее»: the picture opens, not the link (WGExtrasPolicy)
                             if let file = content.file {
                                 if file.isVideo {
                                     shouldOpenUrl = false

@@ -10,9 +10,9 @@ import PresentationDataUtils
 import AccountContext
 import ShareController
 import UrlEscaping
-// GHOST: the row that leads to the subscription VPN screen (GGVpnEntryPoint, filled by GGVless)
-import GGCore
-import GGFeaturesShared
+// WRAITH: the row that leads to the subscription VPN screen (WGVpnEntryPoint, filled by WGVless)
+import WGCore
+import WGFeaturesShared
 
 private final class ProxySettingsControllerArguments {
     let toggleEnabled: (Bool) -> Void
@@ -23,8 +23,8 @@ private final class ProxySettingsControllerArguments {
     let setServerWithRevealedOptions: (ProxyServerSettings?, ProxyServerSettings?) -> Void
     let toggleUseForCalls: (Bool) -> Void
     let shareProxyList: () -> Void
-    // GHOST: opens the subscription VPN screen (set only when there is an account context)
-    var ggOpenVpn: (() -> Void)?
+    // WRAITH: opens the subscription VPN screen (set only when there is an account context)
+    var wgOpenVpn: (() -> Void)?
     
     init(toggleEnabled: @escaping (Bool) -> Void, addNewServer: @escaping () -> Void, activateServer: @escaping (ProxyServerSettings) -> Void, editServer: @escaping (ProxyServerSettings) -> Void, removeServer: @escaping (ProxyServerSettings) -> Void, setServerWithRevealedOptions: @escaping (ProxyServerSettings?, ProxyServerSettings?) -> Void, toggleUseForCalls: @escaping (Bool) -> Void, shareProxyList: @escaping () -> Void) {
         self.toggleEnabled = toggleEnabled
@@ -43,7 +43,7 @@ private enum ProxySettingsControllerSection: Int32 {
     case servers
     case share
     case calls
-    case ggVpn // GHOST: subscription VPN row
+    case wgVpn // WRAITH: subscription VPN row
 }
 
 private enum ProxyServerAvailabilityStatus: Equatable {
@@ -86,7 +86,7 @@ private enum ProxySettingsControllerEntry: ItemListNodeEntry {
     case shareProxyList(PresentationTheme, String)
     case useForCalls(PresentationTheme, String, Bool)
     case useForCallsInfo(PresentationTheme, String)
-    case ggVpn(String, String) // GHOST: subscription VPN row (title, state)
+    case wgVpn(String, String) // WRAITH: subscription VPN row (title, state)
     
     var section: ItemListSectionId {
         switch self {
@@ -98,8 +98,8 @@ private enum ProxySettingsControllerEntry: ItemListNodeEntry {
                 return ProxySettingsControllerSection.share.rawValue
             case .useForCalls, .useForCallsInfo:
                 return ProxySettingsControllerSection.calls.rawValue
-            case .ggVpn: // GHOST: subscription VPN row
-                return ProxySettingsControllerSection.ggVpn.rawValue
+            case .wgVpn: // WRAITH: subscription VPN row
+                return ProxySettingsControllerSection.wgVpn.rawValue
         }
     }
     
@@ -119,7 +119,7 @@ private enum ProxySettingsControllerEntry: ItemListNodeEntry {
                 return .index(4)
             case .useForCallsInfo:
                 return .index(5)
-            case .ggVpn: // GHOST: subscription VPN row
+            case .wgVpn: // WRAITH: subscription VPN row
                 return .index(6)
         }
     }
@@ -168,8 +168,8 @@ private enum ProxySettingsControllerEntry: ItemListNodeEntry {
                 } else {
                     return false
                 }
-            case let .ggVpn(lhsTitle, lhsState): // GHOST: subscription VPN row
-                if case let .ggVpn(rhsTitle, rhsState) = rhs, lhsTitle == rhsTitle, lhsState == rhsState {
+            case let .wgVpn(lhsTitle, lhsState): // WRAITH: subscription VPN row
+                if case let .wgVpn(rhsTitle, rhsState) = rhs, lhsTitle == rhsTitle, lhsState == rhsState {
                     return true
                 } else {
                     return false
@@ -224,12 +224,12 @@ private enum ProxySettingsControllerEntry: ItemListNodeEntry {
                         return true
                 }
             case .useForCallsInfo:
-                // GHOST: the subscription VPN row comes last
-                if case .ggVpn = rhs {
+                // WRAITH: the subscription VPN row comes last
+                if case .wgVpn = rhs {
                     return true
                 }
                 return false
-            case .ggVpn: // GHOST: subscription VPN row
+            case .wgVpn: // WRAITH: subscription VPN row
                 return false
         }
     }
@@ -271,9 +271,9 @@ private enum ProxySettingsControllerEntry: ItemListNodeEntry {
                 }, tag: ProxySettingsEntryTag.useForCalls)
             case let .useForCallsInfo(_, text):
                 return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
-            case let .ggVpn(title, state): // GHOST: opens the subscription VPN screen
+            case let .wgVpn(title, state): // WRAITH: opens the subscription VPN screen
                 return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: title, label: state, sectionId: self.section, style: .blocks, action: {
-                    arguments.ggOpenVpn?()
+                    arguments.wgOpenVpn?()
                 })
         }
     }
@@ -446,10 +446,10 @@ public func proxySettingsController(accountManager: AccountManager<TelegramAccou
     }, shareProxyList: {
        shareProxyListImpl?()
     })
-    // GHOST: the subscription VPN screen opens from here (GGVpnEntryPoint, set by GGVless)
-    if let context, GGVpnEntryPoint.makeScreen != nil {
-        arguments.ggOpenVpn = {
-            if let screen = GGVpnEntryPoint.makeScreen?(context) as? ViewController {
+    // WRAITH: the subscription VPN screen opens from here (WGVpnEntryPoint, set by WGVless)
+    if let context, WGVpnEntryPoint.makeScreen != nil {
+        arguments.wgOpenVpn = {
+            if let screen = WGVpnEntryPoint.makeScreen?(context) as? ViewController {
                 pushControllerImpl?(screen)
             }
         }
@@ -506,9 +506,9 @@ public func proxySettingsController(accountManager: AccountManager<TelegramAccou
         
         let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(presentationData.strings.SocksProxySetup_Title), leftNavigationButton: leftNavigationButton, rightNavigationButton: rightNavigationButton, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
         var entries = proxySettingsControllerEntries(theme: presentationData.theme, strings: presentationData.strings, state: state, proxySettings: proxySettings, statuses: statuses, connectionStatus: connectionStatus)
-        // GHOST: with the VPN on, Telegram's proxy is its loopback entry, which is not in this list
-        if arguments.ggOpenVpn != nil, let vpnState = GGVpnEntryPoint.stateText?() {
-            entries.append(.ggVpn(GGStrings.Vless.Menu.enable, vpnState))
+        // WRAITH: with the VPN on, Telegram's proxy is its loopback entry, which is not in this list
+        if arguments.wgOpenVpn != nil, let vpnState = WGVpnEntryPoint.stateText?() {
+            entries.append(.wgVpn(WGStrings.Vless.Menu.enable, vpnState))
         }
         let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: entries, style: .blocks, ensureVisibleItemTag: focusOnItemTag)
         

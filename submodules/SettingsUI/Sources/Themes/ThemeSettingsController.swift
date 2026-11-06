@@ -482,7 +482,7 @@ private func themeSettingsControllerEntries(
     entries.append(.powerSaving)
     entries.append(.stickersAndEmoji)
     
-    if availableAppIcons.count > 1 { // GHOST: Ghostgram ships one icon (the ghost) — nothing to choose, no picker
+    if availableAppIcons.count > 1 { // WRAITH: Wraithgram ships one icon (the ghost) — nothing to choose, no picker
         entries.append(.iconHeader(presentationData.theme, strings.Appearance_AppIcon.uppercased()))
         entries.append(.iconItem(presentationData.theme, presentationData.strings, availableAppIcons, isPremium, currentAppIconName))
     }

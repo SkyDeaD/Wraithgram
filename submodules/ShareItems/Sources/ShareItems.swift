@@ -12,7 +12,7 @@ import LegacyComponents
 import ShareItemsImpl
 import UIKit
 import SSignalKit
-import ImageCompression // GHOST: Ghostgram's outgoing photo settings (GGOutgoingImageHooks)
+import ImageCompression // WRAITH: Wraithgram's outgoing photo settings (WGOutgoingImageHooks)
 
 public enum UnpreparedShareItemContent {
     case contact(DeviceContactExtendedData)
@@ -71,10 +71,10 @@ private func preparedShareItem(postbox: Postbox, network: Network, to peerId: Pe
         )
     } else if let image = value["image"] as? UIImage {
         let nativeImageSize = CGSize(width: image.size.width * image.scale, height: image.size.height * image.scale)
-        let ggMaxSide = GGOutgoingImageHooks.maxSide(1280.0, hd: false) // GHOST: size, watermark and JPEG quality of Ghostgram's outgoing photo settings
-        let ggQuality = GGOutgoingImageHooks.jpegQuality(0.52, hd: false)
-        let dimensions = nativeImageSize.fitted(CGSize(width: ggMaxSide, height: ggMaxSide))
-        if let scaledImage = scalePhotoImage(image, dimensions: dimensions).map({ GGOutgoingImageHooks.transform($0, hd: false) }), let imageData = scaledImage.jpegData(compressionQuality: ggQuality == 0.52 ? 0.52 : CGFloat(ggQuality)) {
+        let wgMaxSide = WGOutgoingImageHooks.maxSide(1280.0, hd: false) // WRAITH: size, watermark and JPEG quality of Wraithgram's outgoing photo settings
+        let wgQuality = WGOutgoingImageHooks.jpegQuality(0.52, hd: false)
+        let dimensions = nativeImageSize.fitted(CGSize(width: wgMaxSide, height: wgMaxSide))
+        if let scaledImage = scalePhotoImage(image, dimensions: dimensions).map({ WGOutgoingImageHooks.transform($0, hd: false) }), let imageData = scaledImage.jpegData(compressionQuality: wgQuality == 0.52 ? 0.52 : CGFloat(wgQuality)) {
             return .single(.preparing(false))
             |> then(
                 standaloneUploadedImage(postbox: postbox, network: network, peerId: peerId, text: "", source: .data(imageData), dimensions: PixelDimensions(width: Int32(dimensions.width), height: Int32(dimensions.height)))
@@ -264,10 +264,10 @@ private func preparedShareItem(postbox: Postbox, network: Network, to peerId: Pe
                     }
                 )
             } else {
-                let ggMaxSide = GGOutgoingImageHooks.maxSide(1280.0, hd: false) // GHOST: size, watermark and JPEG quality of Ghostgram's outgoing photo settings
-                let ggQuality = GGOutgoingImageHooks.jpegQuality(0.54, hd: false)
-                let scaledImage = GGOutgoingImageHooks.transform(scalePhotoImage(image, dimensions: CGSize(width: image.size.width * image.scale, height: image.size.height * image.scale).fitted(CGSize(width: ggMaxSide, height: ggMaxSide)))!, hd: false)
-                let imageData = scaledImage.jpegData(compressionQuality: ggQuality == 0.54 ? 0.54 : CGFloat(ggQuality))!
+                let wgMaxSide = WGOutgoingImageHooks.maxSide(1280.0, hd: false) // WRAITH: size, watermark and JPEG quality of Wraithgram's outgoing photo settings
+                let wgQuality = WGOutgoingImageHooks.jpegQuality(0.54, hd: false)
+                let scaledImage = WGOutgoingImageHooks.transform(scalePhotoImage(image, dimensions: CGSize(width: image.size.width * image.scale, height: image.size.height * image.scale).fitted(CGSize(width: wgMaxSide, height: wgMaxSide)))!, hd: false)
+                let imageData = scaledImage.jpegData(compressionQuality: wgQuality == 0.54 ? 0.54 : CGFloat(wgQuality))!
                 return .single(.preparing(false))
                 |> then(
                     standaloneUploadedImage(postbox: postbox, network: network, peerId: peerId, text: "", source: .data(imageData), dimensions: PixelDimensions(width: Int32(scaledImage.size.width), height: Int32(scaledImage.size.height)))

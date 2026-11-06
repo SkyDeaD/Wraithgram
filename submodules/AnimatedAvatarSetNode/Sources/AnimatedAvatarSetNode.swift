@@ -94,11 +94,11 @@ private final class ContentNode: ASDisplayNode {
             if peer.isDeleted {
                 let image = generateDeletedAccountAvatarImage(size: size)!
                 self.updateImage(image: image, size: size, spacing: spacing)
-            } else if let representation = peer.smallProfileImage, let signal = peerAvatarImage(account: context.account, peerReference: PeerReference(peer), authorOfMessage: nil, representation: representation, displayDimensions: size, clipStyle: ggAvatarClipStyle(.round), synchronousLoad: synchronousLoad) { // GHOST: square avatars (clipStyle) — reactions, comments, viewers
+            } else if let representation = peer.smallProfileImage, let signal = peerAvatarImage(account: context.account, peerReference: PeerReference(peer), authorOfMessage: nil, representation: representation, displayDimensions: size, clipStyle: wgAvatarClipStyle(.round), synchronousLoad: synchronousLoad) { // WRAITH: square avatars (clipStyle) — reactions, comments, viewers
                 let image = generateImage(size, rotatedContext: { size, context in
                     context.clear(CGRect(origin: CGPoint(), size: size))
                     context.setFillColor(UIColor.lightGray.cgColor)
-                    ggAvatarFillShape(context, in: CGRect(origin: CGPoint(), size: size)) // GHOST: square avatars
+                    wgAvatarFillShape(context, in: CGRect(origin: CGPoint(), size: size)) // WRAITH: square avatars
                 })!
                 self.updateImage(image: image, size: size, spacing: spacing)
 
@@ -124,7 +124,7 @@ private final class ContentNode: ASDisplayNode {
             let image = generateImage(size, rotatedContext: { size, context in
                 context.clear(CGRect(origin: CGPoint(), size: size))
                 context.setFillColor(placeholderColor.cgColor)
-                ggAvatarFillShape(context, in: CGRect(origin: CGPoint(), size: size)) // GHOST: square avatars
+                wgAvatarFillShape(context, in: CGRect(origin: CGPoint(), size: size)) // WRAITH: square avatars
             })!
             self.updateImage(image: image, size: size, spacing: spacing)
         }
@@ -144,7 +144,7 @@ private final class ContentNode: ASDisplayNode {
             
             context.setBlendMode(.copy)
             context.setFillColor(UIColor.clear.cgColor)
-            ggAvatarFillShape(context, in: CGRect(origin: CGPoint(), size: size).insetBy(dx: -1.5, dy: -1.5).offsetBy(dx: spacing - size.width, dy: 0.0)) // GHOST: square avatars
+            wgAvatarFillShape(context, in: CGRect(origin: CGPoint(), size: size).insetBy(dx: -1.5, dy: -1.5).offsetBy(dx: spacing - size.width, dy: 0.0)) // WRAITH: square avatars
         })
     }
     
@@ -334,11 +334,11 @@ public final class AnimatedAvatarSetView: UIView {
                 if peer.isDeleted {
                     let image = generateDeletedAccountAvatarImage(size: size)!
                     self.updateImage(image: image, size: size, spacing: spacing)
-                } else if let representation = peer.smallProfileImage, let signal = peerAvatarImage(account: context.account, peerReference: PeerReference(peer), authorOfMessage: nil, representation: representation, displayDimensions: size, clipStyle: ggAvatarClipStyle(.round), synchronousLoad: synchronousLoad) { // GHOST: square avatars (clipStyle) — reactions, comments, viewers
+                } else if let representation = peer.smallProfileImage, let signal = peerAvatarImage(account: context.account, peerReference: PeerReference(peer), authorOfMessage: nil, representation: representation, displayDimensions: size, clipStyle: wgAvatarClipStyle(.round), synchronousLoad: synchronousLoad) { // WRAITH: square avatars (clipStyle) — reactions, comments, viewers
                     let image = generateImage(size, rotatedContext: { size, context in
                         context.clear(CGRect(origin: CGPoint(), size: size))
                         context.setFillColor(UIColor.lightGray.cgColor)
-                        ggAvatarFillShape(context, in: CGRect(origin: CGPoint(), size: size)) // GHOST: square avatars
+                        wgAvatarFillShape(context, in: CGRect(origin: CGPoint(), size: size)) // WRAITH: square avatars
                     })!
                     self.updateImage(image: image, size: size, spacing: spacing)
 
@@ -364,7 +364,7 @@ public final class AnimatedAvatarSetView: UIView {
                 let image = generateImage(size, rotatedContext: { size, context in
                     context.clear(CGRect(origin: CGPoint(), size: size))
                     context.setFillColor(placeholderColor.cgColor)
-                    ggAvatarFillShape(context, in: CGRect(origin: CGPoint(), size: size)) // GHOST: square avatars
+                    wgAvatarFillShape(context, in: CGRect(origin: CGPoint(), size: size)) // WRAITH: square avatars
                 })!
                 self.updateImage(image: image, size: size, spacing: spacing)
             }
@@ -388,7 +388,7 @@ public final class AnimatedAvatarSetView: UIView {
                 
                 context.setBlendMode(.copy)
                 context.setFillColor(UIColor.clear.cgColor)
-                ggAvatarFillShape(context, in: CGRect(origin: CGPoint(), size: size).insetBy(dx: -1.5, dy: -1.5).offsetBy(dx: spacing - size.width, dy: 0.0)) // GHOST: square avatars
+                wgAvatarFillShape(context, in: CGRect(origin: CGPoint(), size: size).insetBy(dx: -1.5, dy: -1.5).offsetBy(dx: spacing - size.width, dy: 0.0)) // WRAITH: square avatars
             })
         }
         

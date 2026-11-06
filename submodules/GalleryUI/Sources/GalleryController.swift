@@ -17,8 +17,8 @@ import ScreenCaptureDetection
 import UndoUI
 import TranslateUI
 import UrlWhitelist
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
-import GGHooks // GHOST: capture protection of the viewer (GGChatScreenHooks.captureProtection)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
+import WGHooks // WRAITH: capture protection of the viewer (WGChatScreenHooks.captureProtection)
 
 private func tagsForMessage(_ message: Message) -> MessageTags? {
     //TODO:rewrite to take all media (effectiveMedia returns all rich-text media; we stop at the first)
@@ -305,7 +305,7 @@ public func galleryItemForEntry(
     
     if let image = media as? TelegramMediaImage {
         if let file = image.video {
-            let captureProtected = GGChatScreenHooks.captureProtection(message.isCopyProtected() || message.containsSecretMedia || message.minAutoremoveOrClearTimeout == viewOnceTimeout || message.paidContent != nil || peerIsCopyProtected, context: context, chatLocation: .peer(id: message.id.peerId)) // GHOST: «Обход скриншотов» in the viewer too (GGChatScreenHooks.captureProtection)
+            let captureProtected = WGChatScreenHooks.captureProtection(message.isCopyProtected() || message.containsSecretMedia || message.minAutoremoveOrClearTimeout == viewOnceTimeout || message.paidContent != nil || peerIsCopyProtected, context: context, chatLocation: .peer(id: message.id.peerId)) // WRAITH: «Обход скриншотов» in the viewer too (WGChatScreenHooks.captureProtection)
             
             var originData = GalleryItemOriginData(title: message.effectiveAuthor.flatMap(EnginePeer.init)?.displayTitle(strings: presentationData.strings, displayOrder: presentationData.nameDisplayOrder), timestamp: message.timestamp)
             if Namespaces.Message.allNonRegular.contains(message.id.namespace) {
@@ -362,7 +362,7 @@ public func galleryItemForEntry(
     } else if let file = media as? TelegramMediaFile {
         if file.isVideo {
             let content: UniversalVideoContent
-            let captureProtected = GGChatScreenHooks.captureProtection(message.isCopyProtected() || message.containsSecretMedia || message.minAutoremoveOrClearTimeout == viewOnceTimeout || message.paidContent != nil || peerIsCopyProtected, context: context, chatLocation: .peer(id: message.id.peerId)) // GHOST: «Обход скриншотов» in the viewer too (GGChatScreenHooks.captureProtection)
+            let captureProtected = WGChatScreenHooks.captureProtection(message.isCopyProtected() || message.containsSecretMedia || message.minAutoremoveOrClearTimeout == viewOnceTimeout || message.paidContent != nil || peerIsCopyProtected, context: context, chatLocation: .peer(id: message.id.peerId)) // WRAITH: «Обход скриншотов» in the viewer too (WGChatScreenHooks.captureProtection)
             if file.isAnimated {
                 content = NativeVideoContent(id: .message(message.stableId, file.fileId), userLocation: .peer(message.id.peerId), fileReference: .message(message: MessageReference(message), media: file), imageReference: mediaImage.flatMap({ ImageMediaReference.message(message: MessageReference(message), media: $0) }), loopVideo: true, enableSound: false, tempFilePath: tempFilePath, captureProtected: captureProtected, storeAfterDownload: generateStoreAfterDownload?(message, file))
             } else {
@@ -492,11 +492,11 @@ public func galleryItemForEntry(
         var content: UniversalVideoContent?
         switch websiteType(of: webpageContent.websiteName) {
         case .instagram where webpageContent.file != nil && webpageContent.image != nil && webpageContent.file!.isVideo:
-            content = NativeVideoContent(id: .message(message.stableId, webpageContent.file?.id ?? webpage.webpageId), userLocation: .peer(message.id.peerId), fileReference: .message(message: MessageReference(message), media: webpageContent.file!), imageReference: webpageContent.image.flatMap({ ImageMediaReference.message(message: MessageReference(message), media: $0) }), streamVideo: .conservative, enableSound: true, captureProtected: GGChatScreenHooks.captureProtection(message.isCopyProtected() || message.containsSecretMedia || peerIsCopyProtected, context: context, chatLocation: .peer(id: message.id.peerId)), storeAfterDownload: nil) // GHOST: «Обход скриншотов» in the viewer too
+            content = NativeVideoContent(id: .message(message.stableId, webpageContent.file?.id ?? webpage.webpageId), userLocation: .peer(message.id.peerId), fileReference: .message(message: MessageReference(message), media: webpageContent.file!), imageReference: webpageContent.image.flatMap({ ImageMediaReference.message(message: MessageReference(message), media: $0) }), streamVideo: .conservative, enableSound: true, captureProtected: WGChatScreenHooks.captureProtection(message.isCopyProtected() || message.containsSecretMedia || peerIsCopyProtected, context: context, chatLocation: .peer(id: message.id.peerId)), storeAfterDownload: nil) // WRAITH: «Обход скриншотов» in the viewer too
         default:
             if let embedUrl = webpageContent.embedUrl, let image = webpageContent.image {
                 if let file = webpageContent.file, file.isVideo {
-                    content = NativeVideoContent(id: .message(message.stableId, file.fileId), userLocation: .peer(message.id.peerId), fileReference: .message(message: MessageReference(message), media: file), imageReference: mediaImage.flatMap({ ImageMediaReference.message(message: MessageReference(message), media: $0) }), streamVideo: .conservative, loopVideo: loopVideos, tempFilePath: tempFilePath, captureProtected: GGChatScreenHooks.captureProtection(message.isCopyProtected() || message.containsSecretMedia || peerIsCopyProtected, context: context, chatLocation: .peer(id: message.id.peerId)), storeAfterDownload: generateStoreAfterDownload?(message, file)) // GHOST: «Обход скриншотов» in the viewer too
+                    content = NativeVideoContent(id: .message(message.stableId, file.fileId), userLocation: .peer(message.id.peerId), fileReference: .message(message: MessageReference(message), media: file), imageReference: mediaImage.flatMap({ ImageMediaReference.message(message: MessageReference(message), media: $0) }), streamVideo: .conservative, loopVideo: loopVideos, tempFilePath: tempFilePath, captureProtected: WGChatScreenHooks.captureProtection(message.isCopyProtected() || message.containsSecretMedia || peerIsCopyProtected, context: context, chatLocation: .peer(id: message.id.peerId)), storeAfterDownload: generateStoreAfterDownload?(message, file)) // WRAITH: «Обход скриншотов» in the viewer too
                 } else if URL(string: embedUrl)?.pathExtension == "mp4" {
                     content = SystemVideoContent(userLocation: .peer(message.id.peerId), url: embedUrl, imageReference: .webPage(webPage: WebpageReference(webpage), media: image), dimensions: webpageContent.embedSize?.cgSize ?? CGSize(width: 640.0, height: 640.0), duration: webpageContent.duration.flatMap(Double.init) ?? 0.0)
                 }
@@ -645,8 +645,8 @@ public struct GalleryConfiguration {
     }
     
     static func with(appConfiguration: AppConfiguration) -> GalleryConfiguration {
-        // GHOST: «PiP для YouTube» — picture-in-picture even when the server turns it off (GGExtrasPolicy)
-        if GGExtrasPolicy.forcesYouTubePictureInPicture { return GalleryConfiguration(youtubePictureInPictureEnabled: true) }
+        // WRAITH: «PiP для YouTube» — picture-in-picture even when the server turns it off (WGExtrasPolicy)
+        if WGExtrasPolicy.forcesYouTubePictureInPicture { return GalleryConfiguration(youtubePictureInPictureEnabled: true) }
         if let data = appConfiguration.data, let value = data["youtube_pip"] as? String {
             return GalleryConfiguration(youtubePictureInPictureEnabled: value != "disabled")
         } else {
@@ -872,7 +872,7 @@ public class GalleryController: ViewController, StandalonePresentableController,
                     if let peer = message.peers[message.id.peerId] as? TelegramGroup, let migrationPeerId = peer.migrationReference?.peerId, let migrationPeer = transaction.getPeer(migrationPeerId) {
                         return (message, migrationPeer.isCopyProtectionEnabled)
                     } else if let peer = message.peers[message.id.peerId] as? TelegramUser, let cachedUserData = transaction.getPeerCachedData(peerId: peer.id) as? CachedUserData {
-                        return (message, GGRestrictionHooks.peerCopyProtectionApplies(cachedUserData.flags.contains(.copyProtectionEnabled) || cachedUserData.flags.contains(.myCopyProtectionEnabled), peerId: peer.id)) // GHOST: features may lift a private chat's protection (GGRestrictionHooks.copyProtection)
+                        return (message, WGRestrictionHooks.peerCopyProtectionApplies(cachedUserData.flags.contains(.copyProtectionEnabled) || cachedUserData.flags.contains(.myCopyProtectionEnabled), peerId: peer.id)) // WRAITH: features may lift a private chat's protection (WGRestrictionHooks.copyProtection)
                     }
                     return (message, false)
                 }

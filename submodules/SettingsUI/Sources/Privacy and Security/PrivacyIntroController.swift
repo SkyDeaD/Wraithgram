@@ -8,7 +8,7 @@ import TelegramPresentationData
 import AccountContext
 import AppBundle
 import PhoneNumberFormat
-import GGHooks // GHOST: the own number as features show it (GGPeerInfoHooks.displayedPhoneNumber)
+import WGHooks // WRAITH: the own number as features show it (WGPeerInfoHooks.displayedPhoneNumber)
 
 public enum PrivacyIntroControllerMode {
     case passcode
@@ -51,8 +51,8 @@ public enum PrivacyIntroControllerMode {
             case .twoStepVerification:
                 return strings.TwoStepAuth_AdditionalPassword
             case let .changePhoneNumber(phoneNumber):
-                // GHOST: the own number as features show it; a hidden one gives way to the screen's title (GGPeerInfoHooks.displayedPhoneNumber)
-                guard let shownNumber = GGPeerInfoHooks.phone(phoneNumber, peerId: context.account.peerId, context: context) else { return strings.ChangePhoneNumberNumber_Title }
+                // WRAITH: the own number as features show it; a hidden one gives way to the screen's title (WGPeerInfoHooks.displayedPhoneNumber)
+                guard let shownNumber = WGPeerInfoHooks.phone(phoneNumber, peerId: context.account.peerId, context: context) else { return strings.ChangePhoneNumberNumber_Title }
                 return formatPhoneNumber(context: context, number: shownNumber)
         }
     }

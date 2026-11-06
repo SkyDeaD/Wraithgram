@@ -567,7 +567,7 @@ private final class StarsContextImpl {
     
     private let disposable = MetaDisposable()
     private var updateDisposable: Disposable?
-    private var ggInvalidationDisposable: Disposable? // GHOST: re-publish on GGStarsHooks.invalidate()
+    private var wgInvalidationDisposable: Disposable? // WRAITH: re-publish on WGStarsHooks.invalidate()
     
     init(account: Account, ton: Bool) {
         assert(Queue.mainQueue().isCurrent())
@@ -589,9 +589,9 @@ private final class StarsContextImpl {
             self.updateState(StarsContext.State(flags: [], balance: balance, subscriptions: state.subscriptions, canLoadMoreSubscriptions: state.canLoadMoreSubscriptions, transactions: state.transactions, canLoadMoreTransactions: state.canLoadMoreTransactions, isLoading: false))
             self.load(force: true)
         })
-        // GHOST: the shown balance follows a feature's change at once (GGStarsHooks.invalidate())
-        self.ggInvalidationDisposable = ggObserveStarsBalanceInvalidation(ton: ton, { [weak self] in
-            if let strongSelf = self, let state = strongSelf._state { strongSelf._statePromise.set(.single(ggDisplayedStarsState(state, ton: strongSelf.ton))) }
+        // WRAITH: the shown balance follows a feature's change at once (WGStarsHooks.invalidate())
+        self.wgInvalidationDisposable = wgObserveStarsBalanceInvalidation(ton: ton, { [weak self] in
+            if let strongSelf = self, let state = strongSelf._state { strongSelf._statePromise.set(.single(wgDisplayedStarsState(state, ton: strongSelf.ton))) }
         })
     }
     
@@ -599,7 +599,7 @@ private final class StarsContextImpl {
         assert(Queue.mainQueue().isCurrent())
         self.disposable.dispose()
         self.updateDisposable?.dispose()
-        self.ggInvalidationDisposable?.dispose() // GHOST: see ggInvalidationDisposable
+        self.wgInvalidationDisposable?.dispose() // WRAITH: see wgInvalidationDisposable
     }
     
     private var previousLoadTimestamp: Double?
@@ -649,7 +649,7 @@ private final class StarsContextImpl {
     
     private func updateState(_ state: StarsContext.State) {
         self._state = state
-        self._statePromise.set(.single(ggDisplayedStarsState(state, ton: self.ton))) // GHOST: the balance as features show it (GGStarsHooks.displayedBalance); `_state` keeps the real one
+        self._statePromise.set(.single(wgDisplayedStarsState(state, ton: self.ton))) // WRAITH: the balance as features show it (WGStarsHooks.displayedBalance); `_state` keeps the real one
     }
     
     var onUpdate: Signal<Void, NoError> {
@@ -1133,7 +1133,7 @@ public final class StarsContext {
     public var currentState: StarsContext.State? {
         var state: StarsContext.State?
         self.impl.syncWith { impl in
-            state = impl._state.flatMap { ggDisplayedStarsState($0, ton: impl.ton) } // GHOST: the balance as features show it (GGStarsHooks.displayedBalance)
+            state = impl._state.flatMap { wgDisplayedStarsState($0, ton: impl.ton) } // WRAITH: the balance as features show it (WGStarsHooks.displayedBalance)
         }
         return state
     }

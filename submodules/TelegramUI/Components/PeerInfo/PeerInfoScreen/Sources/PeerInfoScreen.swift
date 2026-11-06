@@ -81,8 +81,8 @@ import ChatTitleView
 import ForumCreateTopicScreen
 import NotificationExceptionsScreen
 import ChatTimerScreen
-import GGHooks // GHOST: peer info points
-import GGCore // GHOST: settings revision for the tab avatar (square avatars)
+import WGHooks // WRAITH: peer info points
+import WGCore // WRAITH: settings revision for the tab avatar (square avatars)
 import NotificationPeerExceptionController
 import StickerPackPreviewUI
 import ChatListHeaderComponent
@@ -2191,8 +2191,8 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
                 return data?.hasSecretValues ?? false
             }
                         
-            // GHOST: the Settings tab is rebuilt when features change what it shows (GGSettingsTabHooks.invalidate)
-            screenData = ggSettingsTabRefreshing(peerInfoScreenSettingsData(context: context, peerId: peerId, accountsAndPeers: self.accountsAndPeers.get(), activeSessionsContextAndCount: self.activeSessionsContextAndCount.get(), notificationExceptions: self.notificationExceptions.get(), privacySettings: self.privacySettings.get(), archivedStickerPacks: self.archivedPacks.get(), hasPassport: hasPassport, starsContext: starsContext, tonContext: tonContext))
+            // WRAITH: the Settings tab is rebuilt when features change what it shows (WGSettingsTabHooks.invalidate)
+            screenData = wgSettingsTabRefreshing(peerInfoScreenSettingsData(context: context, peerId: peerId, accountsAndPeers: self.accountsAndPeers.get(), activeSessionsContextAndCount: self.activeSessionsContextAndCount.get(), notificationExceptions: self.notificationExceptions.get(), privacySettings: self.privacySettings.get(), archivedStickerPacks: self.archivedPacks.get(), hasPassport: hasPassport, starsContext: starsContext, tonContext: tonContext))
             
             
             self.headerNode.displayCopyContextMenu = { [weak self] node, copyPhone, copyUsername in
@@ -2200,8 +2200,8 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
                     return
                 }
                 var actions: [ContextMenuAction] = []
-                // GHOST: copy the number as features show it, a hidden one not at all (GGPeerInfoHooks.displayedPhoneNumber)
-                if copyPhone, let phone = GGPeerInfoHooks.phone(user.phone, peerId: user.id, context: strongSelf.context), !phone.isEmpty {
+                // WRAITH: copy the number as features show it, a hidden one not at all (WGPeerInfoHooks.displayedPhoneNumber)
+                if copyPhone, let phone = WGPeerInfoHooks.phone(user.phone, peerId: user.id, context: strongSelf.context), !phone.isEmpty {
                     actions.append(ContextMenuAction(content: .text(title: strongSelf.presentationData.strings.Settings_CopyPhoneNumber, accessibilityLabel: strongSelf.presentationData.strings.Settings_CopyPhoneNumber), action: { [weak self] in
                         if let strongSelf = self {
                             UIPasteboard.general.string = formatPhoneNumber(context: strongSelf.context, number: phone)
@@ -2946,7 +2946,7 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
             }
         }
         
-        setLayerDisableScreenshots(self.layer, GGChatScreenHooks.captureProtection(peerInfoIsCopyProtected(data: data, sharedMediaFromForumTopic: self.sharedMediaFromForumTopic), context: self.context, chatLocation: .peer(id: self.peerId))) // GHOST: features may change capture protection (GGChatScreenHooks.captureProtection)
+        setLayerDisableScreenshots(self.layer, WGChatScreenHooks.captureProtection(peerInfoIsCopyProtected(data: data, sharedMediaFromForumTopic: self.sharedMediaFromForumTopic), context: self.context, chatLocation: .peer(id: self.peerId))) // WRAITH: features may change capture protection (WGChatScreenHooks.captureProtection)
     }
     
     func scrollToTop() {
@@ -6107,7 +6107,7 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
             let paneSideInsets = peerInfoSideInsets(layout: layout)
             self.paneContainerNode.stripInsets = (paneSideInsets.stripLeft, paneSideInsets.stripRight)
             self.paneContainerNode.update(size: self.paneContainerNode.bounds.size, sideInset: paneSideInsets.paneSideInset, topInset: paneContainerTopInset, bottomInset: bottomInset, deviceMetrics: layout.deviceMetrics, visibleHeight: visibleHeight, expansionFraction: self.initialExpandPanes ? 1.0 : effectiveAreaExpansionFraction, presentationData: self.presentationData, data: self.data, areTabsHidden: self.headerNode.customNavigationContentNode != nil, disableTabSwitching: disableTabSwitching, navigationHeight: navigationHeight, transition: transition)
-            ggPeerInfoPaneContainerDidLayout(self) // GHOST: features may cover the shared media, e.g. of a protected chat (GGPeerInfoHooks.paneContainerDidLayout)
+            wgPeerInfoPaneContainerDidLayout(self) // WRAITH: features may cover the shared media, e.g. of a protected chat (WGPeerInfoHooks.paneContainerDidLayout)
           
             // iPhone Duo unfolded portrait: the search field ends left of the status island.
             let navigationButtonsWidth = layout.size.width - layout.safeInsets.left - layout.safeInsets.right - layout.navigationBarTrailingButtonsInset
@@ -6644,14 +6644,14 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
         switchToStoryFolder: Int64? = nil,
         switchToMediaTarget: PeerInfoSwitchToMediaTarget? = nil,
     ) {
-        // GHOST: features may open another peer's profile instead (GGPeerInfoHooks.redirectPeer)
-        let ggSourcePeerId = peerId
-        let peerId = GGPeerInfoHooks.redirect(peerId, context: context)
-        // GHOST: a substituted profile keeps nothing of the source peer's context: thread, messages, media position, gifts, requests (GGPeerInfoHooks.redirectPeer)
-        let ggRedirected = peerId != ggSourcePeerId
-        let reactionSourceMessageId = ggRedirected ? nil : reactionSourceMessageId, sourceMessageId = ggRedirected ? nil : sourceMessageId, callMessages = ggRedirected ? [] : callMessages, hintGroupInCommon = ggRedirected ? nil : hintGroupInCommon // GHOST: see ggRedirected
-        let requestsContext = ggRedirected ? nil : requestsContext, profileGiftsContext = ggRedirected ? nil : profileGiftsContext, forumTopicThread = ggRedirected ? nil : forumTopicThread, sharedMediaFromForumTopic = ggRedirected ? nil : sharedMediaFromForumTopic // GHOST: see ggRedirected
-        let switchToMediaTarget = ggRedirected ? nil : switchToMediaTarget, switchToStoryFolder = ggRedirected ? nil : switchToStoryFolder, switchToGiftsTarget = ggRedirected ? nil : switchToGiftsTarget // GHOST: see ggRedirected
+        // WRAITH: features may open another peer's profile instead (WGPeerInfoHooks.redirectPeer)
+        let wgSourcePeerId = peerId
+        let peerId = WGPeerInfoHooks.redirect(peerId, context: context)
+        // WRAITH: a substituted profile keeps nothing of the source peer's context: thread, messages, media position, gifts, requests (WGPeerInfoHooks.redirectPeer)
+        let wgRedirected = peerId != wgSourcePeerId
+        let reactionSourceMessageId = wgRedirected ? nil : reactionSourceMessageId, sourceMessageId = wgRedirected ? nil : sourceMessageId, callMessages = wgRedirected ? [] : callMessages, hintGroupInCommon = wgRedirected ? nil : hintGroupInCommon // WRAITH: see wgRedirected
+        let requestsContext = wgRedirected ? nil : requestsContext, profileGiftsContext = wgRedirected ? nil : profileGiftsContext, forumTopicThread = wgRedirected ? nil : forumTopicThread, sharedMediaFromForumTopic = wgRedirected ? nil : sharedMediaFromForumTopic // WRAITH: see wgRedirected
+        let switchToMediaTarget = wgRedirected ? nil : switchToMediaTarget, switchToStoryFolder = wgRedirected ? nil : switchToStoryFolder, switchToGiftsTarget = wgRedirected ? nil : switchToGiftsTarget // WRAITH: see wgRedirected
         self.context = context
         self.updatedPresentationData = updatedPresentationData
         self.peerId = peerId
@@ -6760,32 +6760,32 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
             }
             |> distinctUntilChanged
             
-            // GHOST: square avatars redraw the tab avatar on a settings change: + the settings revision and
+            // WRAITH: square avatars redraw the tab avatar on a settings change: + the settings revision and
             // the avatar corner; the chain is split into typed steps (one expression timed the type checker out)
-            let ggTabAvatarSource: Signal<(Account, EnginePeer, PresentationTheme, CGFloat)?, NoError> = combineLatest(self.accountsAndPeers.get(), context.sharedContext.presentationData, GGSettingsStore.shared.revision) // GHOST: see above
-            |> map { primaryAndOther, presentationData, _ -> (Account, EnginePeer, PresentationTheme, CGFloat)? in // GHOST: see above
+            let wgTabAvatarSource: Signal<(Account, EnginePeer, PresentationTheme, CGFloat)?, NoError> = combineLatest(self.accountsAndPeers.get(), context.sharedContext.presentationData, WGSettingsStore.shared.revision) // WRAITH: see above
+            |> map { primaryAndOther, presentationData, _ -> (Account, EnginePeer, PresentationTheme, CGFloat)? in // WRAITH: see above
                 if let primary = primaryAndOther.0, !primaryAndOther.1.isEmpty {
-                    let ggCorner: CGFloat = ggAvatarCornerRadius(side: 31.0, isForum: false, upstream: 15.5) // GHOST: the corner the tab avatar is drawn with
-                    return (primary.0.account, primary.1, presentationData.theme, ggCorner) // GHOST: see above
+                    let wgCorner: CGFloat = wgAvatarCornerRadius(side: 31.0, isForum: false, upstream: 15.5) // WRAITH: the corner the tab avatar is drawn with
+                    return (primary.0.account, primary.1, presentationData.theme, wgCorner) // WRAITH: see above
                 } else {
                     return nil
                 }
             }
-            let ggTabAvatarDistinct: Signal<(Account, EnginePeer, PresentationTheme, CGFloat)?, NoError> = ggTabAvatarSource |> distinctUntilChanged(isEqual: { (lhs: (Account, EnginePeer, PresentationTheme, CGFloat)?, rhs: (Account, EnginePeer, PresentationTheme, CGFloat)?) -> Bool in // GHOST: see above
-                guard let lhs, let rhs else { // GHOST: see above
-                    return (lhs == nil) == (rhs == nil) // GHOST: see above
-                } // GHOST: see above
-                if lhs.0 !== rhs.0 || lhs.1 != rhs.1 { // GHOST: see above
-                    return false // GHOST: see above
-                } // GHOST: see above
-                return lhs.2 === rhs.2 && lhs.3 == rhs.3 // GHOST: see above
-            }) // GHOST: see above
-            let accountTabBarAvatar: Signal<(UIImage, UIImage)?, NoError> = ggTabAvatarDistinct // GHOST: see above
+            let wgTabAvatarDistinct: Signal<(Account, EnginePeer, PresentationTheme, CGFloat)?, NoError> = wgTabAvatarSource |> distinctUntilChanged(isEqual: { (lhs: (Account, EnginePeer, PresentationTheme, CGFloat)?, rhs: (Account, EnginePeer, PresentationTheme, CGFloat)?) -> Bool in // WRAITH: see above
+                guard let lhs, let rhs else { // WRAITH: see above
+                    return (lhs == nil) == (rhs == nil) // WRAITH: see above
+                } // WRAITH: see above
+                if lhs.0 !== rhs.0 || lhs.1 != rhs.1 { // WRAITH: see above
+                    return false // WRAITH: see above
+                } // WRAITH: see above
+                return lhs.2 === rhs.2 && lhs.3 == rhs.3 // WRAITH: see above
+            }) // WRAITH: see above
+            let accountTabBarAvatar: Signal<(UIImage, UIImage)?, NoError> = wgTabAvatarDistinct // WRAITH: see above
             |> mapToSignal { primary -> Signal<(UIImage, UIImage)?, NoError> in
                 if let primary = primary {
                     let size = CGSize(width: 31.0, height: 31.0)
                     let inset: CGFloat = 3.0
-                    if let signal = peerAvatarImage(account: primary.0, peerReference: PeerReference(primary.1), authorOfMessage: nil, representation: primary.1.profileImageRepresentations.first, displayDimensions: size, clipStyle: ggAvatarClipStyle(.round), inset: 3.0, emptyColor: nil, synchronousLoad: false) { // GHOST: square avatars (clipStyle)
+                    if let signal = peerAvatarImage(account: primary.0, peerReference: PeerReference(primary.1), authorOfMessage: nil, representation: primary.1.profileImageRepresentations.first, displayDimensions: size, clipStyle: wgAvatarClipStyle(.round), inset: 3.0, emptyColor: nil, synchronousLoad: false) { // WRAITH: square avatars (clipStyle)
                         return signal
                         |> map { imageVersions -> (UIImage, UIImage)? in
                             if let image = imageVersions?.0 {
@@ -6801,18 +6801,18 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
                             if displayLetters.count == 2 && displayLetters[0].isSingleEmoji && displayLetters[1].isSingleEmoji {
                                 displayLetters = [displayLetters[0]]
                             }
-                            let image = generateImage(size, rotatedContext: { (size: CGSize, context: CGContext) -> Void in // GHOST: explicit types (the square-avatar clip below made inference time out)
+                            let image = generateImage(size, rotatedContext: { (size: CGSize, context: CGContext) -> Void in // WRAITH: explicit types (the square-avatar clip below made inference time out)
                                 context.clear(CGRect(origin: CGPoint(), size: size))
                                 context.translateBy(x: inset, y: inset)
                                 
-                                let ggLettersSize = CGSize(width: size.width - inset * 2.0, height: size.height - inset * 2.0) // GHOST: square avatars — the letter avatar in the same shape
-                                let ggLettersClip: CGPath? = ggAvatarClipPath(in: CGRect(origin: CGPoint(), size: ggLettersSize)) // GHOST: see ggLettersSize
-                                if let ggLettersClip { // GHOST: see ggLettersSize
-                                    context.addPath(ggLettersClip) // GHOST: see ggLettersSize
-                                    context.clip() // GHOST: see ggLettersSize
-                                } // GHOST: see ggLettersSize
-                                let ggRound: Bool = ggLettersClip == nil // GHOST: see ggLettersSize
-                                drawPeerAvatarLetters(context: context, size: ggLettersSize, round: ggRound, font: avatarFont, letters: displayLetters, peerId: primary.1.id, nameColor: primary.1.nameColor) // GHOST: size / round: — see ggLettersSize
+                                let wgLettersSize = CGSize(width: size.width - inset * 2.0, height: size.height - inset * 2.0) // WRAITH: square avatars — the letter avatar in the same shape
+                                let wgLettersClip: CGPath? = wgAvatarClipPath(in: CGRect(origin: CGPoint(), size: wgLettersSize)) // WRAITH: see wgLettersSize
+                                if let wgLettersClip { // WRAITH: see wgLettersSize
+                                    context.addPath(wgLettersClip) // WRAITH: see wgLettersSize
+                                    context.clip() // WRAITH: see wgLettersSize
+                                } // WRAITH: see wgLettersSize
+                                let wgRound: Bool = wgLettersClip == nil // WRAITH: see wgLettersSize
+                                drawPeerAvatarLetters(context: context, size: wgLettersSize, round: wgRound, font: avatarFont, letters: displayLetters, peerId: primary.1.id, nameColor: primary.1.nameColor) // WRAITH: size / round: — see wgLettersSize
                             })?.withRenderingMode(.alwaysOriginal)
                             if let image = image {
                                 subscriber.putNext((image, image))

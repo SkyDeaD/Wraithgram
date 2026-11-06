@@ -318,7 +318,7 @@ static NSMutableArray<CALayerSpringParametersOverride *> *currentSpringParameter
 
 @end
 
-// GHOST: no UIKit scroll edge effects. Since iOS 26 every scroll view gets automatic edge effects
+// WRAITH: no UIKit scroll edge effects. Since iOS 26 every scroll view gets automatic edge effects
 // ("scroll pockets"), and linked against the iOS 27 SDK the status bar counts as one of their bars:
 // a blurred band with a dividing line under the status bar / Dynamic Island, drawn above all of the
 // app's content there (the badge under the island included). Telegram draws its own edge effects
@@ -326,24 +326,24 @@ static NSMutableArray<CALayerSpringParametersOverride *> *currentSpringParameter
 // scroll view before it is laid out, i.e. before its first frame. `willMoveToWindow:` and
 // `didMoveToWindow` would miss ASScrollView, which overrides both without calling super.
 API_AVAILABLE(ios(26.0))
-static void ggHideSystemEdgeEffect(UIScrollEdgeEffect *effect) {
+static void wgHideSystemEdgeEffect(UIScrollEdgeEffect *effect) {
     if (effect != nil && !effect.isHidden) {
         effect.hidden = YES;
     }
 }
 
 API_AVAILABLE(ios(26.0))
-static void ggHideSystemEdgeEffects(UIScrollView *scrollView) {
-    ggHideSystemEdgeEffect(scrollView.topEdgeEffect);
-    ggHideSystemEdgeEffect(scrollView.bottomEdgeEffect);
-    ggHideSystemEdgeEffect(scrollView.leftEdgeEffect);
-    ggHideSystemEdgeEffect(scrollView.rightEdgeEffect);
+static void wgHideSystemEdgeEffects(UIScrollView *scrollView) {
+    wgHideSystemEdgeEffect(scrollView.topEdgeEffect);
+    wgHideSystemEdgeEffect(scrollView.bottomEdgeEffect);
+    wgHideSystemEdgeEffect(scrollView.leftEdgeEffect);
+    wgHideSystemEdgeEffect(scrollView.rightEdgeEffect);
 }
 
 /// Wraps the class's own `layoutSubviews`. A class that only inherits it is skipped: replacing an
 /// inherited method would replace it in the superclass, for every view.
 API_AVAILABLE(ios(26.0))
-static void ggHideSystemEdgeEffectsOnLayout(Class scrollViewClass) {
+static void wgHideSystemEdgeEffectsOnLayout(Class scrollViewClass) {
     SEL selector = @selector(layoutSubviews);
     Method method = class_getInstanceMethod(scrollViewClass, selector);
     if (method == nil || method == class_getInstanceMethod(class_getSuperclass(scrollViewClass), selector)) {
@@ -351,7 +351,7 @@ static void ggHideSystemEdgeEffectsOnLayout(Class scrollViewClass) {
     }
     void (*original)(id, SEL) = (void (*)(id, SEL))method_getImplementation(method);
     method_setImplementation(method, imp_implementationWithBlock(^(UIScrollView *scrollView) {
-        ggHideSystemEdgeEffects(scrollView);
+        wgHideSystemEdgeEffects(scrollView);
         original(scrollView, selector);
     }));
 }
@@ -721,10 +721,10 @@ static NSMutableDictionary<NSString *, TrustedWebRecord *> *trustedWebRecords() 
         
         if (@available(iOS 26.0, *)) {
             registerEffectViewOverrides();
-            // GHOST: no UIKit scroll edge effects (see ggHideSystemEdgeEffects). UITableView's
+            // WRAITH: no UIKit scroll edge effects (see wgHideSystemEdgeEffects). UITableView's
             // layoutSubviews never reaches UIScrollView's, so it is wrapped on its own.
-            ggHideSystemEdgeEffectsOnLayout([UIScrollView class]);
-            ggHideSystemEdgeEffectsOnLayout([UITableView class]);
+            wgHideSystemEdgeEffectsOnLayout([UIScrollView class]);
+            wgHideSystemEdgeEffectsOnLayout([UITableView class]);
         }
         /*#if DEBUG
         Class cls = NSClassFromString(@"WKBrowsingContextController");

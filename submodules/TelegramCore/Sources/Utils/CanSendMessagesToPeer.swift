@@ -7,8 +7,8 @@ private final class LinkHelperClass: NSObject {
 }
 
 public func canSendMessagesToPeer(_ peer: EnginePeer, ignoreDefault: Bool = false) -> Bool {
-    // GHOST: features may open or close the input (GGRestrictionHooks.canSendMessages)
-    if let value = ggCanSendMessagesOverride(peer) { return value }
+    // WRAITH: features may open or close the input (WGRestrictionHooks.canSendMessages)
+    if let value = wgCanSendMessagesOverride(peer) { return value }
     if case let .user(user) = peer, user.addressName == "replies" {
         return false
     }

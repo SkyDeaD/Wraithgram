@@ -33,7 +33,7 @@ import AttachmentUI
 import MinimizedContainer
 import BrowserUI
 import NewsFeedSupport
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 final class UnauthorizedApplicationContext {
     let sharedContext: SharedAccountContextImpl
@@ -377,10 +377,10 @@ final class AuthorizedApplicationContext {
                             guard !locked else {
                                 return
                             }
-                            // GHOST: «Закреплённые» / «Упоминания» modes apply to the in-app banner too (GGNotificationFilter)
-                            let ggMode = GGNotificationFilter.inAppDecision(message: firstMessage, accountId: strongSelf.context.account.id)
-                            if ggMode == .disabled { return }
-                            let isMuted = ggMode == .silent || firstMessage.attributes.contains(where: { attribute in // GHOST: + silent mode
+                            // WRAITH: «Закреплённые» / «Упоминания» modes apply to the in-app banner too (WGNotificationFilter)
+                            let wgMode = WGNotificationFilter.inAppDecision(message: firstMessage, accountId: strongSelf.context.account.id)
+                            if wgMode == .disabled { return }
+                            let isMuted = wgMode == .silent || firstMessage.attributes.contains(where: { attribute in // WRAITH: + silent mode
                                 if let attribute = attribute as? NotificationInfoMessageAttribute {
                                     return attribute.flags.contains(.muted)
                                 } else {
@@ -424,7 +424,7 @@ final class AuthorizedApplicationContext {
                                 }
                             }
                             
-                            if GGContentPrivacyHooks.hidesContent(accountId: strongSelf.context.account.id, peerId: firstMessage.id.peerId) { return } // GHOST: no banner with the text of a protected chat (GGContentPrivacyHooks.hidesContent)
+                            if WGContentPrivacyHooks.hidesContent(accountId: strongSelf.context.account.id, peerId: firstMessage.id.peerId) { return } // WRAITH: no banner with the text of a protected chat (WGContentPrivacyHooks.hidesContent)
                             if inAppNotificationSettings.displayPreviews {
                                 let presentationData = strongSelf.context.sharedContext.currentPresentationData.with { $0 }
                                 strongSelf.notificationController.enqueue(ChatMessageNotificationItem(context: strongSelf.context, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat, nameDisplayOrder: presentationData.nameDisplayOrder, messages: messages, threadData: threadData, tapAction: {
@@ -770,7 +770,7 @@ final class AuthorizedApplicationContext {
                     } else {
                         actions = [TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_OK, action: {})]
                     }
-                    let controller = textAlertController(context: strongSelf.context, title: nil, text: GGExtrasPolicy.loggedOutAlertText(text, isDropAuth: isDropAuth), actions: actions) // GHOST: «Причина выхода» (GGExtrasPolicy)
+                    let controller = textAlertController(context: strongSelf.context, title: nil, text: WGExtrasPolicy.loggedOutAlertText(text, isDropAuth: isDropAuth), actions: actions) // WRAITH: «Причина выхода» (WGExtrasPolicy)
                     (strongSelf.rootController.viewControllers.last as? ViewController)?.present(controller, in: .window(.root))
                 }
             }

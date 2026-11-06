@@ -10,7 +10,7 @@ import OpusBinding
 import ChatPresentationInterfaceState
 import AudioWaveform
 import FFMpegBinding
-import GGFeaturesShared // GHOST: voice changer in the recorder
+import WGFeaturesShared // WRAITH: voice changer in the recorder
 
 private let kOutputBus: UInt32 = 0
 private let kInputBus: UInt32 = 1
@@ -191,8 +191,8 @@ final class ManagedAudioRecorderContext {
     private var toneTimer: SwiftSignalKit.Timer?
     private var idleTimerExtensionDisposable: Disposable?
     
-    // GHOST: the voice changer runs before the waveform and the encoder: the real voice is never stored (GGVoiceRecordingHooks)
-    private let ggVoiceEffect: GGVoiceRecordingEffect?
+    // WRAITH: the voice changer runs before the waveform and the encoder: the real voice is never stored (WGVoiceRecordingHooks)
+    private let wgVoiceEffect: WGVoiceRecordingEffect?
     
     init(
         queue: Queue,
@@ -220,7 +220,7 @@ final class ManagedAudioRecorderContext {
         self.queue = queue
         self.mediaManager = mediaManager
         self.oggWriter = TGOggOpusWriter()
-        self.ggVoiceEffect = GGVoiceRecordingHooks.makeEffect() // GHOST: voice changer (GGVoiceRecordingHooks)
+        self.wgVoiceEffect = WGVoiceRecordingHooks.makeEffect() // WRAITH: voice changer (WGVoiceRecordingHooks)
         
         if let resumeData {
             self.dataItem = TGDataItem(data: resumeData.compressedData)
@@ -629,8 +629,8 @@ final class ManagedAudioRecorderContext {
                 self.audioBuffer.append(currentEncoderPacket.assumingMemoryBound(to: UInt8.self), count: currentEncoderPacketSize)
                 break
             } else {
-                // GHOST: voice changer, in place, same length (GGVoiceRecordingHooks)
-                self.ggVoiceEffect?.process(currentEncoderPacket.assumingMemoryBound(to: Int16.self), count: currentEncoderPacketSize / 2, sampleRate: 48000)
+                // WRAITH: voice changer, in place, same length (WGVoiceRecordingHooks)
+                self.wgVoiceEffect?.process(currentEncoderPacket.assumingMemoryBound(to: Int16.self), count: currentEncoderPacketSize / 2, sampleRate: 48000)
                 self.processWaveformPreview(samples: currentEncoderPacket.assumingMemoryBound(to: Int16.self), count: currentEncoderPacketSize / 2)
                 
                 self.oggWriter.writeFrame(currentEncoderPacket.assumingMemoryBound(to: UInt8.self), frameByteCount: UInt(currentEncoderPacketSize))

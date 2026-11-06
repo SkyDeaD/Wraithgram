@@ -452,8 +452,8 @@ private func sendUploadedMessageContent(
             if uniqueId == 0 {
                 uniqueId = Int64.random(in: Int64.min ... Int64.max)
             }
-            // GHOST: the send delay applies to the standalone senders too (GGOutgoingHooks.sendDelay)
-            if scheduleTime == nil, let ggScheduleTime = ggStandaloneSendDelay(accountPeerId: accountPeerId, peerId: peerId, peer: peer, attributes: attributes, serverTime: network.globalTime) { flags |= Int32(1 << 10); scheduleTime = ggScheduleTime }
+            // WRAITH: the send delay applies to the standalone senders too (WGOutgoingHooks.sendDelay)
+            if scheduleTime == nil, let wgScheduleTime = wgStandaloneSendDelay(accountPeerId: accountPeerId, peerId: peerId, peer: peer, attributes: attributes, serverTime: network.globalTime) { flags |= Int32(1 << 10); scheduleTime = wgScheduleTime }
             
             if case .forward = content.content {
             } else {
@@ -633,8 +633,8 @@ private func sendUploadedMessageContent(
                     return .complete()
                 case let .result(result):
                     stateManager.addUpdates(result)
-                    // GHOST: observers of standalone sends, e.g. «offline» after a send (GGOutgoingHooks.didSendStandalone)
-                    ggStandaloneMessageDidSend(accountPeerId: accountPeerId, peerId: peerId, isScheduled: scheduleTime != nil)
+                    // WRAITH: observers of standalone sends, e.g. «offline» after a send (WGOutgoingHooks.didSendStandalone)
+                    wgStandaloneMessageDidSend(accountPeerId: accountPeerId, peerId: peerId, isScheduled: scheduleTime != nil)
                     return .complete()
                 }
             }
@@ -758,8 +758,8 @@ private func sendMessageContent(account: Account, peerId: PeerId, attributes: [M
             if let _ = messageEntities {
                 flags |= Int32(1 << 3)
             }
-            // GHOST: the send delay applies to Siri too (GGOutgoingHooks.sendDelay)
-            if scheduleTime == nil, let ggScheduleTime = ggStandaloneSendDelay(accountPeerId: account.peerId, peerId: peerId, peer: peer, attributes: attributes, serverTime: account.network.globalTime) { flags |= Int32(1 << 10); scheduleTime = ggScheduleTime }
+            // WRAITH: the send delay applies to Siri too (WGOutgoingHooks.sendDelay)
+            if scheduleTime == nil, let wgScheduleTime = wgStandaloneSendDelay(accountPeerId: account.peerId, peerId: peerId, peer: peer, attributes: attributes, serverTime: account.network.globalTime) { flags |= Int32(1 << 10); scheduleTime = wgScheduleTime }
             
             var sendAsInputPeer: Api.InputPeer?
             if let sendAsPeerId = sendAsPeerId, let sendAsPeer = transaction.getPeer(sendAsPeerId), let inputPeer = apiInputPeerOrSelf(sendAsPeer, accountPeerId: account.peerId) {
@@ -823,8 +823,8 @@ private func sendMessageContent(account: Account, peerId: PeerId, attributes: [M
             
             return sendMessageRequest
             |> mapToSignal { result -> Signal<Void, StandaloneSendMessageError> in
-                // GHOST: observers of standalone sends (GGOutgoingHooks.didSendStandalone)
-                ggStandaloneMessageDidSend(accountPeerId: account.peerId, peerId: peerId, isScheduled: scheduleTime != nil)
+                // WRAITH: observers of standalone sends (WGOutgoingHooks.didSendStandalone)
+                wgStandaloneMessageDidSend(accountPeerId: account.peerId, peerId: peerId, isScheduled: scheduleTime != nil)
                 return .complete()
             }
         } else {

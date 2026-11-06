@@ -29,8 +29,8 @@ import MultilineTextComponent
 import MultilineTextWithEntitiesComponent
 import ShimmerEffect
 import GlassBackgroundComponent
-import ChatListTitleView // GHOST: the look of the rows (GGChatListRowStyle)
-import GGAppearanceSettings // GHOST: checkmark colors (ggChatListCheckmarkColor)
+import ChatListTitleView // WRAITH: the look of the rows (WGChatListRowStyle)
+import WGAppearanceSettings // WRAITH: checkmark colors (wgChatListCheckmarkColor)
 
 public enum ChatListItemContent {
     public final class ThreadInfo: Equatable {
@@ -1005,7 +1005,7 @@ private final class ChatListMediaPreviewNode: ASDisplayNode {
             self.playIcon.frame = CGRect(origin: CGPoint(x: floor((size.width - image.size.width) / 2.0), y: floor((size.height - image.size.height) / 2.0)), size: image.size)
         }
         
-        let hasSpoiler = self.message.attributes.contains(where: { $0 is MediaSpoilerMessageAttribute }) && !ggChatListRevealsSpoilers(self.message, context: self.context) // GHOST: anti-spoiler (GGMessageDecoration.revealsSpoilers)
+        let hasSpoiler = self.message.attributes.contains(where: { $0 is MediaSpoilerMessageAttribute }) && !wgChatListRevealsSpoilers(self.message, context: self.context) // WRAITH: anti-spoiler (WGMessageDecoration.revealsSpoilers)
         
         var isRound = false
         var dimensions = CGSize(width: 100.0, height: 100.0)
@@ -1852,7 +1852,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
         } else if case let .groupReference(groupReference) = item.content {
             storyState = groupReference.storyState
         }
-        if item.presentationData.ggRowStyle.hidesStoryRing { storyState = nil } // GHOST: no story rings (GGChatListRowStyle)
+        if item.presentationData.wgRowStyle.hidesStoryRing { storyState = nil } // WRAITH: no story rings (WGChatListRowStyle)
         
         var peer: EnginePeer?
         var displayAsMessage = false
@@ -2028,7 +2028,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
             }
             
             var avatarDiameter = min(60.0, floor(item.presentationData.fontSize.baseDisplaySize * 60.0 / 17.0))
-            avatarDiameter = floor(avatarDiameter * item.presentationData.ggRowStyle.avatarScale) // GHOST: avatar size (GGChatListRowStyle)
+            avatarDiameter = floor(avatarDiameter * item.presentationData.wgRowStyle.avatarScale) // WRAITH: avatar size (WGChatListRowStyle)
             
             if case let .peer(peerData) = item.content, let customMessageListData = peerData.customMessageListData, customMessageListData.commandPrefix != nil {
                 avatarDiameter = 40.0
@@ -2561,7 +2561,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
             
             // if changed, adjust setupItem accordingly
             var avatarDiameter = min(60.0, floor(item.presentationData.fontSize.baseDisplaySize * 60.0 / 17.0))
-            avatarDiameter = floor(avatarDiameter * item.presentationData.ggRowStyle.avatarScale) // GHOST: avatar size (GGChatListRowStyle)
+            avatarDiameter = floor(avatarDiameter * item.presentationData.wgRowStyle.avatarScale) // WRAITH: avatar size (WGChatListRowStyle)
             let avatarLeftEdgeInset: CGFloat = item.useCommunityViewLayout ? 10.0 : 16.0
             let avatarLeftInset: CGFloat
             
@@ -2630,7 +2630,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                     
                     contentData = .chat(itemPeer: itemPeer, threadInfo: threadInfo, peer: peer, hideAuthor: hideAuthor, messageText: messageText, messageEntities: messageEntities, spoilers: spoilers, customEmojiRanges: customEmojiRanges, richTextPreview: richTextPreview)
                     hideAuthor = initialHideAuthor
-                    if !hideAuthor && ggChatListHidesLastMessageAuthor(item: item) { hideAuthor = true } // GHOST: the author of a hidden message goes too (GGChatListHooks.hidesLastMessageAuthor)
+                    if !hideAuthor && wgChatListHidesLastMessageAuthor(item: item) { hideAuthor = true } // WRAITH: the author of a hidden message goes too (WGChatListHooks.hidesLastMessageAuthor)
                 case let .group(groupPeers):
                     contentData = .group(peers: groupPeers)
                     hideAuthor = true
@@ -2843,7 +2843,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                         }
                                        
                         var entities = chatListPreviewTextEntities(entities)
-                        if ggChatListRevealsSpoilers(message, context: item.context) { entities.removeAll(where: { if case .Spoiler = $0.type { return true } else { return false } }) } // GHOST: anti-spoiler (GGMessageDecoration.revealsSpoilers)
+                        if wgChatListRevealsSpoilers(message, context: item.context) { entities.removeAll(where: { if case .Spoiler = $0.type { return true } else { return false } }) } // WRAITH: anti-spoiler (WGMessageDecoration.revealsSpoilers)
                         if let _ = message.media.first(where: { $0 is TelegramMediaPoll }) {
                             entities = []
                         }
@@ -3263,8 +3263,8 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                 break
             }
             let messageTypeIconScale = min(1.0, item.presentationData.fontSize.itemListBaseFontSize / 17.0)
-            // GHOST: a locked chat shows no media thumbnails and no type icon either (GGChatListHooks.hidesMediaPreview)
-            if ggChatListHidesMediaPreview(item: item) { contentImageSpecs.removeAll(); currentMessageTypeIcon = nil }
+            // WRAITH: a locked chat shows no media thumbnails and no type icon either (WGChatListHooks.hidesMediaPreview)
+            if wgChatListHidesMediaPreview(item: item) { contentImageSpecs.removeAll(); currentMessageTypeIcon = nil }
             
             if let currentMessageTypeIcon {
                 textLeftCutout += currentMessageTypeIcon.size.width * messageTypeIconScale
@@ -3395,15 +3395,15 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                     } else {
                         if let forumTopicData = forumTopicData {
                             if message.id.namespace == forumTopicData.maxOutgoingReadMessageId.namespace, message.id.id >= forumTopicData.maxOutgoingReadMessageId.id {
-                                statusState = .read(ggChatListCheckmarkColor(read: true, theme: item.presentationData.theme)) // GHOST: custom checkmark colors (appearance.checkmarks.*)
+                                statusState = .read(wgChatListCheckmarkColor(read: true, theme: item.presentationData.theme)) // WRAITH: custom checkmark colors (appearance.checkmarks.*)
                             } else {
-                                statusState = .delivered(ggChatListCheckmarkColor(read: false, theme: item.presentationData.theme)) // GHOST: custom checkmark colors (appearance.checkmarks.*)
+                                statusState = .delivered(wgChatListCheckmarkColor(read: false, theme: item.presentationData.theme)) // WRAITH: custom checkmark colors (appearance.checkmarks.*)
                             }
                         } else {
                             if let combinedReadState = combinedReadState, combinedReadState.isOutgoingMessageIndexRead(message.index) {
-                                statusState = .read(ggChatListCheckmarkColor(read: true, theme: item.presentationData.theme)) // GHOST: custom checkmark colors (appearance.checkmarks.*)
+                                statusState = .read(wgChatListCheckmarkColor(read: true, theme: item.presentationData.theme)) // WRAITH: custom checkmark colors (appearance.checkmarks.*)
                             } else {
-                                statusState = .delivered(ggChatListCheckmarkColor(read: false, theme: item.presentationData.theme)) // GHOST: custom checkmark colors (appearance.checkmarks.*)
+                                statusState = .delivered(wgChatListCheckmarkColor(read: false, theme: item.presentationData.theme)) // WRAITH: custom checkmark colors (appearance.checkmarks.*)
                             }
                         }
                     }
@@ -3572,7 +3572,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                                 currentCredibilityIconContent = .text(color: item.presentationData.theme.chat.message.incoming.scamColor, string: item.presentationData.strings.Message_ScamAccount.uppercased())
                             } else if peer.isFake {
                                 currentCredibilityIconContent = .text(color: item.presentationData.theme.chat.message.incoming.scamColor, string: item.presentationData.strings.Message_FakeAccount.uppercased())
-                            } else if let emojiStatus = peer.emojiStatus, !item.presentationData.ggRowStyle.hidesEmojiStatus { // GHOST: hide emoji statuses (GGChatListRowStyle)
+                            } else if let emojiStatus = peer.emojiStatus, !item.presentationData.wgRowStyle.hidesEmojiStatus { // WRAITH: hide emoji statuses (WGChatListRowStyle)
                                 currentStatusIconContent = .animation(content: .customEmoji(fileId: emojiStatus.fileId), size: CGSize(width: 32.0, height: 32.0), placeholderColor: item.presentationData.theme.list.mediaPlaceholderColor, themeColor: item.presentationData.theme.list.itemAccentColor, loopMode: .count(2))
                                 if let color = emojiStatus.color {
                                     currentStatusIconParticleColor = UIColor(rgb: UInt32(bitPattern: color))
@@ -3603,7 +3603,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                         currentCredibilityIconContent = .text(color: item.presentationData.theme.chat.message.incoming.scamColor, string: item.presentationData.strings.Message_ScamAccount.uppercased())
                     } else if peer.isFake {
                         currentCredibilityIconContent = .text(color: item.presentationData.theme.chat.message.incoming.scamColor, string: item.presentationData.strings.Message_FakeAccount.uppercased())
-                    } else if let emojiStatus = peer.emojiStatus, !item.presentationData.ggRowStyle.hidesEmojiStatus { // GHOST: hide emoji statuses (GGChatListRowStyle)
+                    } else if let emojiStatus = peer.emojiStatus, !item.presentationData.wgRowStyle.hidesEmojiStatus { // WRAITH: hide emoji statuses (WGChatListRowStyle)
                         currentStatusIconContent = .animation(content: .customEmoji(fileId: emojiStatus.fileId), size: CGSize(width: 32.0, height: 32.0), placeholderColor: item.presentationData.theme.list.mediaPlaceholderColor, themeColor: item.presentationData.theme.list.itemAccentColor, loopMode: .count(2))
                         if let color = emojiStatus.color {
                             currentStatusIconParticleColor = UIColor(rgb: UInt32(bitPattern: color))
@@ -3733,7 +3733,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
             var isFirstForumThreadSelectable = false
             var forumThreads: [(id: Int64, threadPeer: EnginePeer?, title: NSAttributedString, iconId: Int64?, iconColor: Int32?)] = []
             var authorTopicArrowColor: UIColor?
-            var ggSenderStartsText = false // GHOST: a forum carries «Author: » at the start of the text line (sender avatars)
+            var wgSenderStartsText = false // WRAITH: a forum carries «Author: » at the start of the text line (sender avatars)
             if case .savedMessagesChats = item.chatListLocation {
             } else if case let .peer(peer) = item.content, case let .channel(channel) = peer.peer.peer, channel.flags.contains(.isMonoforum) {
                 if forumThread != nil || !topForumTopicItems.isEmpty {
@@ -3781,7 +3781,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                     mutableTextAttributedString.append(textAttributedStringValue)
                     
                     textAttributedString = mutableTextAttributedString
-                    ggSenderStartsText = !authorIsCurrentChat // GHOST: see the variable
+                    wgSenderStartsText = !authorIsCurrentChat // WRAITH: see the variable
                 }
                 
                 effectiveAuthorTitle = nil
@@ -3799,11 +3799,11 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                 }
             }
 
-            // GHOST: room for the sender's avatar before the author line (GGChatListRowStyle.senderAvatarSize)
-            let ggSenderInset: CGFloat = (effectiveAuthorTitle != nil && item.presentationData.ggRowStyle.senderAvatarSize > 0.0) ? item.presentationData.ggRowStyle.senderAvatarSize + 4.0 : 0.0
-            // GHOST: in a forum the avatar goes before «Author: text» (the author line shows the topics)
-            let ggSenderTextInset: CGFloat = (ggSenderStartsText && item.presentationData.ggRowStyle.senderAvatarSize > 0.0) ? item.presentationData.ggRowStyle.senderAvatarSize + 4.0 : 0.0
-            let (authorLayout, authorApply) = authorLayout(item.context, rawContentWidth - badgeSize - ggSenderInset, item.presentationData.theme, effectiveAuthorTitle, forumThreads, authorTopicArrowColor)
+            // WRAITH: room for the sender's avatar before the author line (WGChatListRowStyle.senderAvatarSize)
+            let wgSenderInset: CGFloat = (effectiveAuthorTitle != nil && item.presentationData.wgRowStyle.senderAvatarSize > 0.0) ? item.presentationData.wgRowStyle.senderAvatarSize + 4.0 : 0.0
+            // WRAITH: in a forum the avatar goes before «Author: text» (the author line shows the topics)
+            let wgSenderTextInset: CGFloat = (wgSenderStartsText && item.presentationData.wgRowStyle.senderAvatarSize > 0.0) ? item.presentationData.wgRowStyle.senderAvatarSize + 4.0 : 0.0
+            let (authorLayout, authorApply) = authorLayout(item.context, rawContentWidth - badgeSize - wgSenderInset, item.presentationData.theme, effectiveAuthorTitle, forumThreads, authorTopicArrowColor)
             
             var textBottomRightCutout: CGFloat = 0.0
             
@@ -3818,7 +3818,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                 textBottomRightCutout += layout.size.width + 4.0 + trailingTextBadgeInsets.left + trailingTextBadgeInsets.right
             }
             
-            textLeftCutout += ggSenderTextInset // GHOST: the forum sender's avatar (see ggSenderTextInset)
+            textLeftCutout += wgSenderTextInset // WRAITH: the forum sender's avatar (see wgSenderTextInset)
             var textCutout: TextNodeCutout?
             if !textLeftCutout.isZero || !textBottomRightCutout.isZero {
                 textCutout = TextNodeCutout(topLeft: textLeftCutout.isZero ? nil : CGSize(width: textLeftCutout, height: 10.0), topRight: nil, bottomRight: textBottomRightCutout.isZero ? nil : CGSize(width: textBottomRightCutout, height: 10.0))
@@ -3832,13 +3832,13 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                 textMaxWidth -= 18.0
             }
             
-            // GHOST: features may replace the preview text, e.g. a locked chat (GGChatListHooks.previewText)
-            if let ggPreviewText = ggChatListPreviewText(item: item) { textAttributedString = ggPreviewText }
+            // WRAITH: features may replace the preview text, e.g. a locked chat (WGChatListHooks.previewText)
+            if let wgPreviewText = wgChatListPreviewText(item: item) { textAttributedString = wgPreviewText }
             let textLineSpacing: CGFloat = min(0.2, item.presentationData.fontSize.itemListBaseFontSize * 0.2 / 17.0)
             let (textLayout, textApply) = textLayout(TextNodeLayoutArguments(
                 attributedString: textAttributedString,
                 backgroundColor: nil,
-                maximumNumberOfLines: item.presentationData.ggRowStyle.previewLineLimit(upstream: (authorAttributedString == nil && itemTags.isEmpty && forumThread == nil && topForumTopicItems.isEmpty) ? 2 : 1), // GHOST: preview lines (GGChatListRowStyle)
+                maximumNumberOfLines: item.presentationData.wgRowStyle.previewLineLimit(upstream: (authorAttributedString == nil && itemTags.isEmpty && forumThread == nil && topForumTopicItems.isEmpty) ? 2 : 1), // WRAITH: preview lines (WGChatListRowStyle)
                 truncationType: .end,
                 constrainedSize: CGSize(width: textMaxWidth, height: .greatestFiniteMagnitude),
                 alignment: .natural,
@@ -3995,11 +3995,11 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                                         ItemListRevealOption(key: RevealOptionKey.ungroup.rawValue, title: item.presentationData.strings.ChatList_Context_Ungroup, icon: ungroupCommunityIcon, color: item.presentationData.theme.list.itemDisclosureActions.destructive.fillColor, iconColor: item.presentationData.theme.list.itemDisclosureActions.destructive.foregroundColor, textColor: item.presentationData.theme.chatList.dateTextColor, isDestructive: true)
                                     ]
                                 } else {
-                                    // GHOST: features may change the swipe actions (GGChatListHooks.revealOptions)
-                                    peerRevealOptions = ggChatListRevealOptions(revealOptions(strings: item.presentationData.strings, theme: item.presentationData.theme, isPinned: isPinned, isMuted: !isAccountPeer ? isMuted : nil, location: item.chatListLocation, peerId: renderedPeer.peerId, accountPeerId: item.context.account.peerId, canDelete: true, isEditing: item.editing, filterData: item.filterData), item: item)
+                                    // WRAITH: features may change the swipe actions (WGChatListHooks.revealOptions)
+                                    peerRevealOptions = wgChatListRevealOptions(revealOptions(strings: item.presentationData.strings, theme: item.presentationData.theme, isPinned: isPinned, isMuted: !isAccountPeer ? isMuted : nil, location: item.chatListLocation, peerId: renderedPeer.peerId, accountPeerId: item.context.account.peerId, canDelete: true, isEditing: item.editing, filterData: item.filterData), item: item)
                                 }
                                 if case let .chat(itemPeer) = contentPeer {
-                                    peerLeftRevealOptions = ggChatListRevealOptions(leftRevealOptions(strings: item.presentationData.strings, theme: item.presentationData.theme, isUnread: unreadCount.unread, isEditing: item.editing, isPinned: isPinned, isSavedMessages: itemPeer.peerId == item.context.account.peerId, location: item.chatListLocation, peer: itemPeer.peers[itemPeer.peerId]!, filterData: item.filterData), item: item) // GHOST: features may change the left swipe actions too (GGChatListHooks.revealOptions)
+                                    peerLeftRevealOptions = wgChatListRevealOptions(leftRevealOptions(strings: item.presentationData.strings, theme: item.presentationData.theme, isUnread: unreadCount.unread, isEditing: item.editing, isPinned: isPinned, isSavedMessages: itemPeer.peerId == item.context.account.peerId, location: item.chatListLocation, peer: itemPeer.peers[itemPeer.peerId]!, filterData: item.filterData), item: item) // WRAITH: features may change the left swipe actions too (WGChatListHooks.revealOptions)
                                 } else {
                                     peerLeftRevealOptions = []
                                 }
@@ -4069,7 +4069,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                 itemHeight += titleSpacing
                 itemHeight += authorSpacing
             }
-            if item.presentationData.ggRowStyle != .upstream { itemHeight = floor(itemHeight * item.presentationData.ggRowStyle.heightScale) + item.presentationData.ggRowStyle.previewLinesHeightDelta(lineHeight: measureLayout.size.height) } // GHOST: row height (GGChatListRowStyle)
+            if item.presentationData.wgRowStyle != .upstream { itemHeight = floor(itemHeight * item.presentationData.wgRowStyle.heightScale) + item.presentationData.wgRowStyle.previewLinesHeightDelta(lineHeight: measureLayout.size.height) } // WRAITH: row height (WGChatListRowStyle)
                         
             let rawContentRect = CGRect(origin: CGPoint(x: 2.0, y: layoutOffset + floor(item.presentationData.fontSize.itemListBaseFontSize * 8.0 / 17.0)), size: CGSize(width: rawContentWidth, height: itemHeight - 12.0 - 9.0))
             
@@ -4229,11 +4229,11 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                     var avatarScaleOffset: CGFloat = 0.0
                     var avatarScale: CGFloat = 1.0
                     if let inlineNavigationLocation = item.interaction.inlineNavigationLocation {
-                        var targetAvatarDiameter: CGFloat = floor(item.presentationData.fontSize.itemListBaseFontSize * 54.0 / 17.0) // GHOST: var — see below
-                        if item.presentationData.ggRowStyle != .upstream { // GHOST: the column of a forum keeps Telegram's 54/60 of the list avatar and fits the row; the fixed 54 pt grew the avatars of a compact list and stacked them on each other (GGChatListRowStyle)
-                            targetAvatarDiameter = max(16.0, min(targetAvatarDiameter, floor(avatarFrame.width * 54.0 / 60.0), itemHeight - 8.0)) // GHOST: see above
-                        } // GHOST: see above
-                        let targetAvatarScale: CGFloat = targetAvatarDiameter / avatarFrame.width // GHOST: targetAvatarDiameter — see above
+                        var targetAvatarDiameter: CGFloat = floor(item.presentationData.fontSize.itemListBaseFontSize * 54.0 / 17.0) // WRAITH: var — see below
+                        if item.presentationData.wgRowStyle != .upstream { // WRAITH: the column of a forum keeps Telegram's 54/60 of the list avatar and fits the row; the fixed 54 pt grew the avatars of a compact list and stacked them on each other (WGChatListRowStyle)
+                            targetAvatarDiameter = max(16.0, min(targetAvatarDiameter, floor(avatarFrame.width * 54.0 / 60.0), itemHeight - 8.0)) // WRAITH: see above
+                        } // WRAITH: see above
+                        let targetAvatarScale: CGFloat = targetAvatarDiameter / avatarFrame.width // WRAITH: targetAvatarDiameter — see above
                         avatarScale = targetAvatarScale * inlineNavigationLocation.progress + 1.0 * (1.0 - inlineNavigationLocation.progress)
                         
                         let targetAvatarScaleOffset: CGFloat = -(avatarFrame.width - avatarFrame.width * avatarScale) * 0.5
@@ -4642,16 +4642,16 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                     let _ = strongSelf.statusNode.transitionToState(statusState, animated: animateContent)
                     
                     let rightAccessoryVerticalOffset: CGFloat = floorToScreenPixels(-4.0 * min(1.0, item.presentationData.fontSize.itemListBaseFontSize / 17.0))
-                    // GHOST: a shortened row (compact list, fewer preview lines) raises contentRect.maxY to the title line, and the badges pinned to it climbed onto the date. They go no higher than centered on the first line under the title (GGChatListRowStyle)
-                    let ggAccessoryMinCenterY: CGFloat? = item.presentationData.ggRowStyle != .upstream ? contentRect.minY + titleLayout.size.height - 2.0 + floor(measureLayout.size.height / 2.0) : nil // GHOST: see above
-                    let ggAccessoryY: (CGFloat) -> CGFloat = { height in // GHOST: see above
-                        let upstreamY = contentRect.maxY - height + rightAccessoryVerticalOffset // GHOST: see above
-                        guard let ggAccessoryMinCenterY else { return upstreamY } // GHOST: see above
-                        return max(upstreamY, floorToScreenPixels(ggAccessoryMinCenterY - height / 2.0)) // GHOST: see above
-                    } // GHOST: see above
+                    // WRAITH: a shortened row (compact list, fewer preview lines) raises contentRect.maxY to the title line, and the badges pinned to it climbed onto the date. They go no higher than centered on the first line under the title (WGChatListRowStyle)
+                    let wgAccessoryMinCenterY: CGFloat? = item.presentationData.wgRowStyle != .upstream ? contentRect.minY + titleLayout.size.height - 2.0 + floor(measureLayout.size.height / 2.0) : nil // WRAITH: see above
+                    let wgAccessoryY: (CGFloat) -> CGFloat = { height in // WRAITH: see above
+                        let upstreamY = contentRect.maxY - height + rightAccessoryVerticalOffset // WRAITH: see above
+                        guard let wgAccessoryMinCenterY else { return upstreamY } // WRAITH: see above
+                        return max(upstreamY, floorToScreenPixels(wgAccessoryMinCenterY - height / 2.0)) // WRAITH: see above
+                    } // WRAITH: see above
                     var nextBadgeX: CGFloat = contentRect.maxX
                     if let _ = currentBadgeBackgroundImage {
-                        let badgeFrame = CGRect(x: nextBadgeX - badgeLayout.width, y: ggAccessoryY(badgeLayout.height), width: badgeLayout.width, height: badgeLayout.height) // GHOST: y — see ggAccessoryMinCenterY
+                        let badgeFrame = CGRect(x: nextBadgeX - badgeLayout.width, y: wgAccessoryY(badgeLayout.height), width: badgeLayout.width, height: badgeLayout.height) // WRAITH: y — see wgAccessoryMinCenterY
                         
                         transition.updateFrame(node: strongSelf.badgeNode, frame: badgeFrame)
                         nextBadgeX -= badgeLayout.width + 6.0
@@ -4663,7 +4663,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                     }
                     
                     if currentMentionBadgeImage != nil || currentBadgeBackgroundImage != nil {
-                        let badgeFrame = CGRect(x: nextBadgeX - mentionBadgeLayout.width, y: ggAccessoryY(mentionBadgeLayout.height), width: mentionBadgeLayout.width, height: mentionBadgeLayout.height) // GHOST: y — see ggAccessoryMinCenterY
+                        let badgeFrame = CGRect(x: nextBadgeX - mentionBadgeLayout.width, y: wgAccessoryY(mentionBadgeLayout.height), width: mentionBadgeLayout.width, height: mentionBadgeLayout.height) // WRAITH: y — see wgAccessoryMinCenterY
                         
                         transition.updateFrame(node: strongSelf.mentionBadgeNode, frame: badgeFrame)
                         nextBadgeX -= mentionBadgeLayout.width + 6.0
@@ -4679,7 +4679,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                         strongSelf.pinnedIconNode.isHidden = false
                         
                         let pinnedIconSize = currentPinnedIconImage.size
-                        let pinnedIconFrame = CGRect(x: nextBadgeX - pinnedIconSize.width, y: ggAccessoryY(pinnedIconSize.height), width: pinnedIconSize.width, height: pinnedIconSize.height) // GHOST: y — see ggAccessoryMinCenterY
+                        let pinnedIconFrame = CGRect(x: nextBadgeX - pinnedIconSize.width, y: wgAccessoryY(pinnedIconSize.height), width: pinnedIconSize.width, height: pinnedIconSize.height) // WRAITH: y — see wgAccessoryMinCenterY
                         
                         strongSelf.pinnedIconNode.frame = pinnedIconFrame
                         nextBadgeX -= pinnedIconSize.width + 6.0
@@ -4794,7 +4794,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                     let titleFrame = CGRect(origin: CGPoint(x: contentRect.origin.x + titleOffset, y: contentRect.origin.y + UIScreenPixel), size: titleLayout.size)
                     strongSelf.titleNode.frame = titleFrame
                     
-                    let authorNodeFrame = CGRect(origin: CGPoint(x: contentRect.origin.x - 1.0 + ggSenderInset, y: contentRect.minY + titleLayout.size.height - 2.0), size: authorLayout) // GHOST: see ggSenderInset
+                    let authorNodeFrame = CGRect(origin: CGPoint(x: contentRect.origin.x - 1.0 + wgSenderInset, y: contentRect.minY + titleLayout.size.height - 2.0), size: authorLayout) // WRAITH: see wgSenderInset
                     strongSelf.authorNode.frame = authorNodeFrame
                     let textNodeFrame = CGRect(origin: CGPoint(x: contentRect.origin.x - 1.0, y: contentRect.minY + titleLayout.size.height - 2.0 + (authorLayout.height.isZero ? 0.0 : (authorLayout.height - 3.0))), size: textLayout.size)
                     
@@ -5105,7 +5105,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                     inputActivitiesApply?()
                     
                     var mediaPreviewOffset = textNodeFrame.origin.offsetBy(dx: 1.0, dy: 1.0 + floor((measureLayout.size.height - contentImageSize.height) / 2.0))
-                    mediaPreviewOffset.x += ggSenderTextInset // GHOST: after the forum sender's avatar
+                    mediaPreviewOffset.x += wgSenderTextInset // WRAITH: after the forum sender's avatar
                     
                     let messageTypeIconImage = currentMessageTypeIcon
                     let messageTypeIconOffset = CGPoint(x: mediaPreviewOffset.x + currentMessageTypeIconOffset.x, y: mediaPreviewOffset.y + currentMessageTypeIconOffset.y)
@@ -5544,13 +5544,13 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                         strongSelf.placeholderNode = nil
                         shimmerNode.removeFromSupernode()
                     }
-                    // GHOST: feature decorations of the row — badge, avatar shape (GGChatListHooks.rowDidLayout)
-                    ggChatListRowDidLayout(strongSelf, item: item, avatarFrame: avatarFrame)
-                    // GHOST: sender avatars (GGChatListStyleHooks.decorateRow) — in the content container, so they
+                    // WRAITH: feature decorations of the row — badge, avatar shape (WGChatListHooks.rowDidLayout)
+                    wgChatListRowDidLayout(strongSelf, item: item, avatarFrame: avatarFrame)
+                    // WRAITH: sender avatars (WGChatListStyleHooks.decorateRow) — in the content container, so they
                     // move, clip and fade with the text (the forum sidebar collapses it); a forum's avatar sits at
                     // the start of the text line
-                    let ggSenderAnchorFrame: CGRect? = ggSenderInset > 0.0 ? strongSelf.authorNode.frame : (ggSenderTextInset > 0.0 ? CGRect(x: textNodeFrame.minX + 1.0 + ggSenderTextInset, y: textNodeFrame.minY + 1.0, width: 0.0, height: measureLayout.size.height) : nil)
-                    ggChatListDecorateRow(GGChatListRowDecoration(context: item.context, node: strongSelf.mainContentContainerNode, style: item.presentationData.ggRowStyle, author: ggSenderAnchorFrame != nil ? messages.last?.author : nil, authorFrame: ggSenderAnchorFrame, theme: item.presentationData.theme))
+                    let wgSenderAnchorFrame: CGRect? = wgSenderInset > 0.0 ? strongSelf.authorNode.frame : (wgSenderTextInset > 0.0 ? CGRect(x: textNodeFrame.minX + 1.0 + wgSenderTextInset, y: textNodeFrame.minY + 1.0, width: 0.0, height: measureLayout.size.height) : nil)
+                    wgChatListDecorateRow(WGChatListRowDecoration(context: item.context, node: strongSelf.mainContentContainerNode, style: item.presentationData.wgRowStyle, author: wgSenderAnchorFrame != nil ? messages.last?.author : nil, authorFrame: wgSenderAnchorFrame, theme: item.presentationData.theme))
                 }
             })
         }
@@ -5989,11 +5989,11 @@ private class StarView: UIView {
     }
 }
 
-// GHOST: «Галочки» › «В списке чатов» (appearance.checkmarks.inChatList): the read and the delivered
+// WRAITH: «Галочки» › «В списке чатов» (appearance.checkmarks.inChatList): the read and the delivered
 // checkmark of a row in their own colors; an automatic color is the theme's. The theme has one color
 // for both, so the colors are not put into it. Layout path: one snapshot read.
-private func ggChatListCheckmarkColor(read: Bool, theme: PresentationTheme) -> UIColor {
-    let snapshot = GGAppearanceSnapshot.current
+private func wgChatListCheckmarkColor(read: Bool, theme: PresentationTheme) -> UIColor {
+    let snapshot = WGAppearanceSnapshot.current
     if snapshot.checkColorsInChatList, let rgb = read ? snapshot.readCheckRGB : snapshot.unreadCheckRGB {
         return UIColor(rgb: rgb)
     }

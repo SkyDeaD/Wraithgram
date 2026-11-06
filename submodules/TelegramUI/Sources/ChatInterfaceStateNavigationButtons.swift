@@ -6,7 +6,7 @@ import TelegramPresentationData
 import AccountContext
 import ChatPresentationInterfaceState
 import ChatNavigationButton
-import GGAppearanceSettings // GHOST: chat top bar options
+import WGAppearanceSettings // WRAITH: chat top bar options
 
 func leftNavigationButtonForChatInterfaceState(_ presentationInterfaceState: ChatPresentationInterfaceState, subject: ChatControllerSubject?, strings: PresentationStrings, currentButton: ChatNavigationButton?, target: Any?, selector: Selector?) -> ChatNavigationButton? {
     if let _ = presentationInterfaceState.interfaceState.selectionState {
@@ -74,9 +74,9 @@ func leftNavigationButtonForChatInterfaceState(_ presentationInterfaceState: Cha
         }
     }
     
-    // GHOST: no back button in chats (appearance.chatTopBar.hideBackButton): an empty spacer takes its
+    // WRAITH: no back button in chats (appearance.chatTopBar.hideBackButton): an empty spacer takes its
     // place (an empty title has no width, so no glass pill is drawn); the edge swipe still goes back
-    if GGAppearanceSnapshot.current.hideBackButton, case .standard(.default) = presentationInterfaceState.mode {
+    if WGAppearanceSnapshot.current.hideBackButton, case .standard(.default) = presentationInterfaceState.mode {
         if let currentButton, currentButton.action == .spacer {
             return currentButton
         }
@@ -248,11 +248,11 @@ func rightNavigationButtonForChatInterfaceState(context: AccountContext, present
     }
     
     if case .scheduledMessages = presentationInterfaceState.subject {
-        return ggChatInfoButton(chatInfoNavigationButton) // GHOST: chat top bar: hide the avatar (W2-4)
+        return wgChatInfoButton(chatInfoNavigationButton) // WRAITH: chat top bar: hide the avatar (W2-4)
     }
     
     if case .standard(.previewing) = presentationInterfaceState.mode {
-        return ggChatInfoButton(chatInfoNavigationButton) // GHOST: chat top bar: hide the avatar (W2-4)
+        return wgChatInfoButton(chatInfoNavigationButton) // WRAITH: chat top bar: hide the avatar (W2-4)
     } else if let peerId = presentationInterfaceState.chatLocation.peerId {
         if presentationInterfaceState.accountPeerId == peerId {
             var displaySearchButton = false
@@ -262,7 +262,7 @@ func rightNavigationButtonForChatInterfaceState(context: AccountContext, present
             }
             
             if case .scheduledMessages = presentationInterfaceState.subject {
-                return ggChatInfoButton(chatInfoNavigationButton) // GHOST: chat top bar: hide the avatar (W2-4)
+                return wgChatInfoButton(chatInfoNavigationButton) // WRAITH: chat top bar: hide the avatar (W2-4)
             } else {
                 displaySearchButton = true
             }
@@ -281,7 +281,7 @@ func rightNavigationButtonForChatInterfaceState(context: AccountContext, present
         }
     }
 
-    return ggChatInfoButton(chatInfoNavigationButton) // GHOST: chat top bar: hide the avatar (W2-4)
+    return wgChatInfoButton(chatInfoNavigationButton) // WRAITH: chat top bar: hide the avatar (W2-4)
 }
 
 func secondaryRightNavigationButtonForChatInterfaceState(context: AccountContext, presentationInterfaceState: ChatPresentationInterfaceState, strings: PresentationStrings, currentButton: ChatNavigationButton?, target: Any?, selector: Selector?, chatInfoNavigationButton: ChatNavigationButton?, moreInfoNavigationButton: ChatNavigationButton?) -> ChatNavigationButton? {
@@ -297,7 +297,7 @@ func secondaryRightNavigationButtonForChatInterfaceState(context: AccountContext
     return nil
 }
 
-// GHOST: no peer avatar in the chat header (appearance.chatTopBar.hideAvatar)
-private func ggChatInfoButton(_ button: ChatNavigationButton?) -> ChatNavigationButton? {
-    return GGAppearanceSnapshot.current.hideAvatar ? nil : button
+// WRAITH: no peer avatar in the chat header (appearance.chatTopBar.hideAvatar)
+private func wgChatInfoButton(_ button: ChatNavigationButton?) -> ChatNavigationButton? {
+    return WGAppearanceSnapshot.current.hideAvatar ? nil : button
 }

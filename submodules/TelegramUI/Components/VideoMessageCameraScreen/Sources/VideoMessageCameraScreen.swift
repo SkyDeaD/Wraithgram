@@ -33,9 +33,9 @@ import ChatSendMessageActionUI
 import ChatControllerInteraction
 import LottieComponent
 import GlassBackgroundComponent
-// GHOST: Ghostgram round video settings and masks (video part; GGRoundCameraSupport.swift)
-import GGCore
-import GGCameraPipeline
+// WRAITH: Wraithgram round video settings and masks (video part; WGRoundCameraSupport.swift)
+import WGCore
+import WGCameraPipeline
 
 private func storeUneditedVideoMessage(
     path: String,
@@ -330,7 +330,7 @@ private final class VideoMessageCameraScreenComponent: CombinedComponent {
             }
             self.lastFlipTimestamp = currentTimestamp
             
-            controller.node.ggSupport.cameraWillFlip() // GHOST: the flip animation starts on the tap
+            controller.node.wgSupport.cameraWillFlip() // WRAITH: the flip animation starts on the tap
             
             let isFrontCamera = controller.cameraState.position == .back
             camera.togglePosition()
@@ -466,8 +466,8 @@ private final class VideoMessageCameraScreenComponent: CombinedComponent {
                         }
                     }, error: { [weak self] error in
                         if let self, let controller = self.getController() {
-                            // GHOST: the Metal camera could not record: the screen goes on with the legacy camera
-                            if controller.node.ggFallBackToLegacyCamera(error: error) {
+                            // WRAITH: the Metal camera could not record: the screen goes on with the legacy camera
+                            if controller.node.wgFallBackToLegacyCamera(error: error) {
                                 return
                             }
                             controller.completion(nil, nil, nil, nil)
@@ -891,7 +891,7 @@ public class VideoMessageCameraScreen: ViewController {
     fileprivate final class Node: ViewControllerTracingNode, ASGestureRecognizerDelegate {
         private weak var controller: VideoMessageCameraScreen?
         private let context: AccountContext
-        private var cameraImpl: CameraImpl // GHOST: `var` — the legacy camera replaces the Metal one that failed (ggFallBackToLegacyCamera)
+        private var cameraImpl: CameraImpl // WRAITH: `var` — the legacy camera replaces the Metal one that failed (wgFallBackToLegacyCamera)
         fileprivate var camera: CameraProtocol?
         private var pinchStartTimestamp: Double?
         private let updateState: ActionSlot<CameraState>
@@ -916,8 +916,8 @@ public class VideoMessageCameraScreen: ViewController {
         private var resultPreviewView: ResultPreviewView?
         
         private var cameraStateDisposable: Disposable?
-        // GHOST: Ghostgram round video settings and masks of this screen
-        fileprivate let ggSupport: GGRoundCameraSupport
+        // WRAITH: Wraithgram round video settings and masks of this screen
+        fileprivate let wgSupport: WGRoundCameraSupport
                 
         private let idleTimerExtensionDisposable = MetaDisposable()
         
@@ -970,7 +970,7 @@ public class VideoMessageCameraScreen: ViewController {
             self.context = controller.context
             
             let experimentalSettings = self.context.sharedContext.immediateExperimentalUISettings
-            let useModernVideoMessagePipeline = GGRoundCameraSupport.usesModernCamera(upstream: experimentalSettings.useModernVideoMessagePipeline ?? (self.context.getAppConfigValue("ios_killswitch_disable_neo_round_camera_v2") == nil)) // GHOST: not after the Metal camera failed in this run
+            let useModernVideoMessagePipeline = WGRoundCameraSupport.usesModernCamera(upstream: experimentalSettings.useModernVideoMessagePipeline ?? (self.context.getAppConfigValue("ios_killswitch_disable_neo_round_camera_v2") == nil)) // WRAITH: not after the Metal camera failed in this run
             let mode: NeoCameraImpl.RoundVideoMode?
             switch useModernVideoMessagePipeline ? experimentalSettings.videoMessageCameraMode : .legacy {
             case .legacy:
@@ -1005,13 +1005,13 @@ public class VideoMessageCameraScreen: ViewController {
             self.previewContainerContentView.clipsToBounds = true
             self.previewContainerView.addSubview(self.previewContainerContentView)
             
-            // GHOST: rear camera at start (SG-F4), 60 fps and zoom below 1× without the dual camera, masks
-            let ggSupport = GGRoundCameraSupport(context: controller.context, usesModernCamera: mode != nil, present: { [weak controller] c in
+            // WRAITH: rear camera at start (SG-F4), 60 fps and zoom below 1× without the dual camera, masks
+            let wgSupport = WGRoundCameraSupport(context: controller.context, usesModernCamera: mode != nil, present: { [weak controller] c in
                 controller?.view.window?.rootViewController?.present(c, animated: true)
             })
-            self.ggSupport = ggSupport
-            let isDualCameraEnabled = cameraImpl.isDualCameraSupported(forRoundVideo: true) && !ggSupport.disablesDualCamera
-            let isFrontPosition = GGRoundCameraSupport.startsWithFrontCamera
+            self.wgSupport = wgSupport
+            let isDualCameraEnabled = cameraImpl.isDualCameraSupported(forRoundVideo: true) && !wgSupport.disablesDualCamera
+            let isFrontPosition = WGRoundCameraSupport.startsWithFrontCamera
             
             self.mainPreviewView = cameraImpl.makeCameraSimplePreviewView(frame: .zero, main: true, roundVideo: true)
             self.additionalPreviewView = cameraImpl.makeCameraSimplePreviewView(frame: .zero, main: false, roundVideo: true)
@@ -1039,7 +1039,7 @@ public class VideoMessageCameraScreen: ViewController {
                 recording: .none,
                 duration: 0.0,
                 isDualCameraEnabled: isDualCameraEnabled,
-                isViewOnceEnabled: GGRoundCameraSupport.isViewOnceEnabledInitially(available: controller.viewOnceAvailable) // GHOST: «view once» by default
+                isViewOnceEnabled: WGRoundCameraSupport.isViewOnceEnabledInitially(available: controller.viewOnceAvailable) // WRAITH: «view once» by default
             )
             
             self.previewState = nil
@@ -1059,15 +1059,15 @@ public class VideoMessageCameraScreen: ViewController {
             self.previewContainerContentView.addSubview(self.progressView)
             self.previewContainerContentView.addSubview(self.previewBlurView)
             self.previewContainerContentView.addSubview(self.loadingView)
-            // GHOST: masks preview inside the circle and the masks panel
-            self.ggSupport.attach(containerView: self.containerView, previewContentView: self.previewContainerContentView, below: self.progressView)
+            // WRAITH: masks preview inside the circle and the masks panel
+            self.wgSupport.attach(containerView: self.containerView, previewContentView: self.previewContainerContentView, below: self.progressView)
             
             self.completion.connect { [weak self] result in
                 if let self {
-                    // GHOST: audio post-processing of the clip before it is added (normalisation, no sound, voice changer)
+                    // WRAITH: audio post-processing of the clip before it is added (normalisation, no sound, voice changer)
                     if case let .video(video) = result {
-                        self.ggSupport.processClip(path: video.videoPath, completion: { [weak self] path, isLate in // GHOST: nil = refused, isLate = back after the next recording started
-                            self?.ggAddProcessedClip(path.flatMap { .video(VideoMessageCameraScreen.CaptureResult.Video(videoPath: $0, dimensions: video.dimensions, duration: video.duration, thumbnail: video.thumbnail)) }, isLate: isLate)
+                        self.wgSupport.processClip(path: video.videoPath, completion: { [weak self] path, isLate in // WRAITH: nil = refused, isLate = back after the next recording started
+                            self?.wgAddProcessedClip(path.flatMap { .video(VideoMessageCameraScreen.CaptureResult.Video(videoPath: $0, dimensions: video.dimensions, duration: video.duration, thumbnail: video.thumbnail)) }, isLate: isLate)
                         })
                         return
                     }
@@ -1095,7 +1095,7 @@ public class VideoMessageCameraScreen: ViewController {
             self.cameraStateDisposable?.dispose()
             self.idleTimerExtensionDisposable.dispose()
             self.backgroundView.removeFromSuperview()
-            self.ggSupport.invalidate() // GHOST: stop the masks
+            self.wgSupport.invalidate() // WRAITH: stop the masks
         }
         
         func withReadyCamera(isFirstTime: Bool = false, _ f: @escaping () -> Void) {
@@ -1118,8 +1118,8 @@ public class VideoMessageCameraScreen: ViewController {
             guard let controller = self.controller, controller.allowLiveUpload, self.liveUploadInterface == nil else {
                 return
             }
-            // GHOST: the raw voice must not be uploaded when the audio is going to be processed
-            guard self.ggSupport.allowsLiveUpload else {
+            // WRAITH: the raw voice must not be uploaded when the audio is going to be processed
+            guard self.wgSupport.allowsLiveUpload else {
                 return
             }
             let liveUploadInterface = LegacyLiveUploadInterface(context: self.context)
@@ -1153,7 +1153,7 @@ public class VideoMessageCameraScreen: ViewController {
                     photo: false,
                     metadata: false,
                     isRoundVideo: true,
-                    frameProcessor: self.ggSupport.frameProcessor // GHOST: masks
+                    frameProcessor: self.wgSupport.frameProcessor // WRAITH: masks
                 ),
                 previewView: self.mainPreviewView,
                 secondaryPreviewView: self.additionalPreviewView
@@ -1167,7 +1167,7 @@ public class VideoMessageCameraScreen: ViewController {
                 guard let self else {
                     return
                 }
-                let positionChanged = self.cameraState.position != position // GHOST: no snapshot for the first report or a flash change
+                let positionChanged = self.cameraState.position != position // WRAITH: no snapshot for the first report or a flash change
                 self.cameraState = self.cameraState.updatedPosition(position).updatedFlashMode(flashMode)
 
                 if !self.cameraState.isDualCameraEnabled && positionChanged {
@@ -1181,24 +1181,24 @@ public class VideoMessageCameraScreen: ViewController {
             camera.startCapture()
             
             self.camera = camera
-            self.ggSupport.cameraDidStart(camera) // GHOST: start zoom
+            self.wgSupport.cameraDidStart(camera) // WRAITH: start zoom
             
             Queue.mainQueue().justDispatch {
-                // GHOST: 3-2-1 countdown before the recording starts
-                if self.ggSupport.startRecordingAfterCountdown({ [startRecording = self.startRecording] in startRecording.invoke(Void()) }) {
+                // WRAITH: 3-2-1 countdown before the recording starts
+                if self.wgSupport.startRecordingAfterCountdown({ [startRecording = self.startRecording] in startRecording.invoke(Void()) }) {
                     return
                 }
                 self.startRecording.invoke(Void())
             }
         }
 
-        // GHOST: Telegram's Metal camera failed before the first clip (report of build 196: no picture,
+        // WRAITH: Telegram's Metal camera failed before the first clip (report of build 196: no picture,
         // the screen closed at once): the legacy camera takes over and the recording starts again, as
         // the old client recorded round videos; the next screens of this run start with it
-        // (GGRoundCameraSupport.usesModernCamera). false = nothing to fall back to.
-        fileprivate func ggFallBackToLegacyCamera(error: CameraRecordingError) -> Bool {
+        // (WGRoundCameraSupport.usesModernCamera). false = nothing to fall back to.
+        fileprivate func wgFallBackToLegacyCamera(error: CameraRecordingError) -> Bool {
             // Never on a screen that is closing: a late error would start the legacy camera behind the chat.
-            guard let controller = self.controller, !controller.isDismissed, !(self.cameraImpl is LegacyCameraImpl), self.results.isEmpty, self.ggSupport.pendingClipCount == 0, self.previewState == nil else {
+            guard let controller = self.controller, !controller.isDismissed, !(self.cameraImpl is LegacyCameraImpl), self.results.isEmpty, self.wgSupport.pendingClipCount == 0, self.previewState == nil else {
                 return false
             }
             Logger.shared.log("VideoMessageCamera", "Metal camera failed (\(error)), falling back to the legacy camera")
@@ -1207,11 +1207,11 @@ public class VideoMessageCameraScreen: ViewController {
             self.cameraStateDisposable = nil
             self.camera?.stopCapture(invalidate: true)
             self.camera = nil
-            self.ggSupport.cameraDidFallBackToLegacy()
+            self.wgSupport.cameraDidFallBackToLegacy()
 
             let cameraImpl: CameraImpl = LegacyCameraImpl.shared
             self.cameraImpl = cameraImpl
-            let isDualCameraEnabled = cameraImpl.isDualCameraSupported(forRoundVideo: true) && !self.ggSupport.disablesDualCamera
+            let isDualCameraEnabled = cameraImpl.isDualCameraSupported(forRoundVideo: true) && !self.wgSupport.disablesDualCamera
             let mainPreviewView = cameraImpl.makeCameraSimplePreviewView(frame: self.mainPreviewView.frame, main: true, roundVideo: true)
             let additionalPreviewView = cameraImpl.makeCameraSimplePreviewView(frame: self.additionalPreviewView.frame, main: false, roundVideo: true)
             self.previewContainerContentView.insertSubview(mainPreviewView, belowSubview: self.mainPreviewView)
@@ -1252,8 +1252,8 @@ public class VideoMessageCameraScreen: ViewController {
         }
 
         @objc private func handlePinch(_ gestureRecognizer: UIPinchGestureRecognizer) {
-            // GHOST: «remember the zoom»: the pinch keeps its zoom instead of snapping back
-            if self.ggSupport.handlePinch(gestureRecognizer) {
+            // WRAITH: «remember the zoom»: the pinch keeps its zoom instead of snapping back
+            if self.wgSupport.handlePinch(gestureRecognizer) {
                 return
             }
             switch gestureRecognizer.state {
@@ -1273,11 +1273,11 @@ public class VideoMessageCameraScreen: ViewController {
                     return
                 }
                 self.camera?.rampZoom(1.0, rate: 8.0)
-                self.ggSupport.didResetZoom() // GHOST: keep the zoom slider in sync
+                self.wgSupport.didResetZoom() // WRAITH: keep the zoom slider in sync
             case .cancelled:
                 self.pinchStartTimestamp = nil
                 self.camera?.rampZoom(1.0, rate: 8.0)
-                self.ggSupport.didResetZoom() // GHOST: keep the zoom slider in sync
+                self.wgSupport.didResetZoom() // WRAITH: keep the zoom slider in sync
             case .failed:
                 self.pinchStartTimestamp = nil
             default:
@@ -1310,8 +1310,8 @@ public class VideoMessageCameraScreen: ViewController {
 
         func animateOut(completion: @escaping () -> Void) {
             self.camera?.stopCapture(invalidate: true)
-            self.ggSupport.animateOut(duration: 0.15) // GHOST: zoom slider and masks controls fade with the screen
-            self.ggSupport.invalidate() // GHOST: stop the masks
+            self.wgSupport.animateOut(duration: 0.15) // WRAITH: zoom slider and masks controls fade with the screen
+            self.wgSupport.invalidate() // WRAITH: stop the masks
                                     
             UIView.animate(withDuration: 0.25, animations: {
                 self.backgroundView.alpha = 0.0
@@ -1326,7 +1326,7 @@ public class VideoMessageCameraScreen: ViewController {
         
         private func animatePositionChange() {
             if let snapshotView = self.mainPreviewView.snapshotView(afterScreenUpdates: false) {
-                // GHOST: one snapshot at a time, and each release removes its own. A flip within a second of
+                // WRAITH: one snapshot at a time, and each release removes its own. A flip within a second of
                 // the previous snapshot used to replace `previewSnapshotView`, the first release then faded
                 // the new one and the old one stayed over the running camera for good: a frozen (often the
                 // blurred placeholder) circle while the recording went on (owner's video, build 199).
@@ -1348,8 +1348,8 @@ public class VideoMessageCameraScreen: ViewController {
                     })
                 }
 
-                // GHOST: with the flip animation the snapshot goes once the new camera runs (the second stays the ceiling)
-                self.ggSupport.holdPositionChangeSnapshot(camera: self.camera, previewView: self.mainPreviewView, release: action)
+                // WRAITH: with the flip animation the snapshot goes once the new camera runs (the second stays the ceiling)
+                self.wgSupport.holdPositionChangeSnapshot(camera: self.camera, previewView: self.mainPreviewView, release: action)
                 
                 self.requestUpdateLayout(transition: .immediate)
             }
@@ -1366,9 +1366,9 @@ public class VideoMessageCameraScreen: ViewController {
         
         func resumeCameraCapture() {
             if !self.mainPreviewView.isEnabled {
-                let resumeSnapshotView = self.resultPreviewView?.snapshotView(afterScreenUpdates: false) // GHOST: the release below removes this snapshot only (see animatePositionChange)
+                let resumeSnapshotView = self.resultPreviewView?.snapshotView(afterScreenUpdates: false) // WRAITH: the release below removes this snapshot only (see animatePositionChange)
                 if let snapshotView = resumeSnapshotView {
-                    self.previewSnapshotView?.removeFromSuperview() // GHOST
+                    self.previewSnapshotView?.removeFromSuperview() // WRAITH
                     self.previewContainerContentView.insertSubview(snapshotView, belowSubview: self.previewBlurView)
                     self.previewSnapshotView = snapshotView
                 }
@@ -1398,7 +1398,7 @@ public class VideoMessageCameraScreen: ViewController {
                 let _ = (self.mainPreviewView.isPreviewing
                 |> filter { $0 }
                 |> take(1)
-                |> deliverOnMainQueue /* GHOST: the preview layer reports on the capture thread; the release animates views */).startStandalone(next: { _ in
+                |> deliverOnMainQueue /* WRAITH: the preview layer reports on the capture thread; the release animates views */).startStandalone(next: { _ in
                     action()
                 })
                 
@@ -1410,13 +1410,13 @@ public class VideoMessageCameraScreen: ViewController {
         fileprivate var results: [VideoMessageCameraScreen.CaptureResult] = []
         fileprivate var resultsPipe = ValuePipe<VideoMessageCameraScreen.CaptureResult>()
         
-        // GHOST: a clip back from the audio processing (GGRoundCameraSupport.processClip). nil = refused (the voice could not be hidden): nothing is sent, the camera closes with a message. A clip back while the next one is being recorded is only appended: no pause of the running camera, no preview.
-        fileprivate func ggAddProcessedClip(_ result: VideoMessageCameraScreen.CaptureResult?, isLate: Bool) {
+        // WRAITH: a clip back from the audio processing (WGRoundCameraSupport.processClip). nil = refused (the voice could not be hidden): nothing is sent, the camera closes with a message. A clip back while the next one is being recorded is only appended: no pause of the running camera, no preview.
+        fileprivate func wgAddProcessedClip(_ result: VideoMessageCameraScreen.CaptureResult?, isLate: Bool) {
             guard let controller = self.controller else {
                 return
             }
             guard let result else {
-                self.ggSupport.presentAudioFailure(on: controller)
+                self.wgSupport.presentAudioFailure(on: controller)
                 controller.completion(nil, nil, nil, nil)
                 return
             }
@@ -1807,8 +1807,8 @@ public class VideoMessageCameraScreen: ViewController {
                 let componentFrame = CGRect(origin: .zero, size: componentSize)
                 transition.setFrame(view: componentView, frame: componentFrame)
             }
-            // GHOST: masks panel, masks preview, zoom slider, countdown
-            self.ggSupport.update(layout: GGRoundVideoCameraLayout(containerSize: backgroundFrame.size, previewFrame: previewFrame, isShowingResult: self.previewState != nil || self.transitioningToPreview, isRecording: self.cameraState.recording != .none, isFrontCamera: self.cameraState.position == .front, safeInsets: layout.safeInsets), animated: !transition.animation.isImmediate)
+            // WRAITH: masks panel, masks preview, zoom slider, countdown
+            self.wgSupport.update(layout: WGRoundVideoCameraLayout(containerSize: backgroundFrame.size, previewFrame: previewFrame, isShowingResult: self.previewState != nil || self.transitioningToPreview, isRecording: self.cameraState.recording != .none, isFrontCamera: self.cameraState.position == .front, safeInsets: layout.safeInsets), animated: !transition.animation.isImmediate)
             
             if let previewState = self.previewState {
                 if previewState.composition !== self.resultPreviewView?.composition {
@@ -1919,8 +1919,8 @@ public class VideoMessageCameraScreen: ViewController {
     }
     
     private var currentResults: Signal<[VideoMessageCameraScreen.CaptureResult], NoError> {
-        // GHOST: clips in the audio post-processing are added later: wait for every one of them (GGRoundCameraSupport)
-        if let settled = self.node.ggSupport.settledResults(results: { [weak self] in self?.node.results ?? [] }, waitsForNextClip: self.waitingForNextResult) {
+        // WRAITH: clips in the audio post-processing are added later: wait for every one of them (WGRoundCameraSupport)
+        if let settled = self.node.wgSupport.settledResults(results: { [weak self] in self?.node.results ?? [] }, waitsForNextClip: self.waitingForNextResult) {
             self.waitingForNextResult = false
             return settled
         }
@@ -2068,7 +2068,7 @@ public class VideoMessageCameraScreen: ViewController {
             skipAction = true
         }
         
-        if case .none = self.cameraState.recording, self.node.results.isEmpty, self.node.ggSupport.pendingClipCount == 0 /* GHOST: a clip still in the audio processing is waited for */ {
+        if case .none = self.cameraState.recording, self.node.results.isEmpty, self.node.wgSupport.pendingClipCount == 0 /* WRAITH: a clip still in the audio processing is waited for */ {
             self.completion(nil, nil, nil, nil)
             return
         }
@@ -2104,7 +2104,7 @@ public class VideoMessageCameraScreen: ViewController {
             var videoPaths: [String] = []
             var duration: Double = 0.0
             
-            var hasAdjustments = results.count > 1 || self.node.ggSupport.hasProcessedAudio // GHOST: processed audio never reuses the raw live upload
+            var hasAdjustments = results.count > 1 || self.node.wgSupport.hasProcessedAudio // WRAITH: processed audio never reuses the raw live upload
             for result in results {
                 if case let .video(video) = result {
                     videoPaths.append(video.videoPath)
@@ -2263,7 +2263,7 @@ public class VideoMessageCameraScreen: ViewController {
                     context.engine.resources.storeCachedRepresentation(resource: EngineMediaResource(resource), representation: CachedVideoFirstFrameRepresentation(), data: data)
                 }
 
-                let media = TelegramMediaFile(fileId: EngineMedia.Id(namespace: Namespaces.Media.LocalFile, id: Int64.random(in: Int64.min ... Int64.max)), partialReference: nil, resource: resource, previewRepresentations: previewRepresentations, videoThumbnails: [], immediateThumbnailData: nil, mimeType: "video/mp4", size: nil, attributes: [.FileName(fileName: "video.mp4"), .Video(duration: finalDuration, size: outputDimensions, flags: GGRoundCameraSupport.sendsAsRegularVideo ? [] : [.instantRoundVideo] /* GHOST: «send as an ordinary video» */, preloadSize: nil, coverTime: nil, videoCodec: nil)], alternativeRepresentations: [])
+                let media = TelegramMediaFile(fileId: EngineMedia.Id(namespace: Namespaces.Media.LocalFile, id: Int64.random(in: Int64.min ... Int64.max)), partialReference: nil, resource: resource, previewRepresentations: previewRepresentations, videoThumbnails: [], immediateThumbnailData: nil, mimeType: "video/mp4", size: nil, attributes: [.FileName(fileName: "video.mp4"), .Video(duration: finalDuration, size: outputDimensions, flags: WGRoundCameraSupport.sendsAsRegularVideo ? [] : [.instantRoundVideo] /* WRAITH: «send as an ordinary video» */, preloadSize: nil, coverTime: nil, videoCodec: nil)], alternativeRepresentations: [])
                 
                 var attributes: [EngineMessage.Attribute] = []
                 if self.cameraState.isViewOnceEnabled {
@@ -2273,8 +2273,8 @@ public class VideoMessageCameraScreen: ViewController {
                     attributes.append(EffectMessageAttribute(id: messageEffect.id))
                 }
         
-                // GHOST: «save a copy to the gallery» (background, never delays sending)
-                GGRoundCameraSupport.saveCopyToGallery(paths: videoPaths, trimRange: self.node.previewState?.trimRange)
+                // WRAITH: «save a copy to the gallery» (background, never delays sending)
+                WGRoundCameraSupport.saveCopyToGallery(paths: videoPaths, trimRange: self.node.previewState?.trimRange)
                 self.completion(.message(
                     text: "",
                     attributes: attributes,
@@ -2296,8 +2296,8 @@ public class VideoMessageCameraScreen: ViewController {
         guard !self.didSend else {
             return false
         }
-        // GHOST: released during the countdown: nothing was recorded, close the camera
-        if self.node.ggSupport.cancelCountdown() {
+        // WRAITH: released during the countdown: nothing was recorded, close the camera
+        if self.node.wgSupport.cancelCountdown() {
             self.completion(nil, nil, nil, nil)
             return false
         }
@@ -2361,7 +2361,7 @@ public class VideoMessageCameraScreen: ViewController {
         }
       
         self.audioSessionDisposable = self.context.sharedContext.mediaManager.audioSession.push(audioSessionType: audioSessionType, activate: { [weak self] _ in
-            GGRoundCameraSupport.applyMicrophoneMode() // GHOST: microphone mode of round videos
+            WGRoundCameraSupport.applyMicrophoneMode() // WRAITH: microphone mode of round videos
             if let self {
                 Queue.mainQueue().after(0.05) {
                     self.node.setupCamera()
@@ -2377,7 +2377,7 @@ public class VideoMessageCameraScreen: ViewController {
         guard !self.isDismissed else {
             return
         }
-        self.node.ggSupport.cancelCountdown() // GHOST: countdown
+        self.node.wgSupport.cancelCountdown() // WRAITH: countdown
         
         self.node.dismissAllTooltips()
         

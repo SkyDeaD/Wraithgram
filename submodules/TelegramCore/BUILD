@@ -8,11 +8,11 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: GGCore bridge (W1-1) and Core extension points compiled into TelegramCore
-        "//Ghostgram/GGCore:TelegramCoreBridgeSources",
-        "//Ghostgram/GGHooks:TelegramCoreHookSources",
-        # GHOST: TelegramCore points of the Swiftgram-parity features (W5-SG)
-        "//Ghostgram/Features/Extras:TelegramCoreSources",
+        # WRAITH: WGCore bridge (W1-1) and Core extension points compiled into TelegramCore
+        "//Wraithgram/WGCore:TelegramCoreBridgeSources",
+        "//Wraithgram/WGHooks:TelegramCoreHookSources",
+        # WRAITH: TelegramCore points of the Swiftgram-parity features (W5-SG)
+        "//Wraithgram/Features/Extras:TelegramCoreSources",
     ],
     copts = [
         "-warnings-as-errors",
@@ -36,8 +36,8 @@ swift_library(
         "//submodules/TelegramCore/FlatBuffers",
         "//submodules/TelegramCore/FlatSerialization",
         "//submodules/MurMurHash32",
-        # GHOST: Ghostgram core (settings, hook points)
-        "//Ghostgram/GGCore:GGCore",
+        # WRAITH: Wraithgram core (settings, hook points)
+        "//Wraithgram/WGCore:WGCore",
     ],
     visibility = [
         "//visibility:public",

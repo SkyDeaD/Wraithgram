@@ -287,8 +287,8 @@ public final class HorizontalTabsComponent: Component {
     public let isEditing: Bool
     public let layout: Layout
     public let liftWhileSwitching: Bool
-    // GHOST: halved spacing between tabs (chat list folders, «Короткие отступы» — W2-5)
-    public let ggCompactSpacing: Bool
+    // WRAITH: halved spacing between tabs (chat list folders, «Короткие отступы» — W2-5)
+    public let wgCompactSpacing: Bool
     
     public init(
         context: AccountContext?,
@@ -298,9 +298,9 @@ public final class HorizontalTabsComponent: Component {
         isEditing: Bool,
         layout: Layout = .fill,
         liftWhileSwitching: Bool = true,
-        ggCompactSpacing: Bool = false // GHOST: see the property
+        wgCompactSpacing: Bool = false // WRAITH: see the property
     ) {
-        self.ggCompactSpacing = ggCompactSpacing // GHOST: see the property
+        self.wgCompactSpacing = wgCompactSpacing // WRAITH: see the property
         self.context = context
         self.theme = theme
         self.tabs = tabs
@@ -329,7 +329,7 @@ public final class HorizontalTabsComponent: Component {
         if lhs.liftWhileSwitching != rhs.liftWhileSwitching {
             return false
         }
-        if lhs.ggCompactSpacing != rhs.ggCompactSpacing { // GHOST: see the property
+        if lhs.wgCompactSpacing != rhs.wgCompactSpacing { // WRAITH: see the property
             return false
         }
         return true
@@ -804,7 +804,7 @@ public final class HorizontalTabsComponent: Component {
                         tab: tab,
                         isSelected: false,
                         editing: itemEditing,
-                        ggCompactSpacing: component.ggCompactSpacing // GHOST: compact folder tabs
+                        wgCompactSpacing: component.wgCompactSpacing // WRAITH: compact folder tabs
                     )),
                     environment: {},
                     containerSize: CGSize(width: 1000.0, height: sizeHeight - lensInset * 2.0)
@@ -817,7 +817,7 @@ public final class HorizontalTabsComponent: Component {
                         tab: tab,
                         isSelected: true,
                         editing: itemEditing,
-                        ggCompactSpacing: component.ggCompactSpacing // GHOST: compact folder tabs
+                        wgCompactSpacing: component.wgCompactSpacing // WRAITH: compact folder tabs
                     )),
                     environment: {},
                     containerSize: CGSize(width: 1000.0, height: sizeHeight - lensInset * 2.0)
@@ -1041,10 +1041,10 @@ private final class ItemComponent: Component {
     let tab: HorizontalTabsComponent.Tab
     let isSelected: Bool
     let editing: Editing?
-    let ggCompactSpacing: Bool // GHOST: compact folder tabs
+    let wgCompactSpacing: Bool // WRAITH: compact folder tabs
     
-    init(context: AccountContext?, theme: PresentationTheme, tab: HorizontalTabsComponent.Tab, isSelected: Bool, editing: Editing?, ggCompactSpacing: Bool = false) {
-        self.ggCompactSpacing = ggCompactSpacing // GHOST: see the property
+    init(context: AccountContext?, theme: PresentationTheme, tab: HorizontalTabsComponent.Tab, isSelected: Bool, editing: Editing?, wgCompactSpacing: Bool = false) {
+        self.wgCompactSpacing = wgCompactSpacing // WRAITH: see the property
         self.context = context
         self.theme = theme
         self.tab = tab
@@ -1065,7 +1065,7 @@ private final class ItemComponent: Component {
         if lhs.editing != rhs.editing {
             return false
         }
-        if lhs.ggCompactSpacing != rhs.ggCompactSpacing { // GHOST: compact folder tabs
+        if lhs.wgCompactSpacing != rhs.wgCompactSpacing { // WRAITH: compact folder tabs
             return false
         }
         return true
@@ -1200,7 +1200,7 @@ private final class ItemComponent: Component {
             self.containerView.isGestureEnabled = component.editing == nil
             self.tapRecognizer?.isEnabled = component.editing == nil
             
-            let sideInset: CGFloat = component.ggCompactSpacing ? 8.0 : 16.0 // GHOST: compact folder tabs
+            let sideInset: CGFloat = component.wgCompactSpacing ? 8.0 : 16.0 // WRAITH: compact folder tabs
             let badgeSpacing: CGFloat = 5.0
             
             var size = CGSize(width: sideInset, height: availableSize.height)

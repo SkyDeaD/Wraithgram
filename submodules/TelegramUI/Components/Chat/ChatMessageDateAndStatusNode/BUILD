@@ -12,11 +12,11 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: Ghostgram hook points
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/GGHooks:GGHooks",
-        # GHOST: appearance snapshot (status line, checkmarks, hidden reactions) — W2-4
-        "//Ghostgram/Features/Appearance:GGAppearanceSettings",
+        # WRAITH: Wraithgram hook points
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/WGHooks:WGHooks",
+        # WRAITH: appearance snapshot (status line, checkmarks, hidden reactions) — W2-4
+        "//Wraithgram/Features/Appearance:WGAppearanceSettings",
         "//submodules/AsyncDisplayKit",
         "//submodules/TelegramCore",
         "//submodules/Display",

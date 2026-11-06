@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="docs/assets/logo.png" width="128" height="128" alt="Ghostgram logo: a white ghost on a black background">
+  <img src="docs/assets/logo.png" width="128" height="128" alt="Wraithgram logo: a dark hooded wraith with white eyes on a light grey background">
 </p>
 
 <div align="center">
 
-# Ghostgram
+# Wraithgram
 
 </div>
 
@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/SkyDeaD/ghostgram/releases"><img src="https://img.shields.io/github/v/release/SkyDeaD/ghostgram?include_prereleases&label=release" alt="Latest release"></a>
+  <a href="https://github.com/SkyDeaD/wraithgram/releases"><img src="https://img.shields.io/github/v/release/SkyDeaD/wraithgram?include_prereleases&label=release" alt="Latest release"></a>
   <img src="https://img.shields.io/badge/iOS-15.0%2B-black?logo=apple" alt="iOS 15.0 or later">
   <img src="https://img.shields.io/badge/Telegram-13.1.2-26A5E4?logo=telegram&logoColor=white" alt="Based on Telegram iOS 13.1.2">
   <img src="https://img.shields.io/badge/Swift-F05138?logo=swift&logoColor=white" alt="Swift">
@@ -24,17 +24,17 @@
   <b>English</b> · <a href="README.ru.md">Русский</a>
 </p>
 
-Ghostgram is built on the official [Telegram iOS](https://github.com/TelegramMessenger/Telegram-iOS) source
-code (13.1.2). All of its features are in one menu: **Settings → Ghostgram**. A native macOS version is in
+Wraithgram is built on the official [Telegram iOS](https://github.com/TelegramMessenger/Telegram-iOS) source
+code (13.1.2). All of its features are in one menu: **Settings → Wraithgram**. A native macOS version is in
 development.
 
-Ghostgram is not affiliated with Telegram.
+Wraithgram is not affiliated with Telegram.
 
 ## Download
 
-Builds are published on the [Releases](https://github.com/SkyDeaD/ghostgram/releases) page:
+Builds are published on the [Releases](https://github.com/SkyDeaD/wraithgram/releases) page:
 
-- **iOS:** an `.ipa` file. Ghostgram is not in the App Store, so install it with a signing app such as ESign
+- **iOS:** an `.ipa` file. Wraithgram is not in the App Store, so install it with a signing app such as ESign
   or LCSign and your own certificate. It installs next to the official Telegram app.
 - **macOS:** a `.dmg` file, once the macOS version is released.
 
@@ -102,7 +102,7 @@ Builds are published on the [Releases](https://github.com/SkyDeaD/ghostgram/rele
 - **Fake gifts:** gifts on your profile that only you see.
 - **Extras:** in-app Safari or another browser, picture in picture for YouTube, IP and api_id in sessions,
   "Recent Actions" and "Administrators" in menus, more mute and cache options, no Premium offers.
-- **Ghostgram settings:** language, export and import of all settings, reset.
+- **Wraithgram settings:** language, export and import of all settings, reset.
 
 The interface is in English, Russian, Ukrainian and Arabic.
 
@@ -114,45 +114,45 @@ run.
 1. Clone the repository with its submodules:
 
    ```sh
-   git clone --recursive -j8 https://github.com/SkyDeaD/ghostgram.git
-   cd ghostgram
+   git clone --recursive -j8 https://github.com/SkyDeaD/wraithgram.git
+   cd wraithgram
    ```
 
 2. Create the configuration file and fill in `api_id` and `api_hash` from
    [my.telegram.org](https://my.telegram.org):
 
    ```sh
-   cp build-system/ghostgram-configuration.example.json build-system/ghostgram-configuration.json
+   cp build-system/wraithgram-configuration.example.json build-system/wraithgram-configuration.json
    ```
 
 3. Build for the simulator:
 
    ```sh
-   build-system/GGBuild.sh
+   build-system/WGBuild.sh
    ```
 
-   The simulator needs no profiles of your own: without `build-system/ghostgram-codesigning/profiles` the
+   The simulator needs no profiles of your own: without `build-system/wraithgram-codesigning/profiles` the
    script uses Telegram's test profiles from `build-system/fake-codesigning` with an extended expiration
    date. Keep `bundle_id` set to `ph.telegra.Telegraph` for this build.
 
 4. Build an IPA for your iPhone. To sign it on the phone with ESign, LCSign or a similar app:
 
    ```sh
-   build-system/GGBuildResign.sh
+   build-system/WGBuildResign.sh
    ```
 
-   The result is `build-output/ipa/Ghostgram-for-resign.ipa` with the bundle ID `org.ghostgram.app`. To
+   The result is `build-output/ipa/Wraithgram-for-resign.ipa` with the bundle ID `org.wraithgram.app`. To
    sign on the Mac with your own certificate and profiles instead, see
    [Signing with your own profiles](docs/ios/codesigning.md).
 
 The build scripts pin Bazel to the Xcode chosen with `xcode-select` and apply the patches from
-`build-system/GGPatches` to the `rules_apple` and `tgcalls` submodules. The configuration file, the
+`build-system/WGPatches` to the `rules_apple` and `tgcalls` submodules. The configuration file, the
 signing folders and the build output are in `.gitignore`.
 
 ### VPN core (optional)
 
 ```sh
-Ghostgram/Features/Vless/Core/build-core.sh
+Wraithgram/Features/Vless/Core/build-core.sh
 ```
 
 Needs Go 1.26 or newer and the Xcode command line tools; the first run downloads
@@ -162,36 +162,36 @@ says that the core is not included.
 ## Repository structure
 
 ```text
-ghostgram/
-├── Ghostgram/            Ghostgram's code
-│   ├── GGCore/           settings, strings, logging (shared, no UI)
-│   ├── GGHooks/          the points where Ghostgram connects to Telegram's code
-│   ├── GGSettingsUI/     the Ghostgram menu
+wraithgram/
+├── Wraithgram/           Wraithgram's code
+│   ├── WGCore/           settings, strings, logging (shared, no UI)
+│   ├── WGHooks/          the points where Wraithgram connects to Telegram's code
+│   ├── WGSettingsUI/     the Wraithgram menu
 │   ├── Features/         the features, one module each
 │   └── Strings/          translations and their tools
-├── build-system/         build scripts (GG*.sh), patches, configuration template
+├── build-system/         build scripts (WG*.sh), patches, configuration template
 ├── docs/ios/             iOS guides: signing, updating to a new Telegram release
 └── Telegram/, submodules/, third-party/, …
                           Telegram iOS; kept at the root because its Bazel build expects it
 ```
 
-Changes to Telegram's own files are kept small, marked `// GHOST:` and call into `GGHooks`. New Telegram
+Changes to Telegram's own files are kept small, marked `// WRAITH:` and call into `WGHooks`. New Telegram
 releases are applied as patches: see [Updating to a new Telegram iOS release](docs/ios/upstream-sync.md).
 To contribute, see [Contributing](.github/CONTRIBUTING.md).
 
 ## Credits
 
-- [Telegram iOS](https://github.com/TelegramMessenger/Telegram-iOS) by Telegram: Ghostgram is built on its
+- [Telegram iOS](https://github.com/TelegramMessenger/Telegram-iOS) by Telegram: Wraithgram is built on its
   source code.
-- [ichmagmaus111/ghostgram](https://github.com/ichmagmaus111/ghostgram): the original Ghostgram, which this
-  project continues. Thank you! Its Telegram community: [channel](https://t.me/ghostgrama),
+- [ichmagmaus111/ghostgram](https://github.com/ichmagmaus111/ghostgram): the original Ghostgram, which
+  Wraithgram is based on. Thank you! Its Telegram community: [channel](https://t.me/ghostgrama),
   [chat](https://t.me/ghostgramchat) and [forum](https://t.me/ghostgramforum).
 
 ## License
 
-Ghostgram is distributed under the [GNU General Public License v2](LICENSE), like the Telegram iOS source
+Wraithgram is distributed under the [GNU General Public License v2](LICENSE), like the Telegram iOS source
 code it is based on. Third-party components keep their own licenses; the list is in the app
-(**Settings → Ghostgram → About → Third-Party Components**).
+(**Settings → Wraithgram → About → Third-Party Components**).
 
 If you build your own app from this code, follow Telegram's
 [rules for developers](https://github.com/TelegramMessenger/Telegram-iOS#creating-your-telegram-application):

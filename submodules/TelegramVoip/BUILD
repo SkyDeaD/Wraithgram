@@ -19,8 +19,8 @@ swift_library(
         "//submodules/FFMpegBinding",
         "//submodules/ManagedFile",
         "//submodules/AppBundle",
-        # GHOST: call audio effects of the call audio device (W3-3)
-        "//Ghostgram/Features/CallsMedia/CallAudio:GGCallAudio",
+        # WRAITH: call audio effects of the call audio device (W3-3)
+        "//Wraithgram/Features/CallsMedia/CallAudio:WGCallAudio",
     ],
     visibility = [
         "//visibility:public",

@@ -13,7 +13,7 @@ import EdgeEffect
 import GlassBackgroundComponent
 import SideColumnLayout
 import NavigationBarComponent
-import GGHooks // GHOST: chat list chrome points
+import WGHooks // WRAITH: chat list chrome points
 
 private func searchScrollHeightValue() -> CGFloat {
     return 54.0
@@ -1046,8 +1046,8 @@ public final class ChatListNavigationBar: Component {
                 self.contentView.frame = CGRect(origin: CGPoint(), size: size)
             }
             
-            // GHOST: gradient / snow / folder-panel features adjust the bar (GGChatListChromeHooks.navigationBarDidLayout)
-            GGChatListChromeHooks.notifyNavigationBarDidLayout(view: self, size: size, isAnimated: !transition.animation.isImmediate)
+            // WRAITH: gradient / snow / folder-panel features adjust the bar (WGChatListChromeHooks.navigationBarDidLayout)
+            WGChatListChromeHooks.notifyNavigationBarDidLayout(view: self, size: size, isAnimated: !transition.animation.isImmediate)
             return size
         }
     }

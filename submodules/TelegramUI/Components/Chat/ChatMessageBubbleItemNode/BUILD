@@ -6,16 +6,16 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: call-site helpers of the bubble (taps, quick translate button)
-        "//Ghostgram/GGHooks:ChatMessageBubbleItemNodeHookSources",
+        # WRAITH: call-site helpers of the bubble (taps, quick translate button)
+        "//Wraithgram/WGHooks:ChatMessageBubbleItemNodeHookSources",
     ],
     copts = [
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: Ghostgram hook points
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/GGHooks:GGHooks",
+        # WRAITH: Wraithgram hook points
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/WGHooks:WGHooks",
         "//submodules/AsyncDisplayKit",
         "//submodules/LottieSettings:LottieSettings",
         "//submodules/Display",

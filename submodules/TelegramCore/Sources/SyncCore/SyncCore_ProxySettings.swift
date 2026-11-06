@@ -128,8 +128,8 @@ public struct ProxySettings: Codable, Equatable {
     
     public var effectiveActiveServer: ProxyServerSettings? {
         if self.enabled, let activeServer = self.activeServer {
-            // GHOST: features may bypass the proxy for now, e.g. while a VPN is up (GGNetworkHooks.useProxy)
-            if !ggShouldUseProxy(activeServer) { return nil }
+            // WRAITH: features may bypass the proxy for now, e.g. while a VPN is up (WGNetworkHooks.useProxy)
+            if !wgShouldUseProxy(activeServer) { return nil }
             return activeServer
         } else {
             return nil

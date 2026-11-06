@@ -936,9 +936,9 @@ public final class NavigationBarComponent: Component {
                     pill.background = background
                     self.addSubview(background)
                     background.contentView.addSubview(pill.itemsContainer)
-                    background.update(size: frame.size, cornerRadius: ggUpdateNavigationGlassShape(background, items: pill.itemsContainer, height: frame.height) /* GHOST: shaped buttons (square avatars) */, isDark: isDark, tintColor: tintColor, isInteractive: true, isVisible: false, transition: .immediate)
+                    background.update(size: frame.size, cornerRadius: wgUpdateNavigationGlassShape(background, items: pill.itemsContainer, height: frame.height) /* WRAITH: shaped buttons (square avatars) */, isDark: isDark, tintColor: tintColor, isInteractive: true, isVisible: false, transition: .immediate)
                 }
-                let _ = ggUpdateNavigationGlassShape(background, items: pill.itemsContainer, height: frame.height) // GHOST: the shape its animations keep (square avatars)
+                let _ = wgUpdateNavigationGlassShape(background, items: pill.itemsContainer, height: frame.height) // WRAITH: the shape its animations keep (square avatars)
                 // A pill that comes grows out of the nearest previous pill nearer the edge (UIKit's sections are
                 // contiguous, so that is every one).
                 let previousPartners: [(slot: Int, frame: CGRect, tint: NavigationBarComponent.Button.Tint)] = previousRightPills.enumerated().compactMap { index, previous in
@@ -957,7 +957,7 @@ public final class NavigationBarComponent: Component {
                     self.retargetInPlace(inPlace, frame: frame, tintColor: tintColor, isDark: isDark, transition: transition)
                 } else {
                     backgroundTransition.setFrame(view: background, frame: frame)
-                    background.update(size: frame.size, cornerRadius: ggNavigationGlassCornerRadius(background, size: frame.size, upstream: frame.height * 0.5) /* GHOST: shaped buttons (square avatars) */, isDark: isDark, tintColor: tintColor, isInteractive: true, transition: transition)
+                    background.update(size: frame.size, cornerRadius: wgNavigationGlassCornerRadius(background, size: frame.size, upstream: frame.height * 0.5) /* WRAITH: shaped buttons (square avatars) */, isDark: isDark, tintColor: tintColor, isInteractive: true, transition: transition)
                     backgroundTransition.setFrame(view: pill.itemsContainer, frame: CGRect(origin: CGPoint(), size: frame.size))
                 }
                 // A menu from any of its buttons morphs the whole pill, its other buttons with it, and closes back into it:
@@ -1013,7 +1013,7 @@ public final class NavigationBarComponent: Component {
             } else {
                 // Taken away by a layout that does not animate in place: a merge it is in ends here.
                 self.finishInPlace(of: background)
-                background.update(size: background.bounds.size, cornerRadius: ggNavigationGlassCornerRadius(background, size: background.bounds.size, upstream: background.bounds.height * 0.5) /* GHOST: keeps its shape while it fades out */, isDark: isDark, tintColor: tintColor, isInteractive: true, isVisible: false, transition: transition)
+                background.update(size: background.bounds.size, cornerRadius: wgNavigationGlassCornerRadius(background, size: background.bounds.size, upstream: background.bounds.height * 0.5) /* WRAITH: keeps its shape while it fades out */, isDark: isDark, tintColor: tintColor, isInteractive: true, isVisible: false, transition: transition)
                 transition.attachAnimation(view: background, id: "remove", completion: { [weak background] _ in
                     background?.removeFromSuperview()
                 })

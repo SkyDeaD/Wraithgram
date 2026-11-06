@@ -28,6 +28,6 @@ build:macos --strategy=SwiftCompile=worker
 common:macos --features=swift.use_global_module_cache
 common:macos --features=oso_prefix_is_pwd
 
-# GHOST: pin bazel to the xcode-select'ed Xcode (macOS 27 LaunchServices reports only the newest
-# one). build-system/GGXcodeConfig.sh writes this file; it is gitignored and optional.
-try-import %workspace%/build-system/GGXcode.bazelrc
+# WRAITH: pin bazel to the xcode-select'ed Xcode (macOS 27 LaunchServices reports only the newest
+# one). build-system/WGXcodeConfig.sh writes this file; it is gitignored and optional.
+try-import %workspace%/build-system/WGXcode.bazelrc

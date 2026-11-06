@@ -78,7 +78,7 @@ import StarsWithdrawalScreen
 import MiniAppListScreen
 import GiftOptionsScreen
 import GiftViewScreen
-import GGHooks // GHOST: account points
+import WGHooks // WRAITH: account points
 import StarsIntroScreen
 import WalletScreen
 import WalletReceiveScreen
@@ -371,8 +371,8 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         }
         
         self._currentPresentationData = Atomic(value: initialPresentationDataAndSettings.presentationData)
-        // GHOST: Ghostgram's language follows Telegram's (GGLocalization)
-        ggTelegramLanguageDidChange(initialPresentationDataAndSettings.presentationData)
+        // WRAITH: Wraithgram's language follows Telegram's (WGLocalization)
+        wgTelegramLanguageDidChange(initialPresentationDataAndSettings.presentationData)
         self.currentAutomaticMediaDownloadSettings = initialPresentationDataAndSettings.automaticMediaDownloadSettings
         self.currentAutodownloadSettings = Atomic(value: initialPresentationDataAndSettings.autodownloadSettings)
         self.currentMediaInputSettings = Atomic(value: initialPresentationDataAndSettings.mediaInputSettings)
@@ -468,8 +468,8 @@ public final class SharedAccountContextImpl: SharedAccountContext {
                 }
                 if stringsUpdated {
                     updateLegacyLocalization(strings: next.strings)
-                    // GHOST: Ghostgram's language follows Telegram's (GGLocalization)
-                    ggTelegramLanguageDidChange(next)
+                    // WRAITH: Wraithgram's language follows Telegram's (WGLocalization)
+                    wgTelegramLanguageDidChange(next)
                 }
                 if themeUpdated {
                     updateLegacyTheme()
@@ -1790,8 +1790,8 @@ public final class SharedAccountContextImpl: SharedAccountContext {
     }
     
     public func switchToAccount(id: AccountRecordId, fromSettingsController settingsController: ViewController? = nil, withChatListController chatListController: ViewController? = nil) {
-        // GHOST: features may authenticate before switching (GGAccountsHooks.switchGate)
-        if GGAccountsHooks.interceptSwitch(to: id, proceed: { [weak self, weak settingsController, weak chatListController] in self?.switchToAccount(id: id, fromSettingsController: settingsController, withChatListController: chatListController) }) { return }
+        // WRAITH: features may authenticate before switching (WGAccountsHooks.switchGate)
+        if WGAccountsHooks.interceptSwitch(to: id, proceed: { [weak self, weak settingsController, weak chatListController] in self?.switchToAccount(id: id, fromSettingsController: settingsController, withChatListController: chatListController) }) { return }
         if self.activeAccountsValue?.primary?.account.id == id {
             return
         }
@@ -2665,8 +2665,8 @@ public final class SharedAccountContextImpl: SharedAccountContext {
             content = .group(messages: messages.map { ($0, true, .none, entryAttributes, nil) })
             chatLocation = .peer(id: messages.first!.id.peerId)
         } else {
-            // GHOST: a menu preview may show an outgoing message as not read yet (GGPreviewMessageDecorations)
-            content = .message(message: messages.first!, read: !GGPreviewMessageDecorations.isUnread(messages.first!), selection: .none, attributes: entryAttributes, location: nil)
+            // WRAITH: a menu preview may show an outgoing message as not read yet (WGPreviewMessageDecorations)
+            content = .message(message: messages.first!, read: !WGPreviewMessageDecorations.isUnread(messages.first!), selection: .none, attributes: entryAttributes, location: nil)
             chatLocation = .peer(id: messages.first!.id.peerId)
         }
         

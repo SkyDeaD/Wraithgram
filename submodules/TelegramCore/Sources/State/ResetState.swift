@@ -123,8 +123,8 @@ func _internal_resetAccountState(postbox: Postbox, network: Network, accountPeer
                 }
                 
                 if let replacePinnedItemIds = fetchedChats.pinnedItemIds {
-                    // GHOST: features keep a local tail of pins (GGPinnedChatsHooks.listFromServer)
-                    transaction.setPinnedItemIds(groupId: .root, itemIds: ggPinnedItemIdsFromServer(replacePinnedItemIds.map(PinnedItemId.peer), groupId: .root, transaction: transaction))
+                    // WRAITH: features keep a local tail of pins (WGPinnedChatsHooks.listFromServer)
+                    transaction.setPinnedItemIds(groupId: .root, itemIds: wgPinnedItemIdsFromServer(replacePinnedItemIds.map(PinnedItemId.peer), groupId: .root, transaction: transaction))
                 }
                 
                 for (peerId, summary) in fetchedChats.mentionTagSummaries {

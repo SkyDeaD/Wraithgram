@@ -1201,8 +1201,8 @@ public final class ManagedAudioSessionImpl: NSObject, ManagedAudioSession {
                     try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
             }
         }
-        // GHOST: record voice messages and round videos with the built-in microphone (GGAudioSessionHooks)
-        ggApplyBuiltInMicrophoneIfNeeded(isRecording: type.isRecord, isHeadsetConnected: self.isHeadsetPluggedInValue)
+        // WRAITH: record voice messages and round videos with the built-in microphone (WGAudioSessionHooks)
+        wgApplyBuiltInMicrophoneIfNeeded(isRecording: type.isRecord, isHeadsetConnected: self.isHeadsetPluggedInValue)
     }
     
     private func activate() {

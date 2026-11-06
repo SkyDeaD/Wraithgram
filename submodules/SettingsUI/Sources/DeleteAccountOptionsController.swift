@@ -17,7 +17,7 @@ import PremiumUI
 import PasswordSetupUI
 import StorageUsageScreen
 import AlertComponent
-import GGCore // GHOST: text of the account limit
+import WGCore // WRAITH: text of the account limit
 
 private struct DeleteAccountOptionsArguments {
     let changePhoneNumber: () -> Void
@@ -152,9 +152,9 @@ private func deleteAccountOptionsEntries(presentationData: PresentationData, can
 
     entries.append(.changePhoneNumber(presentationData.theme, presentationData.strings.DeleteAccount_Options_ChangePhoneNumberTitle, presentationData.strings.DeleteAccount_Options_ChangePhoneNumberText))
     if canAddAccounts {
-        // GHOST: the text names the account limit when Premium no longer changes it (GGLimitHooks.accountLimit), not Telegram's "up to 3"
-        let ggAddAccountText: String? = GGLimitHooks.premiumRaisesAccountLimit ? nil : GGStrings.AccountLimit.addAccountHelp(count: GGLimitHooks.maximumNumberOfAccounts(isPremium: false))
-        entries.append(.addAccount(presentationData.theme, presentationData.strings.DeleteAccount_Options_AddAccountTitle, ggAddAccountText ?? presentationData.strings.DeleteAccount_Options_AddAccountText))
+        // WRAITH: the text names the account limit when Premium no longer changes it (WGLimitHooks.accountLimit), not Telegram's "up to 3"
+        let wgAddAccountText: String? = WGLimitHooks.premiumRaisesAccountLimit ? nil : WGStrings.AccountLimit.addAccountHelp(count: WGLimitHooks.maximumNumberOfAccounts(isPremium: false))
+        entries.append(.addAccount(presentationData.theme, presentationData.strings.DeleteAccount_Options_AddAccountTitle, wgAddAccountText ?? presentationData.strings.DeleteAccount_Options_AddAccountText))
     }
 
     entries.append(.changePrivacy(presentationData.theme, presentationData.strings.DeleteAccount_Options_ChangePrivacyTitle, presentationData.strings.DeleteAccount_Options_ChangePrivacyText))
@@ -218,8 +218,8 @@ public func deleteAccountOptionsController(context: AccountContext, navigationCo
                 }
             }
 
-            // GHOST: one account limit for every check (GGLimitHooks.accountLimit; Ghostgram: 100 with and without Premium)
-            maximumAvailableAccounts = GGLimitHooks.maximumNumberOfAccounts(upstream: maximumAvailableAccounts)
+            // WRAITH: one account limit for every check (WGLimitHooks.accountLimit; Wraithgram: 100 with and without Premium)
+            maximumAvailableAccounts = WGLimitHooks.maximumNumberOfAccounts(upstream: maximumAvailableAccounts)
             if count >= maximumAvailableAccounts {
                 var replaceImpl: ((ViewController) -> Void)?
                 let controller = PremiumLimitScreen(context: context, subject: .accounts, count: Int32(count), action: {

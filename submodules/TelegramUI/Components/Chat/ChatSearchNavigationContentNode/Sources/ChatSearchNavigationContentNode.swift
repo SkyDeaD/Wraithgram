@@ -12,7 +12,7 @@ import ChatPresentationInterfaceState
 import ComponentFlow
 import GlassBackgroundComponent
 import ActivityIndicator
-import GGBookmarkSearchRow // GHOST: bookmarks row under the search field (W2-2)
+import WGBookmarkSearchRow // WRAITH: bookmarks row under the search field (W2-2)
 
 private let searchBarFont = Font.regular(17.0)
 
@@ -36,7 +36,7 @@ public final class ChatSearchNavigationContentNode: NavigationBarContentNode {
     private var searchingActivityDisposable: Disposable?
     
     private var params: (size: CGSize, leftInset: CGFloat, rightInset: CGFloat)?
-    private var ggBookmarkRow: GGBookmarkSearchRow? // GHOST: bookmarks row (W2-2)
+    private var wgBookmarkRow: WGBookmarkSearchRow? // WRAITH: bookmarks row (W2-2)
     
     public init(context: AccountContext, theme: PresentationTheme, strings: PresentationStrings, chatLocation: ChatLocation, interaction: ChatPanelInterfaceInteraction, presentationInterfaceState: ChatPresentationInterfaceState) {
         self.context = context
@@ -121,9 +121,9 @@ public final class ChatSearchNavigationContentNode: NavigationBarContentNode {
             }
         }
         
-        // GHOST: bookmarks of this chat under the search field, tap = jump (GGBookmarkSearchRow, W2-2)
-        self.ggBookmarkRow = GGBookmarkSearchRow.make(context: context, chatLocation: chatLocation, theme: theme, navigate: { [weak self] id in self?.interaction.navigateToMessage(id, false, true, .generic) }, requestLayout: { [weak self] in self?.requestContainerLayout(.animated(duration: 0.2, curve: .easeInOut)) })
-        if let ggBookmarkRow = self.ggBookmarkRow { self.view.addSubview(ggBookmarkRow.view) } // GHOST: see above
+        // WRAITH: bookmarks of this chat under the search field, tap = jump (WGBookmarkSearchRow, W2-2)
+        self.wgBookmarkRow = WGBookmarkSearchRow.make(context: context, chatLocation: chatLocation, theme: theme, navigate: { [weak self] id in self?.interaction.navigateToMessage(id, false, true, .generic) }, requestLayout: { [weak self] in self?.requestContainerLayout(.animated(duration: 0.2, curve: .easeInOut)) })
+        if let wgBookmarkRow = self.wgBookmarkRow { self.view.addSubview(wgBookmarkRow.view) } // WRAITH: see above
         
         if let statuses = interaction.statuses {
             self.searchingActivityDisposable = (statuses.searching
@@ -146,7 +146,7 @@ public final class ChatSearchNavigationContentNode: NavigationBarContentNode {
     }
     
     override public var nominalHeight: CGFloat {
-        return 60.0 + (self.ggBookmarkRow?.height ?? 0.0) // GHOST: bookmarks row (W2-2)
+        return 60.0 + (self.wgBookmarkRow?.height ?? 0.0) // WRAITH: bookmarks row (W2-2)
     }
     
     @objc private func onCloseTapGesture(_ recognizer: UITapGestureRecognizer) {
@@ -231,7 +231,7 @@ public final class ChatSearchNavigationContentNode: NavigationBarContentNode {
         
         transition.setFrame(view: self.close.background, frame: closeFrame)
         self.close.background.update(size: closeFrame.size, cornerRadius: closeFrame.height * 0.5, isDark: self.theme.overallDarkAppearance, tintColor: .init(kind: self.preferClearGlass ? .clear : .panel), isInteractive: true, transition: transition)
-        self.ggBookmarkRow?.layout(frame: CGRect(x: leftInset, y: 60.0, width: size.width - leftInset - rightInset, height: GGBookmarkSearchRow.rowHeight)) // GHOST: bookmarks row (W2-2)
+        self.wgBookmarkRow?.layout(frame: CGRect(x: leftInset, y: 60.0, width: size.width - leftInset - rightInset, height: WGBookmarkSearchRow.rowHeight)) // WRAITH: bookmarks row (W2-2)
         
         return size
     }
@@ -301,7 +301,7 @@ public final class ChatSearchNavigationContentNode: NavigationBarContentNode {
         
         if presentationInterfaceState.theme != self.theme || (presentationInterfaceState.preferredGlassType == .clear) != self.preferClearGlass {
             self.theme = presentationInterfaceState.theme
-            self.ggBookmarkRow?.updateTheme(presentationInterfaceState.theme) // GHOST: bookmarks row (W2-2)
+            self.wgBookmarkRow?.updateTheme(presentationInterfaceState.theme) // WRAITH: bookmarks row (W2-2)
             self.preferClearGlass = presentationInterfaceState.preferredGlassType == .clear
             if let params = self.params {
                 let _ = self.updateLayout(size: params.size, leftInset: params.leftInset, rightInset: params.rightInset, transition: .immediate)

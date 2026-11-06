@@ -85,26 +85,26 @@ submodules/TelegramApi/Sources/SwiftPMGenerated/
 submodules/TelegramApi/ObjC/SwiftPMGenerated/
 submodules/TelegramApi/Tests/SwiftPMGenerated/
 
-# Ghostgram: keys and generated Xcode pin
-build-system/ghostgram-configuration.json
-build-system/GGXcode/
-build-system/GGXcode.bazelrc
+# Wraithgram: keys and generated Xcode pin
+build-system/wraithgram-configuration.json
+build-system/WGXcode/
+build-system/WGXcode.bazelrc
 
-# Ghostgram: distribution signing (certificate + profiles) and build output
-build-system/ghostgram-codesigning/
+# Wraithgram: distribution signing (certificate + profiles) and build output
+build-system/wraithgram-codesigning/
 build-output/
 
-# Ghostgram: App Store Connect API key id + issuer for TestFlight uploads (GGUploadTestFlight.sh)
-build-system/ghostgram-appstoreconnect.json
+# Wraithgram: App Store Connect API key id + issuer for TestFlight uploads (WGUploadTestFlight.sh)
+build-system/wraithgram-appstoreconnect.json
 
-# Ghostgram: remake notes (plans, agent cards, state, module docs) stay local, out of the public repo
-/GGREMAKE/
-/Ghostgram/**/*.md
+# Wraithgram: remake notes (plans, agent cards, state, module docs) stay local, out of the public repo
+/WGREMAKE/
+/Wraithgram/**/*.md
 
-# Ghostgram: local Claude Code guide (the tracked CLAUDE.md is upstream Telegram's)
+# Wraithgram: local Claude Code guide (the tracked CLAUDE.md is upstream Telegram's)
 /CLAUDE.local.md
-/build-system/GGSimCodesigning/
-/build-system/ghostgram-codesigning-device/
-/build-system/ghostgram-configuration-device.json
-/build-system/GGResignCodesigning/
-/build-system/ghostgram-configuration-resign.json
+/build-system/WGSimCodesigning/
+/build-system/wraithgram-codesigning-device/
+/build-system/wraithgram-configuration-device.json
+/build-system/WGResignCodesigning/
+/build-system/wraithgram-configuration-resign.json

@@ -5,8 +5,8 @@ import CoreMedia
 import CoreVideo
 import VideoToolbox
 import Camera
-// GHOST: round video bitrate / codec / watermark from the Ghostgram settings
-import GGCameraPipeline
+// WRAITH: round video bitrate / codec / watermark from the Wraithgram settings
+import WGCameraPipeline
 import DeviceModel
 
 // Mutated only on the media queue. Each recording owns its statistics even when
@@ -221,9 +221,9 @@ final class VideoRecorder {
     private let transitionImageUpdated: (UIImage?) -> Void
     private let runtimeFailure: (CameraRecordingError) -> Void
     private let completion: (Result) -> Void
-    // GHOST: round video settings of this recording and its prepared watermark
-    private let ggRecording: GGRoundVideoRecordingConfig
-    private let ggWatermark: GGRoundVideoWatermark?
+    // WRAITH: round video settings of this recording and its prepared watermark
+    private let wgRecording: WGRoundVideoRecordingConfig
+    private let wgWatermark: WGRoundVideoWatermark?
 
     private var state: State = .arming
     private var assetWriter: AVAssetWriter?
@@ -263,8 +263,8 @@ final class VideoRecorder {
         url: URL,
         hasAudio: Bool,
         initialPosition: Camera.Position,
-        ggRecording: GGRoundVideoRecordingConfig = .standard, // GHOST: round video settings and watermark of this recording
-        ggWatermark: GGRoundVideoWatermark? = nil,
+        wgRecording: WGRoundVideoRecordingConfig = .standard, // WRAITH: round video settings and watermark of this recording
+        wgWatermark: WGRoundVideoWatermark? = nil,
         mode: NeoCameraImpl.RoundVideoMode,
         usesMultiCam: Bool,
         log: ((String) -> Void)?,
@@ -279,8 +279,8 @@ final class VideoRecorder {
         self.url = url
         self.hasAudio = hasAudio
         self.activePosition = initialPosition
-        self.ggRecording = ggRecording // GHOST: see `ggRecording`
-        self.ggWatermark = ggWatermark
+        self.wgRecording = wgRecording // WRAITH: see `wgRecording`
+        self.wgWatermark = wgWatermark
         self.durationUpdated = durationUpdated
         self.transitionImageUpdated = transitionImageUpdated
         self.runtimeFailure = runtimeFailure
@@ -631,22 +631,22 @@ final class VideoRecorder {
         assetWriter.shouldOptimizeForNetworkUse = false
 
         let compressionProperties: [String: Any] = [
-            AVVideoAverageBitRateKey: self.ggRecording.bitrate(defaultKbps: 1200), // GHOST: bitrate setting
+            AVVideoAverageBitRateKey: self.wgRecording.bitrate(defaultKbps: 1200), // WRAITH: bitrate setting
             AVVideoProfileLevelKey: AVVideoProfileLevelH264HighAutoLevel,
             AVVideoH264EntropyModeKey: AVVideoH264EntropyModeCABAC
         ]
-        var videoSettings: [String: Any] = [ // GHOST: `var` — HEVC from the settings may replace it below
+        var videoSettings: [String: Any] = [ // WRAITH: `var` — HEVC from the settings may replace it below
             AVVideoCodecKey: AVVideoCodecType.h264,
-            AVVideoWidthKey: self.processor.outputSide, // GHOST: round video resolution
+            AVVideoWidthKey: self.processor.outputSide, // WRAITH: round video resolution
             AVVideoHeightKey: self.processor.outputSide,
             AVVideoCompressionPropertiesKey: compressionProperties,
             AVVideoColorPropertiesKey: RoundVideoFrameProcessor.videoColorProperties(from: firstVideoFrame.source)
         ]
-        // GHOST: HEVC when chosen and supported; H.264 above stays the fallback
-        if self.ggRecording.useHEVC {
+        // WRAITH: HEVC when chosen and supported; H.264 above stays the fallback
+        if self.wgRecording.useHEVC {
             var hevcSettings = videoSettings
             hevcSettings[AVVideoCodecKey] = AVVideoCodecType.hevc
-            hevcSettings[AVVideoCompressionPropertiesKey] = [AVVideoAverageBitRateKey: self.ggRecording.bitrate(defaultKbps: 1200)]
+            hevcSettings[AVVideoCompressionPropertiesKey] = [AVVideoAverageBitRateKey: self.wgRecording.bitrate(defaultKbps: 1200)]
             if assetWriter.canApply(outputSettings: hevcSettings, forMediaType: .video) {
                 videoSettings = hevcSettings
             }
@@ -666,7 +666,7 @@ final class VideoRecorder {
 
         let sourcePixelBufferAttributes: [String: Any] = [
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
-            kCVPixelBufferWidthKey as String: self.processor.outputSide, // GHOST: round video resolution
+            kCVPixelBufferWidthKey as String: self.processor.outputSide, // WRAITH: round video resolution
             kCVPixelBufferHeightKey as String: self.processor.outputSide,
             kCVPixelBufferMetalCompatibilityKey as String: true,
             kCVPixelBufferIOSurfacePropertiesKey as String: [:] as NSDictionary
@@ -798,8 +798,8 @@ final class VideoRecorder {
             return
         }
 
-        // GHOST: round video watermark over the finished square (the text is rendered once per recording)
-        self.ggWatermark?.draw(into: processedFrame.pixelBuffer)
+        // WRAITH: round video watermark over the finished square (the text is rendered once per recording)
+        self.wgWatermark?.draw(into: processedFrame.pixelBuffer)
 
         guard videoAdaptor.append(processedFrame.pixelBuffer, withPresentationTime: frame.presentationTime) else {
             self.statistics.writerAppendFailures += 1

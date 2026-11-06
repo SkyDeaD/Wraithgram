@@ -196,8 +196,8 @@ private func validatePeerReadState(network: Network, postbox: Postbox, stateMana
         |> ignoreValues
     }
 
-    // GHOST: a local-only read is not replaced by the server's unread state (GGPresenceHooks.sendReadReceipt)
-    if !ggShouldSendReadReceipt(peerId: peerId, kind: .historyValidation, accountPeerId: stateManager.accountPeerId) { return confirmSynchronized(postbox: postbox, peerId: peerId) |> ignoreValues }
+    // WRAITH: a local-only read is not replaced by the server's unread state (WGPresenceHooks.sendReadReceipt)
+    if !wgShouldSendReadReceipt(peerId: peerId, kind: .historyValidation, accountPeerId: stateManager.accountPeerId) { return confirmSynchronized(postbox: postbox, peerId: peerId) |> ignoreValues }
     let readStateWithInitialState = dialogReadState(network: network, postbox: postbox, peerId: peerId)
     
     let maybeAppliedReadState = readStateWithInitialState
@@ -254,8 +254,8 @@ private func validatePeerReadState(network: Network, postbox: Postbox, stateMana
 }
 
 private func pushPeerReadState(network: Network, postbox: Postbox, stateManager: AccountStateManager, peerId: PeerId, readState: PeerReadState) -> Signal<PeerReadState, PeerReadStateValidationError> {
-    // GHOST: features may keep a read receipt on the device; it still counts as pushed (GGPresenceHooks.sendReadReceipt)
-    if !ggShouldSendReadReceipt(peerId: peerId, readState: readState, accountPeerId: stateManager.accountPeerId) { return .single(readState) }
+    // WRAITH: features may keep a read receipt on the device; it still counts as pushed (WGPresenceHooks.sendReadReceipt)
+    if !wgShouldSendReadReceipt(peerId: peerId, readState: readState, accountPeerId: stateManager.accountPeerId) { return .single(readState) }
     if peerId.namespace == Namespaces.Peer.SecretChat {
         // Decide whether a request is needed before looking the peer up: inputSecretChat goes
         // through loadedPeerWithId, which never emits when the peer row is missing and fails

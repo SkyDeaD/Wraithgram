@@ -6,7 +6,7 @@
 
 + (NSArray<MTSignal *> *)itemSignalsForInputItems:(NSArray *)inputItems;
 + (NSData *)audioWaveform:(NSURL *)url;
-// GHOST: Ghostgram's outgoing photo settings. 0 (default) = upstream: photo files are scaled to 1280 px and compressed here. Otherwise they are decoded to this long side and passed on as `image`, for ShareItems to scale, mark and compress (GGOutgoingImageHooks).
-+ (void)setGGPhotoMaxPixelSize:(CGFloat)size NS_SWIFT_NAME(setGGPhotoMaxPixelSize(_:));
+// WRAITH: Wraithgram's outgoing photo settings. 0 (default) = upstream: photo files are scaled to 1280 px and compressed here. Otherwise they are decoded to this long side and passed on as `image`, for ShareItems to scale, mark and compress (WGOutgoingImageHooks).
++ (void)setWGPhotoMaxPixelSize:(CGFloat)size NS_SWIFT_NAME(setWGPhotoMaxPixelSize(_:));
 
 @end

@@ -14,7 +14,7 @@ import ButtonComponent
 import MultilineTextComponent
 import TelegramPresentationData
 import TelegramCallsUI
-import GGHooks // GHOST: capture protection
+import WGHooks // WRAITH: capture protection
 
 final class StoryItemContentComponent: Component {
     typealias EnvironmentType = StoryContentItem.Environment
@@ -357,7 +357,7 @@ final class StoryItemContentComponent: Component {
                             useLargeThumbnail: false,
                             autoFetchFullSizeThumbnail: false,
                             tempFilePath: nil,
-                            captureProtected: GGChatScreenHooks.captureProtection(component.item.isForwardingDisabled, context: component.context, chatLocation: .peer(id: component.peer.id)), // GHOST: screenshot bypass
+                            captureProtected: WGChatScreenHooks.captureProtection(component.item.isForwardingDisabled, context: component.context, chatLocation: .peer(id: component.peer.id)), // WRAITH: screenshot bypass
                             hintDimensions: file.dimensions?.cgSize,
                             storeAfterDownload: nil,
                             displayImage: false,
@@ -777,7 +777,7 @@ final class StoryItemContentComponent: Component {
                 availableReactions: component.availableReactions,
                 entityFiles: component.entityFiles,
                 size: size,
-                isCaptureProtected: GGChatScreenHooks.captureProtection(component.item.isForwardingDisabled, context: component.context, chatLocation: .peer(id: component.peer.id)), // GHOST: screenshot bypass
+                isCaptureProtected: WGChatScreenHooks.captureProtection(component.item.isForwardingDisabled, context: component.context, chatLocation: .peer(id: component.peer.id)), // WRAITH: screenshot bypass
                 attemptSynchronous: synchronousLoad,
                 isActive: self.progressMode.mode == .play,
                 transition: transition
@@ -972,7 +972,7 @@ final class StoryItemContentComponent: Component {
                         storyId: component.item.id,
                         media: messageMedia,
                         size: availableSize,
-                        isCaptureProtected: GGChatScreenHooks.captureProtection(component.item.isForwardingDisabled, context: component.context, chatLocation: .peer(id: component.peer.id)), // GHOST: screenshot bypass
+                        isCaptureProtected: WGChatScreenHooks.captureProtection(component.item.isForwardingDisabled, context: component.context, chatLocation: .peer(id: component.peer.id)), // WRAITH: screenshot bypass
                         attemptSynchronous: synchronousLoad,
                         transition: transition
                     )
@@ -1151,7 +1151,7 @@ final class StoryItemContentComponent: Component {
                         storyId: component.item.id,
                         media: messageMedia,
                         size: availableSize,
-                        isCaptureProtected: GGChatScreenHooks.captureProtection(component.item.isForwardingDisabled, context: component.context, chatLocation: .peer(id: component.peer.id)), // GHOST: screenshot bypass
+                        isCaptureProtected: WGChatScreenHooks.captureProtection(component.item.isForwardingDisabled, context: component.context, chatLocation: .peer(id: component.peer.id)), // WRAITH: screenshot bypass
                         attemptSynchronous: synchronousLoad,
                         transition: transition
                     )

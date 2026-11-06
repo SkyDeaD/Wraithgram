@@ -44,7 +44,7 @@ import PlainButtonComponent
 import BundleIconComponent
 import MarqueeComponent
 import EdgeEffect
-import GGHooks // GHOST: peer info points
+import WGHooks // WRAITH: peer info points
 
 final class PeerInfoHeaderRegularContentNode: SparseNode {
 }
@@ -1257,8 +1257,8 @@ final class PeerInfoHeaderNode: ASDisplayNode {
                 title = "" //"\u{00A0}"
             }
             if title.isEmpty {
-                // GHOST: features may hide or replace the shown number (GGPeerInfoHooks.displayedPhoneNumber)
-                if case let .user(user) = peer, let phone = GGPeerInfoHooks.phone(user.phone, peerId: user.id, context: self.context) {
+                // WRAITH: features may hide or replace the shown number (WGPeerInfoHooks.displayedPhoneNumber)
+                if case let .user(user) = peer, let phone = WGPeerInfoHooks.phone(user.phone, peerId: user.id, context: self.context) {
                     title = formatPhoneNumber(context: self.context, number: phone)
                 } else if let addressName = peer.addressName {
                     title = "@\(addressName)"
@@ -1272,11 +1272,11 @@ final class PeerInfoHeaderNode: ASDisplayNode {
             smallTitleAttributes = MultiScaleTextState.Attributes(font: Font.medium(28.0), color: .white, shadowColor: titleShadowColor)
             
             if self.isSettings, case let .user(user) = peer {
-                // GHOST: features may hide or replace the shown number (GGPeerInfoHooks.displayedPhoneNumber)
-                var subtitle = GGPeerInfoHooks.phone(user.phone, peerId: user.id, context: self.context).flatMap({ formatPhoneNumber(context: self.context, number: $0) }) ?? ""
+                // WRAITH: features may hide or replace the shown number (WGPeerInfoHooks.displayedPhoneNumber)
+                var subtitle = WGPeerInfoHooks.phone(user.phone, peerId: user.id, context: self.context).flatMap({ formatPhoneNumber(context: self.context, number: $0) }) ?? ""
                 
                 if let mainUsername = user.addressName, !mainUsername.isEmpty {
-                    // GHOST: a hidden number leaves the username alone, without the « • » separator in front
+                    // WRAITH: a hidden number leaves the username alone, without the « • » separator in front
                     subtitle = subtitle.isEmpty ? "@\(mainUsername)" : "\(subtitle) • @\(mainUsername)"
                 }
                 subtitleStringText = subtitle
@@ -1437,9 +1437,9 @@ final class PeerInfoHeaderNode: ASDisplayNode {
         }
         #endif
 
-        // GHOST: a hidden rating badge takes no room either — the subtitle stays centered (GGPeerInfoHooks.hidesItem)
-        let ggHidesStarRating = GGPeerInfoHooks.hidesItem(.starRating, context: peer.flatMap { GGPeerInfoContext(context: self.context, peer: $0, chatPeer: nil, isSettings: self.isSettings, controller: nil) })
-        if let starRating = self.currentStarRating, !ggHidesStarRating {
+        // WRAITH: a hidden rating badge takes no room either — the subtitle stays centered (WGPeerInfoHooks.hidesItem)
+        let wgHidesStarRating = WGPeerInfoHooks.hidesItem(.starRating, context: peer.flatMap { WGPeerInfoContext(context: self.context, peer: $0, chatPeer: nil, isSettings: self.isSettings, controller: nil) })
+        if let starRating = self.currentStarRating, !wgHidesStarRating {
             let subtitleRating: ComponentView<Empty>
             var subtitleRatingTransition = ComponentTransition(transition)
             if let current = self.subtitleRating {
@@ -2795,8 +2795,8 @@ final class PeerInfoHeaderNode: ASDisplayNode {
             self.updateAvatarMask(transition: .immediate)
         }
         
-        // GHOST: header decorations — GIF background, avatar shape (GGPeerInfoHooks.headerDidLayout)
-        GGPeerInfoHooks.notifyHeaderDidLayout(GGPeerInfoHeader(context: self.context, peer: peer, isSettings: self.isSettings, node: self, width: width, height: resolvedHeight, transition: transition, backgroundContainerView: self.backgroundBannerView, titleStateViews: [TitleNodeStateRegular, TitleNodeStateExpanded].compactMap { self.titleNode.stateNode(forKey: $0)?.view })) // GHOST: no rating view any more — a hidden rating badge is left out above (GGPeerInfoHooks.hidesItem)
+        // WRAITH: header decorations — GIF background, avatar shape (WGPeerInfoHooks.headerDidLayout)
+        WGPeerInfoHooks.notifyHeaderDidLayout(WGPeerInfoHeader(context: self.context, peer: peer, isSettings: self.isSettings, node: self, width: width, height: resolvedHeight, transition: transition, backgroundContainerView: self.backgroundBannerView, titleStateViews: [TitleNodeStateRegular, TitleNodeStateExpanded].compactMap { self.titleNode.stateNode(forKey: $0)?.view })) // WRAITH: no rating view any more — a hidden rating badge is left out above (WGPeerInfoHooks.hidesItem)
         return resolvedHeight
     }
     

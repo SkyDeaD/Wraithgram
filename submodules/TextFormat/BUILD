@@ -12,8 +12,8 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: appearance snapshot (seconds in message times)
-        "//Ghostgram/Features/Appearance:GGAppearanceSettings",
+        # WRAITH: appearance snapshot (seconds in message times)
+        "//Wraithgram/Features/Appearance:WGAppearanceSettings",
         "//submodules/SSignalKit/SwiftSignalKit",
     	"//submodules/TelegramCore:TelegramCore",
         "//submodules/Display:Display",

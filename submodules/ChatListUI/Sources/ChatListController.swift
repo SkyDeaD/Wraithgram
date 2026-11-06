@@ -63,7 +63,7 @@ import GlobalControlPanelsContext
 import AlertComponent
 import AlertHeaderComponent
 import AvatarComponent
-import GGHooks // GHOST: chat list points
+import WGHooks // WRAITH: chat list points
 
 private final class ContextControllerContentSourceImpl: ContextControllerContentSource {
     let controller: ViewController
@@ -765,8 +765,8 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
                 if let navigationBarView = strongSelf.chatListDisplayNode.navigationBarView.view as? ChatListNavigationBar.View, let headerPanelsView = navigationBarView.headerPanels as? HeaderPanelContainerComponent.View, let tabsView = headerPanelsView.tabs as? HorizontalTabsComponent.View {
                     tabsView.updateTabSwitchFraction(fraction: fraction, isDragging: strongSelf.chatListDisplayNode.mainContainerNode.isSwitchingCurrentItemFilterByDragging, transition: ComponentTransition(transition))
                 }
-                // GHOST: the folder strip above the tab bar follows the swipe too («Папки внизу»)
-                strongSelf.chatListDisplayNode.ggBottomFolderStrip.updateTabSwitchFraction(fraction: fraction, isDragging: strongSelf.chatListDisplayNode.mainContainerNode.isSwitchingCurrentItemFilterByDragging, transition: ComponentTransition(transition))
+                // WRAITH: the folder strip above the tab bar follows the swipe too («Папки внизу»)
+                strongSelf.chatListDisplayNode.wgBottomFolderStrip.updateTabSwitchFraction(fraction: fraction, isDragging: strongSelf.chatListDisplayNode.mainContainerNode.isSwitchingCurrentItemFilterByDragging, transition: ComponentTransition(transition))
             }
             self.reloadFilters()
         }
@@ -2188,8 +2188,8 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
             if self.previewing {
                 self.storiesReady.set(.single(true))
             } else {
-                // GHOST: features may hide stories (GGChatListHooks.storySubscriptions)
-                self.storySubscriptionsDisposable = (ggChatListStorySubscriptions(self.context.engine.messages.storySubscriptions(isHidden: self.location == .chatList(groupId: .archive)), context: self.context)
+                // WRAITH: features may hide stories (WGChatListHooks.storySubscriptions)
+                self.storySubscriptionsDisposable = (wgChatListStorySubscriptions(self.context.engine.messages.storySubscriptions(isHidden: self.location == .chatList(groupId: .archive)), context: self.context)
                 |> deliverOnMainQueue).startStrict(next: { [weak self] rawStorySubscriptions in
                     guard let self else {
                         return
@@ -2900,8 +2900,8 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
                 titleComponent: primaryContext.chatTitleComponent.flatMap { AnyComponent<Empty>($0) },
                 chatListTitle: primaryContext.chatListTitle,
                 leftButton: primaryContext.leftButton,
-                // GHOST: features add header buttons (GGChatListHooks.headerRightButtons)
-                rightButtons: ggChatListHeaderRightButtons(primaryContext.rightButtons, context: self.context, location: self.location),
+                // WRAITH: features add header buttons (WGChatListHooks.headerRightButtons)
+                rightButtons: wgChatListHeaderRightButtons(primaryContext.rightButtons, context: self.context, location: self.location),
                 backPressed: displayBackButton ? { [weak self] in
                     guard let self else {
                         return
@@ -3675,8 +3675,8 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
                 return value
             }
         }
-        // GHOST: the tabs may have been reordered in the strip above the tab bar («Папки внизу»)
-        if reorderedFilterIdsValue == nil { reorderedFilterIdsValue = self.chatListDisplayNode.ggBottomFolderStrip.reorderedFilterIds }
+        // WRAITH: the tabs may have been reordered in the strip above the tab bar («Папки внизу»)
+        if reorderedFilterIdsValue == nil { reorderedFilterIdsValue = self.chatListDisplayNode.wgBottomFolderStrip.reorderedFilterIds }
         
         if let reorderedFilterIdsValue, let tabContainerData = self.tabContainerData {
             var entries: [ChatListFilterTabEntry] = []
@@ -4039,7 +4039,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
     
     private var initializedFilters = false
     private func reloadFilters(firstUpdate: (() -> Void)? = nil) {
-        let filterItems = ggChatListFilterItemsWithTabChanges(chatListFilterItems(context: self.context), context: self.context) // GHOST: the tabs follow a hide-a-tab setting at once (GGChatListHooks.filterTabsChanges)
+        let filterItems = wgChatListFilterItemsWithTabChanges(chatListFilterItems(context: self.context), context: self.context) // WRAITH: the tabs follow a hide-a-tab setting at once (WGChatListHooks.filterTabsChanges)
         var notifiedFirstUpdate = false
         self.filterDisposable.set((combineLatest(queue: .mainQueue(),
             filterItems,
@@ -4075,8 +4075,8 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
             } else {
                 resolvedItems = []
             }
-            // GHOST: features may change the folder tabs, e.g. hide «All chats» (GGChatListHooks.filterTabs)
-            resolvedItems = ggChatListFilterTabs(resolvedItems, context: strongSelf.context)
+            // WRAITH: features may change the folder tabs, e.g. hide «All chats» (WGChatListHooks.filterTabs)
+            resolvedItems = wgChatListFilterTabs(resolvedItems, context: strongSelf.context)
             
             let firstItem = countAndFilterItems.1.first?.0 ?? .allChats
             let firstItemEntryId: ChatListFilterTabEntryId
@@ -4094,7 +4094,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
                 if let tabContainerData = strongSelf.tabContainerData {
                     var found = false
                     if let index = tabContainerData.0.firstIndex(where: { $0.id == selectedEntryId }) {
-                        for i in (0 ..< max(0, index - 1)).reversed() { // GHOST: a hidden first tab (index 0, «Все чаты») made this `0 ..< -1` — a trap
+                        for i in (0 ..< max(0, index - 1)).reversed() { // WRAITH: a hidden first tab (index 0, «Все чаты») made this `0 ..< -1` — a trap
                             if resolvedItems.contains(where: { $0.id == tabContainerData.0[i].id }) {
                                 selectedEntryId = tabContainerData.0[i].id
                                 found = true
@@ -4109,8 +4109,8 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
                     selectedEntryId = .all
                 }
             }
-            // GHOST: a tab hidden by GGChatListHooks.filterTabs must not stay selected
-            selectedEntryId = ggChatListSelectedFilterTab(selectedEntryId, tabs: resolvedItems)
+            // WRAITH: a tab hidden by WGChatListHooks.filterTabs must not stay selected
+            selectedEntryId = wgChatListSelectedFilterTab(selectedEntryId, tabs: resolvedItems)
             let filtersLimit = isPremium == false ? limits.maxFoldersCount : nil
             strongSelf.tabContainerData = (resolvedItems, false, filtersLimit)
             var availableFilters: [ChatListContainerNodeFilter] = []
@@ -4131,7 +4131,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
             if !hasAllChats {
                 availableFilters.insert(.all, at: 0)
             }
-            // GHOST: no swipe into a folder tab hidden by GGChatListHooks.filterTabs (e.g. «Все чаты»)
+            // WRAITH: no swipe into a folder tab hidden by WGChatListHooks.filterTabs (e.g. «Все чаты»)
             if !resolvedItems.isEmpty && !resolvedItems.contains(where: { $0.id == .all }) { availableFilters.removeAll(where: { if case .all = $0 { return true } else { return false } }) }
             strongSelf.chatListDisplayNode.mainContainerNode.updateAvailableFilters(availableFilters, limit: filtersLimit)
             
@@ -6323,7 +6323,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
     
     override public func tabBarItemContextAction(sourceView: ContextExtractedContentContainingView, gesture: ContextGesture) {
         let _ = (combineLatest(queue: .mainQueue(),
-            ggChatListFolders(self.context.engine.peers.currentChatListFilters(), context: self.context) |> take(1), // GHOST: features may hide folders, e.g. a locked secret folder (GGChatListHooks.folders)
+            wgChatListFolders(self.context.engine.peers.currentChatListFilters(), context: self.context) |> take(1), // WRAITH: features may hide folders, e.g. a locked secret folder (WGChatListHooks.folders)
             chatListFilterItems(context: self.context)
             |> take(1),
             context.engine.data.get(

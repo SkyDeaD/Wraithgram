@@ -575,8 +575,8 @@ public final class EntityKeyboardComponent: Component {
             
             let emojiContentItemIdUpdated = ActionSlot<(AnyHashable, AnyHashable?, ComponentTransition)>()
             if var emojiContent = component.emojiContent {
-                if ggEmojiKeyboardStyle().standardEmojiFirst { // GHOST: standard emoji right after recent (SG-G9)
-                    emojiContent = emojiContent.withUpdatedItemGroups(panelItemGroups: ggStandardEmojiFirst(emojiContent.panelItemGroups), contentItemGroups: ggStandardEmojiFirst(emojiContent.contentItemGroups), itemContentUniqueId: emojiContent.itemContentUniqueId, emptySearchResults: emojiContent.emptySearchResults, searchState: emojiContent.searchState)
+                if wgEmojiKeyboardStyle().standardEmojiFirst { // WRAITH: standard emoji right after recent (SG-G9)
+                    emojiContent = emojiContent.withUpdatedItemGroups(panelItemGroups: wgStandardEmojiFirst(emojiContent.panelItemGroups), contentItemGroups: wgStandardEmojiFirst(emojiContent.contentItemGroups), itemContentUniqueId: emojiContent.itemContentUniqueId, emptySearchResults: emojiContent.emptySearchResults, searchState: emojiContent.searchState)
                 }
                 contents.append(AnyComponentWithIdentity(id: "emoji", component: AnyComponent(emojiContent)))
                 var topEmojiItems: [EntityKeyboardTopPanelComponent.Item] = []

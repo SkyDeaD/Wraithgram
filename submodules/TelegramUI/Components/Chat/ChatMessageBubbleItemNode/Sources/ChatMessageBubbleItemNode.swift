@@ -78,7 +78,7 @@ import ChatMessageGiftOfferBubbleContentNode
 import ChatMessageDisableCopyProtectionBubbleContentNode
 import ChatMessageGiveawayBubbleContentNode
 import ChatMessageJoinedChannelBubbleContentNode
-import GGHooks // GHOST: message decorations
+import WGHooks // WRAITH: message decorations
 import ChatMessageFactCheckBubbleContentNode
 import ChatMessageTransferBubbleContentNode
 import ChatMessageUnlockMediaNode
@@ -1316,7 +1316,7 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
                 if let summarizeButtonNode = strongSelf.summarizeButtonNode, summarizeButtonNode.frame.contains(point) {
                     return .fail
                 }
-                if ggBubbleTranslateButtonContains(strongSelf, point: point) { return .fail } // GHOST: the quick translate button
+                if wgBubbleTranslateButtonContains(strongSelf, point: point) { return .fail } // WRAITH: the quick translate button
                 
                 if let shareButtonNode = strongSelf.shareButtonNode, shareButtonNode.frame.contains(point) {
                     return .fail
@@ -1472,7 +1472,7 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
         self.tapRecognizer = recognizer
         self.view.addGestureRecognizer(recognizer)
         self.view.isExclusiveTouch = true
-        ggInstallBubbleTripleTap(self) // GHOST: triple tap on a message, only when a feature handles it (GGMessageGestureHooks.tap)
+        wgInstallBubbleTripleTap(self) // WRAITH: triple tap on a message, only when a feature handles it (WGMessageGestureHooks.tap)
 
         let replyRecognizer = ChatSwipeToReplyRecognizer(target: self, action: #selector(self.swipeToReplyGesture(_:)))
         if let item = self.item {
@@ -2026,8 +2026,8 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
             allowFullWidth = true
         }
 
-        // GHOST: features may give a bubble the full width without the side share button (GGMessageLayoutHooks.fullWidthBubble)
-        if GGMessageLayoutHooks.isFullWidthBubble(item.message, context: item.context) { allowFullWidth = true; needsShareButton = false }
+        // WRAITH: features may give a bubble the full width without the side share button (WGMessageLayoutHooks.fullWidthBubble)
+        if WGMessageLayoutHooks.isFullWidthBubble(item.message, context: item.context) { allowFullWidth = true; needsShareButton = false }
         var tmpWidth: CGFloat
         if allowFullWidth {
             tmpWidth = baseWidth
@@ -2073,8 +2073,8 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
             }
         }
         maximumContentWidth = max(0.0, maximumContentWidth)
-        // GHOST: features may change the bubble width, e.g. wide channel posts (GGChatScreenHooks.bubbleMaxWidth)
-        maximumContentWidth = GGChatScreenHooks.bubbleMaxWidth(maximumContentWidth, message: item.message, context: item.context)
+        // WRAITH: features may change the bubble width, e.g. wide channel posts (WGChatScreenHooks.bubbleMaxWidth)
+        maximumContentWidth = WGChatScreenHooks.bubbleMaxWidth(maximumContentWidth, message: item.message, context: item.context)
         
         var contentPropertiesAndPrepareLayouts: [(Message, Bool, ChatMessageEntryAttributes, BubbleItemAttributes, (_ item: ChatMessageBubbleContentItem, _ layoutConstants: ChatMessageItemLayoutConstants, _ preparePosition: ChatMessageBubblePreparePosition, _ messageSelection: Bool?, _ constrainedSize: CGSize, _ avatarInset: CGFloat) -> (ChatMessageBubbleContentProperties, CGSize?, CGFloat, (CGSize, ChatMessageBubbleContentPosition) -> (CGFloat, (CGFloat) -> (CGSize, (ListViewItemUpdateAnimation, Bool, ListViewItemApply?) -> Void))))] = []
         var addedContentNodes: [(Message, Bool, ChatMessageBubbleContentNode, Int?)]?
@@ -2229,8 +2229,8 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
         if let forwardInfo = firstMessage.forwardInfo, forwardInfo.psaType != nil {
             inlineBotNameString = nil
         }
-        // GHOST: features may hide "via @bot" (GGMessageDecorationHooks)
-        if GGMessageDecorationHooks.hidesViaBot(firstMessage, context: item.context) { inlineBotNameString = nil }
+        // WRAITH: features may hide "via @bot" (WGMessageDecorationHooks)
+        if WGMessageDecorationHooks.hidesViaBot(firstMessage, context: item.context) { inlineBotNameString = nil }
         
         var forwardInlineBotNameString: String?
         if !ignoreForward, !isInstantVideo, firstMessage.forwardInfo != nil {
@@ -5741,8 +5741,8 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
         // Outside both branches on purpose: the animated one only touches the background when the
         // frame CHANGED, and a tear can move while the bubble does not.
         strongSelf.updateBackgroundTear(unsupportedZones, backgroundFrame: backgroundFrame, animation: animation)
-        // GHOST: quick translate button beside the bubble (GGMessageDecorationHooks.translateButtonLanguage, SG-E2)
-        ggLayoutBubbleTranslateButton(strongSelf, item: item, backgroundFrame: backgroundFrame, incoming: incoming, shareButtonFrame: strongSelf.shareButtonNode?.frame, isHidden: isCurrentlyPlayingMedia || isSidePanelOpen, width: params.width)
+        // WRAITH: quick translate button beside the bubble (WGMessageDecorationHooks.translateButtonLanguage, SG-E2)
+        wgLayoutBubbleTranslateButton(strongSelf, item: item, backgroundFrame: backgroundFrame, incoming: incoming, shareButtonFrame: strongSelf.shareButtonNode?.frame, isHidden: isCurrentlyPlayingMedia || isSidePanelOpen, width: params.width)
 
         let previousContextContentFrame = strongSelf.mainContextSourceNode.contentRect
         strongSelf.mainContextSourceNode.contentRect = backgroundFrame.offsetBy(dx: incomingOffset, dy: 0.0)
@@ -5850,29 +5850,29 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
                     case let .optionalAction(f):
                         f()
                     case let .openContextMenu(openContextMenu):
-                        // GHOST: the bubble's own action, run now or — while a feature waits for a triple tap — once no third tap came (GGMessageGestureHooks)
-                        let ggUpstreamAction: () -> Void = { [weak self] in
+                        // WRAITH: the bubble's own action, run now or — while a feature waits for a triple tap — once no third tap came (WGMessageGestureHooks)
+                        let wgUpstreamAction: () -> Void = { [weak self] in
                             guard let self else { return }
                         if canAddMessageReactions(message: EngineMessage(openContextMenu.tapMessage)) {
                             item.controllerInteraction.updateMessageReaction(openContextMenu.tapMessage, .default, false, nil)
                         } else {
                             item.controllerInteraction.openMessageContextMenu(openContextMenu.tapMessage, openContextMenu.selectAll, self, openContextMenu.subFrame, nil, nil)
                         }
-                        } // GHOST: see ggUpstreamAction
-                        if case .doubleTap = gesture, ggBubbleHandleDoubleTap(self, item: item, message: openContextMenu.tapMessage, upstream: ggUpstreamAction) { break } // GHOST: features may take the double tap (GGMessageGestureHooks.tap)
-                        ggUpstreamAction() // GHOST: see ggUpstreamAction
+                        } // WRAITH: see wgUpstreamAction
+                        if case .doubleTap = gesture, wgBubbleHandleDoubleTap(self, item: item, message: openContextMenu.tapMessage, upstream: wgUpstreamAction) { break } // WRAITH: features may take the double tap (WGMessageGestureHooks.tap)
+                        wgUpstreamAction() // WRAITH: see wgUpstreamAction
                     }
                 } else if case .tap = gesture {
                     item.controllerInteraction.clickThroughMessage(self.view, location)
                 } else if case .doubleTap = gesture {
-                    // GHOST: the quick reaction, run now or — while a feature waits for a triple tap — once no third tap came (GGMessageGestureHooks)
-                    let ggUpstreamAction: () -> Void = {
+                    // WRAITH: the quick reaction, run now or — while a feature waits for a triple tap — once no third tap came (WGMessageGestureHooks)
+                    let wgUpstreamAction: () -> Void = {
                     if canAddMessageReactions(message: EngineMessage(item.message)) {
                         item.controllerInteraction.updateMessageReaction(item.message, .default, false, nil)
                     }
-                    } // GHOST: see ggUpstreamAction
-                    if ggBubbleHandleDoubleTap(self, item: item, message: item.message, upstream: ggUpstreamAction) { return } // GHOST: features may take the double tap (GGMessageGestureHooks.tap)
-                    ggUpstreamAction() // GHOST: see ggUpstreamAction
+                    } // WRAITH: see wgUpstreamAction
+                    if wgBubbleHandleDoubleTap(self, item: item, message: item.message, upstream: wgUpstreamAction) { return } // WRAITH: features may take the double tap (WGMessageGestureHooks.tap)
+                    wgUpstreamAction() // WRAITH: see wgUpstreamAction
                 }
             }
         default:
@@ -6717,7 +6717,7 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
             return summarizeButtonNode.view.hitTest(self.view.convert(point, to: summarizeButtonNode.view), with: event)
         }
         
-        if let ggResult = ggBubbleTranslateButtonHitTest(self, point: point, event: event) { return ggResult } // GHOST: the quick translate button
+        if let wgResult = wgBubbleTranslateButtonHitTest(self, point: point, event: event) { return wgResult } // WRAITH: the quick translate button
         
         if let shareButtonNode = self.shareButtonNode, shareButtonNode.frame.contains(point) {
             return shareButtonNode.view.hitTest(self.view.convert(point, to: shareButtonNode.view), with: event)

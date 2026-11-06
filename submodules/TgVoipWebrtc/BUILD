@@ -302,10 +302,10 @@ objc_library(
         "//third-party/libyuv",
         "//third-party/td:TdBinding",
         "//third-party/wamr:wamr",
-        # GHOST: call audio effects of SharedCallAudioDevice (W3-3)
-        "//Ghostgram/Features/CallsMedia/CallAudio:GGCallAudio",
-        # GHOST: frame hook of the camera capturer for Ghostgram call masks (W3-2)
-        "//Ghostgram/Features/CameraMasks:GGCallFrameBridge",
+        # WRAITH: call audio effects of SharedCallAudioDevice (W3-3)
+        "//Wraithgram/Features/CallsMedia/CallAudio:WGCallAudio",
+        # WRAITH: frame hook of the camera capturer for Wraithgram call masks (W3-2)
+        "//Wraithgram/Features/CameraMasks:WGCallFrameBridge",
     ],
     sdk_frameworks = [
         "Foundation",

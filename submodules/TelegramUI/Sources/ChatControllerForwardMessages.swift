@@ -13,8 +13,8 @@ import PremiumUI
 import ReactionSelectionNode
 import TopMessageReactions
 import ChatMessagePaymentAlertController
-import GGCore // GHOST: Ghostgram strings
-import GGFeaturesShared // GHOST: forward copies (W2-3)
+import WGCore // WRAITH: Wraithgram strings
+import WGFeaturesShared // WRAITH: forward copies (W2-3)
 
 extension ChatControllerImpl {
     func forwardMessages(messageIds: [EngineMessage.Id], options: ChatInterfaceForwardOptionsState? = nil, resetCurrent: Bool = false) {
@@ -165,7 +165,7 @@ extension ChatControllerImpl {
                             return .forward(source: message.id, threadId: nil, grouping: .auto, attributes: attributes, correlationId: nil)
                         })
                         
-                        let ggCommitPrepared: ([EnqueueMessage]) -> Void = { result in // GHOST: forward copies of protected messages (W2-3)
+                        let wgCommitPrepared: ([EnqueueMessage]) -> Void = { result in // WRAITH: forward copies of protected messages (W2-3)
                             guard let strongSelf = self else {
                                 return
                             }
@@ -315,8 +315,8 @@ extension ChatControllerImpl {
                             })
                         }
                         
-                        // GHOST: protected messages go as copies («Обход защиты от копирования», GGForwardCopy)
-                        let commit: ([EnqueueMessage]) -> Void = { result in ggCommitForwardBatch(self, result, sources: messages, hideNames: forwardOptions?.hideNames == true, hideCaptions: forwardOptions?.hideCaptions == true, commit: ggCommitPrepared) }
+                        // WRAITH: protected messages go as copies («Обход защиты от копирования», WGForwardCopy)
+                        let commit: ([EnqueueMessage]) -> Void = { result in wgCommitForwardBatch(self, result, sources: messages, hideNames: forwardOptions?.hideNames == true, hideCaptions: forwardOptions?.hideCaptions == true, commit: wgCommitPrepared) }
                         switch mode {
                         case .generic:
                             commit(result)
@@ -381,8 +381,8 @@ extension ChatControllerImpl {
                     }
                 }
                 
-                // GHOST: protected messages go as copies, sent at once (GGForwardCopy)
-                if peerId != accountPeerId, ggSendForwardCopiesIfNeeded(strongSelf, messages: messages, peerId: peerId, threadId: threadId, picker: strongController) {
+                // WRAITH: protected messages go as copies, sent at once (WGForwardCopy)
+                if peerId != accountPeerId, wgSendForwardCopiesIfNeeded(strongSelf, messages: messages, peerId: peerId, threadId: threadId, picker: strongController) {
                 } else if case .peer(peerId) = strongSelf.chatLocation, strongSelf.parentController == nil, !isPinnedMessages {
                     strongSelf.updateChatPresentationInterfaceState(animated: false, interactive: true, { $0.updatedInterfaceState({ $0.withUpdatedForwardMessageIds(messages.map { $0.id }).withUpdatedForwardOptionsState(ChatInterfaceForwardOptionsState(hideNames: !hasNotOwnMessages, hideCaptions: false, unhideNamesOnCaptionChange: false)).withoutSelectionState() }).updatedSearch(nil) })
                     strongSelf.updateItemNodesSearchTextHighlightStates()
@@ -430,8 +430,8 @@ extension ChatControllerImpl {
                         }, additionalView: messages.count > 0 ? chatShareToSavedMessagesAdditionalView(strongSelf, reactionItems: reactionItems, correlationIds: correlationIds) : nil), in: .current)
                     })
                     
-                    // GHOST: protected messages go as copies (GGForwardCopy)
-                    let _ = (ggForwardCopies(strongSelf, mappedMessages, sources: messages) |> mapToSignal { enqueueMessages(account: strongSelf.context.account, peerId: peerId, messages: $0) }
+                    // WRAITH: protected messages go as copies (WGForwardCopy)
+                    let _ = (wgForwardCopies(strongSelf, mappedMessages, sources: messages) |> mapToSignal { enqueueMessages(account: strongSelf.context.account, peerId: peerId, messages: $0) }
                     |> deliverOnMainQueue).startStandalone(next: { messageIds in
                         if let strongSelf = self {
                             let signals: [Signal<Bool, NoError>] = messageIds.compactMap({ id -> Signal<Bool, NoError>? in
@@ -528,55 +528,55 @@ extension ChatControllerImpl {
     }
 }
 
-// GHOST: «Обход защиты от копирования» — forwards of protected messages become copies (GGForwardCopy).
-private func ggCommitForwardBatch(_ controller: ChatControllerImpl?, _ batch: [EnqueueMessage], sources: [EngineRawMessage], hideNames: Bool, hideCaptions: Bool, commit: @escaping ([EnqueueMessage]) -> Void) {
-    guard let controller, GGForwardCopy.needsCopy(sources) else {
+// WRAITH: «Обход защиты от копирования» — forwards of protected messages become copies (WGForwardCopy).
+private func wgCommitForwardBatch(_ controller: ChatControllerImpl?, _ batch: [EnqueueMessage], sources: [EngineRawMessage], hideNames: Bool, hideCaptions: Bool, commit: @escaping ([EnqueueMessage]) -> Void) {
+    guard let controller, WGForwardCopy.needsCopy(sources) else {
         commit(batch)
         return
     }
-    let _ = (ggForwardCopies(controller, batch, sources: sources, hideNames: hideNames, hideCaptions: hideCaptions)
+    let _ = (wgForwardCopies(controller, batch, sources: sources, hideNames: hideNames, hideCaptions: hideCaptions)
     |> deliverOnMainQueue).startStandalone(next: { converted in
         commit(converted)
     })
 }
 
-private func ggForwardCopies(_ controller: ChatControllerImpl, _ batch: [EnqueueMessage], sources: [EngineRawMessage], hideNames: Bool = false, hideCaptions: Bool = false) -> Signal<[EnqueueMessage], NoError> {
-    guard GGForwardCopy.needsCopy(sources) else {
+private func wgForwardCopies(_ controller: ChatControllerImpl, _ batch: [EnqueueMessage], sources: [EngineRawMessage], hideNames: Bool = false, hideCaptions: Bool = false) -> Signal<[EnqueueMessage], NoError> {
+    guard WGForwardCopy.needsCopy(sources) else {
         return .single(batch)
     }
     let context = controller.context
-    return GGForwardCopy.convert(batch, sources: sources, account: context.account, hideNames: hideNames, hideCaptions: hideCaptions)
+    return WGForwardCopy.convert(batch, sources: sources, account: context.account, hideNames: hideNames, hideCaptions: hideCaptions)
     |> deliverOnMainQueue
     |> map { [weak controller] result -> [EnqueueMessage] in
-        if result.skippedCount > 0 || result.failedCount > 0, let controller { // GHOST: + failed downloads
+        if result.skippedCount > 0 || result.failedCount > 0, let controller { // WRAITH: + failed downloads
             let presentationData = context.sharedContext.currentPresentationData.with { $0 }
-            var texts: [String] = [] // GHOST: + copies whose media could not be downloaded (GGForwardCopy.Result.failedCount)
+            var texts: [String] = [] // WRAITH: + copies whose media could not be downloaded (WGForwardCopy.Result.failedCount)
             if result.skippedCount > 0 {
-                texts.append(GGStrings.Restrictions.Copy.unsupported(count: result.skippedCount))
+                texts.append(WGStrings.Restrictions.Copy.unsupported(count: result.skippedCount))
             }
             if result.failedCount > 0 {
-                texts.append(GGStrings.Restrictions.Copy.failed(count: result.failedCount))
+                texts.append(WGStrings.Restrictions.Copy.failed(count: result.failedCount))
             }
-            controller.present(textAlertController(context: context, title: GGStrings.Restrictions.Copy.unsupportedTitle, text: texts.joined(separator: "\n"), actions: [TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_OK, action: {})]), in: .window(.root))
+            controller.present(textAlertController(context: context, title: WGStrings.Restrictions.Copy.unsupportedTitle, text: texts.joined(separator: "\n"), actions: [TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_OK, action: {})]), in: .window(.root))
         }
         return result.messages
     }
 }
 
-private func ggSendForwardCopiesIfNeeded(_ controller: ChatControllerImpl, messages: [EngineRawMessage], peerId: EnginePeer.Id, threadId: Int64?, picker: ViewController) -> Bool {
-    guard GGForwardCopy.needsCopy(messages) else {
+private func wgSendForwardCopiesIfNeeded(_ controller: ChatControllerImpl, messages: [EngineRawMessage], peerId: EnginePeer.Id, threadId: Int64?, picker: ViewController) -> Bool {
+    guard WGForwardCopy.needsCopy(messages) else {
         return false
     }
     let context = controller.context
     let batch = messages.map { EnqueueMessage.forward(source: $0.id, threadId: threadId, grouping: .auto, attributes: [], correlationId: nil) }
-    let _ = (ggForwardCopies(controller, batch, sources: messages)
+    let _ = (wgForwardCopies(controller, batch, sources: messages)
     |> mapToSignal { enqueueMessages(account: context.account, peerId: peerId, messages: $0) }
     |> deliverOnMainQueue).startStandalone(next: { [weak controller] _ in
         guard let controller else {
             return
         }
         let presentationData = context.sharedContext.currentPresentationData.with { $0 }
-        controller.present(UndoOverlayController(presentationData: presentationData, content: .info(title: nil, text: GGStrings.Restrictions.Copy.sent, timeout: nil, customUndoText: nil), elevatedLayout: false, action: { _ in return false }), in: .current)
+        controller.present(UndoOverlayController(presentationData: presentationData, content: .info(title: nil, text: WGStrings.Restrictions.Copy.sent, timeout: nil, customUndoText: nil), elevatedLayout: false, action: { _ in return false }), in: .current)
     })
     controller.updateChatPresentationInterfaceState(animated: false, interactive: true, { $0.updatedInterfaceState({ $0.withoutSelectionState() }) })
     picker.dismiss()

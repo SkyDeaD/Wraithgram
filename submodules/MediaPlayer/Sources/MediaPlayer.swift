@@ -132,8 +132,8 @@ private final class MediaPlayerContext {
     private var continuePlayingWithoutSoundOnLostAudioSession: Bool
     private let storeAfterDownload: (() -> Void)?
     private let isAudioVideoMessage: Bool
-    // GHOST: what the playback equalizer treats this player as (GGPlaybackEqualizer)
-    private var ggEqualizerKind: GGPlaybackEqualizerKind {
+    // WRAITH: what the playback equalizer treats this player as (WGPlaybackEqualizer)
+    private var wgEqualizerKind: WGPlaybackEqualizerKind {
         if !self.video {
             return .audio
         }
@@ -435,7 +435,7 @@ private final class MediaPlayerContext {
                             }
                         }
                     }
-                }, ggEqualizerKind: self.ggEqualizerKind) // GHOST: playback equalizer (voice/music, round video, video)
+                }, wgEqualizerKind: self.wgEqualizerKind) // WRAITH: playback equalizer (voice/music, round video, video)
                 self.audioRenderer = MediaPlayerAudioRendererContext(renderer: renderer)
                 renderer.start()
             }
@@ -518,7 +518,7 @@ private final class MediaPlayerContext {
                                 }
                             }
                         }
-                    }, ggEqualizerKind: self.ggEqualizerKind) // GHOST: playback equalizer (voice/music, round video, video)
+                    }, wgEqualizerKind: self.wgEqualizerKind) // WRAITH: playback equalizer (voice/music, round video, video)
                     self.audioRenderer = MediaPlayerAudioRendererContext(renderer: renderer)
                     renderer.start()
                 }

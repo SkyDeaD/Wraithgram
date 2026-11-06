@@ -9,7 +9,7 @@ import Emoji
 import UniversalMediaPlayer
 import ChatMessageInteractiveMediaNode
 import ChatMessageAnimatedStickerItemNode
-import GGFeaturesShared // GHOST: Ghostgram message settings (W2-3)
+import WGFeaturesShared // WRAITH: Wraithgram message settings (W2-3)
 
 private final class PrefetchMediaContext {
     let fetchDisposable = MetaDisposable()
@@ -241,8 +241,8 @@ private final class PrefetchManagerInnerImpl {
     }
     
     fileprivate func prepareNextGreetingSticker() {
-        // GHOST: nothing is preloaded while greeting stickers are hidden (GGMessagesPolicy.hidesGreetingSticker)
-        if GGMessagesPolicy.hidesGreetingSticker { self.preloadedGreetingStickerPromise.set(.single(nil)); return }
+        // WRAITH: nothing is preloaded while greeting stickers are hidden (WGMessagesPolicy.hidesGreetingSticker)
+        if WGMessagesPolicy.hidesGreetingSticker { self.preloadedGreetingStickerPromise.set(.single(nil)); return }
         let account = self.account
         let engine = self.engine
         self.preloadedGreetingStickerPromise.set(.single(nil)

@@ -1,5 +1,5 @@
 import Foundation
-import BuildConfig // GHOST: app group of a re-signed app
+import BuildConfig // WRAITH: app group of a re-signed app
 import UIKit
 import Display
 import SwiftSignalKit
@@ -2037,7 +2037,7 @@ public func debugController(sharedContext: SharedAccountContext, context: Accoun
         return getNavigationControllerImpl?()
     })
     
-    let appGroupName = BuildConfig.appGroupName(baseAppBundleId: Bundle.main.bundleIdentifier!) // GHOST: app group of a re-signed app
+    let appGroupName = BuildConfig.appGroupName(baseAppBundleId: Bundle.main.bundleIdentifier!) // WRAITH: app group of a re-signed app
     let maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
     
     var hasLegacyAppData = false

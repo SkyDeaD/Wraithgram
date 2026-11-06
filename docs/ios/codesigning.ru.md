@@ -2,7 +2,7 @@
 
 Для сборки на устройство нужны свои профили подготовки (provisioning profiles). Для симулятора — нет: без
 своих профилей сборка берёт тестовые профили Telegram из `build-system/fake-codesigning`, а
-`build-system/GGSimProfiles.py` продлевает им срок, истёкший 30 октября 2026 года. Здесь написано, как сделать
+`build-system/WGSimProfiles.py` продлевает им срок, истёкший 30 октября 2026 года. Здесь написано, как сделать
 свои профили.
 
 Нужен аккаунт Apple Developer. На бесплатном аккаунте нельзя создать App Groups и push-уведомления, а они нужны
@@ -10,14 +10,14 @@
 
 ## Выбери идентификаторы
 
-1. Придумай bundle ID приложения, например `org.example.ghostgram`.
+1. Придумай bundle ID приложения, например `org.example.wraithgram`.
 2. Найди свой Team ID в разделе **Membership details** на
    [developer.apple.com/account](https://developer.apple.com/account).
-3. Впиши оба значения в `build-system/ghostgram-configuration.json`:
+3. Впиши оба значения в `build-system/wraithgram-configuration.json`:
 
    ```json
    {
-     "bundle_id": "org.example.ghostgram",
+     "bundle_id": "org.example.wraithgram",
      "team_id": "ABCDE12345"
    }
    ```
@@ -47,21 +47,21 @@
 
 1. Для каждого App ID создай профиль **iOS App Development**. Профиля разработки хватает для симулятора и для
    своих устройств.
-2. Скачай профили и положи их в `build-system/ghostgram-codesigning/profiles/`. Имена файлов любые: сборка
+2. Скачай профили и положи их в `build-system/wraithgram-codesigning/profiles/`. Имена файлов любые: сборка
    находит каждый профиль по его App ID и копирует под именем из таблицы.
 3. Собери:
 
    ```sh
-   build-system/GGBuild.sh
+   build-system/WGBuild.sh
    ```
 
-   В первой строке вывода должно быть `signing    : build-system/ghostgram-codesigning`.
+   В первой строке вывода должно быть `signing    : build-system/wraithgram-codesigning`.
 
-Папка в `.gitignore`. Чтобы хранить профили в другом месте, укажи в `GG_CODESIGN` папку, внутри которой есть
+Папка в `.gitignore`. Чтобы хранить профили в другом месте, укажи в `WG_CODESIGN` папку, внутри которой есть
 `profiles/`.
 
-Для IPA на устройство `build-system/GGBuildRelease.sh` нужен ещё сертификат распространения (`.p12` с пустым
-паролем) в `build-system/ghostgram-codesigning/certs/` и профили распространения для тех же App ID.
+Для IPA на устройство `build-system/WGBuildRelease.sh` нужен ещё сертификат распространения (`.p12` с пустым
+паролем) в `build-system/wraithgram-codesigning/certs/` и профили распространения для тех же App ID.
 
 Эти шаги повторяют то, что проверяют скрипты сборки (`build-system/Make/BuildConfiguration.py`). На настоящем
 аккаунте их ещё не проверяли. Если сборка пишет, что не хватает права (entitlement) или оно не совпадает,
@@ -82,11 +82,11 @@
    `PROFILE` — имя файла профиля. Запиши `application-identifier` (`TEAM.BUNDLE`), первую группу из
    `com.apple.security.application-groups` и проверь, что есть `aps-environment`.
 
-2. Создай `build-system/ghostgram-configuration-device.json` — копию `build-system/ghostgram-configuration.json`,
+2. Создай `build-system/wraithgram-configuration-device.json` — копию `build-system/wraithgram-configuration.json`,
    где `bundle_id` равен `BUNDLE`, `team_id` равен `TEAM`, и добавь поле `app_group` с группой из шага 1. Файл в
    `.gitignore`.
 
-3. Создай папку `build-system/ghostgram-codesigning-device/`:
+3. Создай папку `build-system/wraithgram-codesigning-device/`:
    - в `profiles/` положи профиль;
    - в `certs/` положи `.p12`, файл `password` с его паролем и промежуточный сертификат Apple
      [`AppleWWDRCAG3.cer`](https://www.apple.com/certificateauthority/AppleWWDRCAG3.cer).
@@ -104,13 +104,13 @@
 4. Собери:
 
    ```sh
-   GG_CONFIG=build-system/ghostgram-configuration-device.json \
-   GG_CODESIGN=build-system/ghostgram-codesigning-device \
-   build-system/GGBuildRelease.sh 1 --disableExtensions
+   WG_CONFIG=build-system/wraithgram-configuration-device.json \
+   WG_CODESIGN=build-system/wraithgram-codesigning-device \
+   build-system/WGBuildRelease.sh 1 --disableExtensions
    ```
 
    Скрипт на время сборки импортирует сертификат во временную связку ключей и потом возвращает список связок
-   как был. Результат — `build-output/ipa/Ghostgram.ipa`, подписанный для твоего устройства.
+   как был. Результат — `build-output/ipa/Wraithgram.ipa`, подписанный для твоего устройства.
 
 Когда продавец сертификата его отзовёт, установленное приложение перестанет запускаться, пока его не подпишут
 заново.
@@ -121,13 +121,13 @@
 расширениями. Для них собери IPA со своим bundle ID:
 
 ```sh
-build-system/GGBuildResign.sh
+build-system/WGBuildResign.sh
 ```
 
-Результат — `build-output/ipa/Ghostgram-for-resign.ipa` с bundle ID `org.ghostgram.app` (поменять можно через
-`GG_RESIGN_BUNDLE_ID`). Она подписана тестовыми профилями Telegram, перенацеленными на этот ID; программа
+Результат — `build-output/ipa/Wraithgram-for-resign.ipa` с bundle ID `org.wraithgram.app` (поменять можно через
+`WG_RESIGN_BUNDLE_ID`). Она подписана тестовыми профилями Telegram, перенацеленными на этот ID; программа
 подписи заменит подпись. Никогда не переподписывай IPA с bundle ID `ph.telegra.Telegraph`: программа подписи
-может его оставить, и тогда IPA встанет поверх официального Telegram. `GGBuildRelease.sh` такой bundle ID не
+может его оставить, и тогда IPA встанет поверх официального Telegram. `WGBuildRelease.sh` такой bundle ID не
 принимает. При запуске приложение и каждое расширение открывают App Group из
 профиля, которым их переподписали (первую группу в `embedded.mobileprovision`), если `group.<bundle ID>`
 недоступна.

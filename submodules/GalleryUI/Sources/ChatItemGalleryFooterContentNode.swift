@@ -38,7 +38,7 @@ import EdgeEffect
 import RasterizedCompositionComponent
 import BadgeComponent
 import UIKitRuntimeUtils
-import GGHooks // GHOST: gallery points
+import WGHooks // WRAITH: gallery points
 
 private let deleteImage = generateTintedImage(image: UIImage(bundleImageName: "Chat/Input/Accessory Panels/MessageSelectionTrash"), color: .white)
 private let actionImage = generateTintedImage(image: UIImage(bundleImageName: "Chat/Input/Accessory Panels/MessageSelectionForward"), color: .white)
@@ -1531,8 +1531,8 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
         }
         
         self.contentNode.frame = CGRect(origin: CGPoint(), size: CGSize(width: width, height: panelHeight))
-        // GHOST: feature buttons in the footer, e.g. photo translation, subtitles (GGGalleryHooks.footerDidLayout)
-        GGGalleryHooks.notifyFooterDidLayout(context: self.context, message: self.currentMessage, contentNode: self.contentNode, width: width, panelHeight: panelHeight, transition: transition)
+        // WRAITH: feature buttons in the footer, e.g. photo translation, subtitles (WGGalleryHooks.footerDidLayout)
+        WGGalleryHooks.notifyFooterDidLayout(context: self.context, message: self.currentMessage, contentNode: self.contentNode, width: width, panelHeight: panelHeight, transition: transition)
         
         return LayoutInfo(height: panelHeight, needsShadow: needsShadow)
     }

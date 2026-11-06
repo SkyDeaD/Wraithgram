@@ -584,9 +584,9 @@ private final class MultipartFetchManager {
                 self.defaultPartSize = 16 * 1024
                 self.parallelParts = 4 * 4
             } else {
-                // GHOST: features may tune download parts for large files (GGNetworkHooks.downloadParameters)
-                self.defaultPartSize = ggDownloadPartSize(512 * 1024, fileSize: size)
-                self.parallelParts = ggDownloadPendingParts(8, fileSize: size)
+                // WRAITH: features may tune download parts for large files (WGNetworkHooks.downloadParameters)
+                self.defaultPartSize = wgDownloadPartSize(512 * 1024, fileSize: size)
+                self.parallelParts = wgDownloadPendingParts(8, fileSize: size)
             }
         } else {
             self.parallelParts = 1

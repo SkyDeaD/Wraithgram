@@ -23,11 +23,11 @@
 
 + (NSString * _Nullable)keychainAccessGroupForBaseAppBundleId:(NSString * _Nonnull)baseAppBundleId NS_SWIFT_NAME(keychainAccessGroup(baseAppBundleId:));
 
-// GHOST: the app group to open. "group.<base bundle id>" unless the Info.plist names one (GGAppGroup) or the
+// WRAITH: the app group to open. "group.<base bundle id>" unless the Info.plist names one (WGAppGroup) or the
 // app was re-signed with a profile whose groups are named differently (a purchased certificate re-signed on
 // the device): then the first group of embedded.mobileprovision that the system lets the process open.
 + (NSString * _Nonnull)appGroupNameForBaseAppBundleId:(NSString * _Nonnull)baseAppBundleId NS_SWIFT_NAME(appGroupName(baseAppBundleId:));
-// GHOST: the passcode's private keychain group; it must end with the app group without "group." (PasscodeCore).
+// WRAITH: the passcode's private keychain group; it must end with the app group without "group." (PasscodeCore).
 + (NSString * _Nullable)passcodePrivateAccessGroupForBaseAppBundleId:(NSString * _Nonnull)baseAppBundleId NS_SWIFT_NAME(passcodePrivateAccessGroup(baseAppBundleId:));
 
 + (DeviceSpecificEncryptionParameters * _Nonnull)deviceSpecificEncryptionParameters:(NSString * _Nonnull)rootPath baseAppBundleId:(NSString * _Nonnull)baseAppBundleId;

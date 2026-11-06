@@ -16,7 +16,7 @@ import AlertComponent
 import AlertCheckComponent
 import AppBundle
 import ContextUI
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 private final class RecentSessionsControllerArguments {
     let context: AccountContext
@@ -955,7 +955,7 @@ public func recentSessionsController(context: AccountContext, activeSessionsCont
     
     let enableQRLogin = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.appConfiguration))
     |> map { view -> Bool in
-        if GGExtrasPolicy.alwaysShowsQRLogin { return true } // GHOST: «Вход по QR всегда» (GGExtrasPolicy)
+        if WGExtrasPolicy.alwaysShowsQRLogin { return true } // WRAITH: «Вход по QR всегда» (WGExtrasPolicy)
         guard let appConfiguration = view?.get(AppConfiguration.self) else {
             return false
         }

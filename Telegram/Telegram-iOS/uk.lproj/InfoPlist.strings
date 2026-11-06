@@ -1,9 +1,9 @@
 /* Localized versions of Info.plist keys */
 
-"NSContactsUsageDescription" = "Telegram завантажуватиме ваші контакти до зашифрованих хмарних серверів,  щоб ви могли зʼєднуватися з друзями на всіх пристроях."; /* GHOST: Telegram's cloud, the name stays */
-"NSLocationWhenInUseUsageDescription" = "Коли ви надсилаєте розташування друзям, Ghostgram потребує доступу, щоб показати їм мапу."; /* GHOST: app name */
-"NSLocationAlwaysAndWhenInUseUsageDescription" = "Коли ви захочете поділитися Маячком із друзями у чаті, Ghostgram потребує фонового доступу до розташування, щоб воно оновлювалося на час трансляції маячка."; /* GHOST: app name */
-"NSLocationAlwaysUsageDescription" = "Коли ви захочете поділитися Маячком із друзями у чаті, Ghostgram потребує фонового доступу до розташування, щоб воно оновлювалося на час трансляції маячка. Також вам це потрібно для надсилання розташувань з Apple Watch."; /* GHOST: app name */
+"NSContactsUsageDescription" = "Telegram завантажуватиме ваші контакти до зашифрованих хмарних серверів,  щоб ви могли зʼєднуватися з друзями на всіх пристроях."; /* WRAITH: Telegram's cloud, the name stays */
+"NSLocationWhenInUseUsageDescription" = "Коли ви надсилаєте розташування друзям, Wraithgram потребує доступу, щоб показати їм мапу."; /* WRAITH: app name */
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Коли ви захочете поділитися Маячком із друзями у чаті, Wraithgram потребує фонового доступу до розташування, щоб воно оновлювалося на час трансляції маячка."; /* WRAITH: app name */
+"NSLocationAlwaysUsageDescription" = "Коли ви захочете поділитися Маячком із друзями у чаті, Wraithgram потребує фонового доступу до розташування, щоб воно оновлювалося на час трансляції маячка. Також вам це потрібно для надсилання розташувань з Apple Watch."; /* WRAITH: app name */
 "NSCameraUsageDescription" = "Нам це потрібно, щоб ви могли знімати та ділитися фото й відео.";
 "NSPhotoLibraryUsageDescription" = "Нам це потрібно, щоб ви могли ділитися фото та відео з вашої бібліотеки фото.";
 "NSPhotoLibraryAddUsageDescription" = "Нам це потрібно, щоб ви могли зберігати фото та відео до вашої бібліотеки фото.";

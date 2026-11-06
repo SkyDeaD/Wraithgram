@@ -340,7 +340,7 @@ public func chatListFilterPresetListController(context: AccountContext, mode: Ch
     var pushControllerImpl: ((ViewController) -> Void)?
     var presentControllerImpl: ((ViewController) -> Void)?
     
-    let filtersWithCountsSignal = ggChatListFolders(context.engine.peers.updatedChatListFilters(), context: context) // GHOST: features may hide folders, e.g. a locked secret folder (GGChatListHooks.folders)
+    let filtersWithCountsSignal = wgChatListFolders(context.engine.peers.updatedChatListFilters(), context: context) // WRAITH: features may hide folders, e.g. a locked secret folder (WGChatListHooks.folders)
     |> distinctUntilChanged
     |> mapToSignal { filters -> Signal<[(ChatListFilter, Int)], NoError> in
         return .single(filters.map { filter -> (ChatListFilter, Int) in

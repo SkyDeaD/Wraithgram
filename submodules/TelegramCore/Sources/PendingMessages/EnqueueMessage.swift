@@ -728,10 +728,10 @@ private func opportunisticallyTransformOutgoingMedia(network: Network, postbox: 
 }
 
 public func enqueueMessages(account: Account, peerId: PeerId, messages: [EnqueueMessage]) -> Signal<[MessageId?], NoError> {
-    // GHOST: outgoing pipeline — text stages and batch transformers (GGOutgoingHooks)
-    let messages = ggTransformOutgoingMessages(messages, account: account, peerId: peerId)
-    // GHOST: forwards the server would refuse go as copies (GGOutgoingHooks.forwardCopies); synchronous when there are none
-    let signal: Signal<[(Bool, EnqueueMessage)], NoError> = ggConvertForwardCopies(messages, account: account)
+    // WRAITH: outgoing pipeline — text stages and batch transformers (WGOutgoingHooks)
+    let messages = wgTransformOutgoingMessages(messages, account: account, peerId: peerId)
+    // WRAITH: forwards the server would refuse go as copies (WGOutgoingHooks.forwardCopies); synchronous when there are none
+    let signal: Signal<[(Bool, EnqueueMessage)], NoError> = wgConvertForwardCopies(messages, account: account)
     |> mapToSignal { messages -> Signal<[(Bool, EnqueueMessage)], NoError> in
         if let transformOutgoingMessageMedia = account.transformOutgoingMessageMedia {
             return opportunisticallyTransformOutgoingMedia(network: account.network, postbox: account.postbox, transformOutgoingMessageMedia: transformOutgoingMessageMedia, messages: messages, userInteractive: true)
@@ -760,8 +760,8 @@ public func enqueueMessages(account: Account, peerId: PeerId, messages: [Enqueue
                 }
             }
 
-            // GHOST: send delay, decided with the chat's peer at hand (GGOutgoingHooks.sendDelay)
-            normalMessages = ggApplyOutgoingSendDelay(normalMessages, transaction: transaction, account: account, peerId: peerId)
+            // WRAITH: send delay, decided with the chat's peer at hand (WGOutgoingHooks.sendDelay)
+            normalMessages = wgApplyOutgoingSendDelay(normalMessages, transaction: transaction, account: account, peerId: peerId)
             if !normalMessages.isEmpty {
                 let normalIds = enqueueMessages(transaction: transaction, account: account, peerId: peerId, messages: normalMessages)
                 for i in 0 ..< min(normalIds.count, normalMessageIndices.count) {
@@ -775,8 +775,8 @@ public func enqueueMessages(account: Account, peerId: PeerId, messages: [Enqueue
             for messageId in ephemeralMessageIds {
                 let _ = _internal_sendEphemeralOutgoingMessage(account: account, messageId: messageId).startStandalone()
             }
-            // GHOST: observers of sent messages (GGOutgoingHooks.didEnqueue)
-            ggOutgoingMessagesDidEnqueue(account: account, peerId: peerId, ids: resultIds)
+            // WRAITH: observers of sent messages (WGOutgoingHooks.didEnqueue)
+            wgOutgoingMessagesDidEnqueue(account: account, peerId: peerId, ids: resultIds)
             return resultIds
         }
     }

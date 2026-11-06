@@ -16,8 +16,8 @@ import PresentationDataUtils
 import UrlWhitelist
 import OpenUserGeneratedUrl
 import DebugCompanionScreen
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
-import GGExtrasHooks // GHOST: Swiftgram-parity points (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
+import WGExtrasHooks // WRAITH: Swiftgram-parity points (W5-SG)
 
 public struct ParsedSecureIdUrl {
     public let peerId: EnginePeer.Id
@@ -296,8 +296,8 @@ private func handleInternetUrl(
                     let controller = BrowserScreen(context: context, subject: .webPage(url: parsedUrl.absoluteString))
                     navigationController?.pushViewController(controller)
                 } else {
-                    // GHOST: «Safari в приложении» from «Больше браузеров» (GGExtrasUIHooks.openInAppBrowser)
-                    if localSettings.defaultWebBrowser == GGExtrasPolicy.inAppSafariBrowserIdentifier, GGExtrasUIHooks.handledInAppBrowser(parsedUrl, context: context, navigationController: navigationController) { return }
+                    // WRAITH: «Safari в приложении» from «Больше браузеров» (WGExtrasUIHooks.openInAppBrowser)
+                    if localSettings.defaultWebBrowser == WGExtrasPolicy.inAppSafariBrowserIdentifier, WGExtrasUIHooks.handledInAppBrowser(parsedUrl, context: context, navigationController: navigationController) { return }
                     let openInOptions = availableOpenInOptions(context: context, item: .url(url: originalUrl))
                     var defaultWebBrowser = localSettings.defaultWebBrowser
                     if defaultWebBrowser == nil || defaultWebBrowser == "inApp" || defaultWebBrowser == "inAppSafari" {

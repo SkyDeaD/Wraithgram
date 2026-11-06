@@ -156,8 +156,8 @@ public func logoutOptionsController(context: AccountContext, navigationControlle
                 }
             }
             
-            // GHOST: one account limit for every check (GGLimitHooks.accountLimit; Ghostgram: 100 with and without Premium)
-            maximumAvailableAccounts = GGLimitHooks.maximumNumberOfAccounts(upstream: maximumAvailableAccounts)
+            // WRAITH: one account limit for every check (WGLimitHooks.accountLimit; Wraithgram: 100 with and without Premium)
+            maximumAvailableAccounts = WGLimitHooks.maximumNumberOfAccounts(upstream: maximumAvailableAccounts)
             if count >= maximumAvailableAccounts {
                 var replaceImpl: ((ViewController) -> Void)?
                 let controller = PremiumLimitScreen(context: context, subject: .accounts, count: Int32(count), action: {

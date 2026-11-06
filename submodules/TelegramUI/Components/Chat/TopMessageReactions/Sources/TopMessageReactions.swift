@@ -271,13 +271,13 @@ public func topMessageReactions(context: AccountContext, message: EngineRawMessa
         }
     }
     
-    // GHOST: own recent reactions replace / precede Telegram's top list (GGRecentReactionsHooks.topReactions)
-    let topReactions = ggTopReactions(context.engine.data.subscribe(TelegramEngine.EngineData.Item.OrderedLists.ListItems(collectionId: Namespaces.OrderedItemList.CloudTopReactions))
+    // WRAITH: own recent reactions replace / precede Telegram's top list (WGRecentReactionsHooks.topReactions)
+    let topReactions = wgTopReactions(context.engine.data.subscribe(TelegramEngine.EngineData.Item.OrderedLists.ListItems(collectionId: Namespaces.OrderedItemList.CloudTopReactions))
     |> map { items -> [RecentReactionItem] in
         return items.compactMap { item -> RecentReactionItem? in
             return item.contents.get(RecentReactionItem.self)
         }
-    }, context: context, message: message) // GHOST: custom recent reactions (W2-5, GGRecentReactionsHooks)
+    }, context: context, message: message) // WRAITH: custom recent reactions (W2-5, WGRecentReactionsHooks)
     
     let allowedReactionsWithFiles: Signal<(reactions: AllowedReactions, files: [Int64: TelegramMediaFile], areStarsEnabled: Bool)?, NoError> = peerMessageAllowedReactions(context: context, message: message, ignoreDefault: ignoreDefault)
     |> mapToSignal { allowedReactions, areStarsEnabled -> Signal<(reactions: AllowedReactions, files: [Int64: TelegramMediaFile], areStarsEnabled: Bool)?, NoError> in

@@ -940,21 +940,21 @@ public final class NavigationBarPlatterTransitionView: UIView {
             add(platter.glass.layer, "position", glassCenters)
             add(platter.glass.layer, "bounds", bounds)
         }
-        // GHOST: shaped buttons (square avatars) keep their glass through the morph (nil = Telegram's capsule)
-        let ggGlassItems: [(view: UIView, height: CGFloat, presence: [CGFloat])] = platter.items.map { items in (view: items.view, height: items.frame.height, presence: times.map { 1.0 - max(0.0, min(1.0, items.appearance.value(at: $0))) }) }
-        let ggGlassSizes = glassFrames.map { CGSize(width: max(0.0, $0.width), height: max(0.0, $0.height)) }
-        if let ggRadii = ggNavigationGlassCornerRadii(sizes: ggGlassSizes, items: ggGlassItems) { platter.glass.animateShape(sizes: ggGlassSizes, cornerRadii: ggRadii, timing: timing, isDark: platter.isDark, tintColor: platter.tint) } else { // GHOST: see above
+        // WRAITH: shaped buttons (square avatars) keep their glass through the morph (nil = Telegram's capsule)
+        let wgGlassItems: [(view: UIView, height: CGFloat, presence: [CGFloat])] = platter.items.map { items in (view: items.view, height: items.frame.height, presence: times.map { 1.0 - max(0.0, min(1.0, items.appearance.value(at: $0))) }) }
+        let wgGlassSizes = glassFrames.map { CGSize(width: max(0.0, $0.width), height: max(0.0, $0.height)) }
+        if let wgRadii = wgNavigationGlassCornerRadii(sizes: wgGlassSizes, items: wgGlassItems) { platter.glass.animateShape(sizes: wgGlassSizes, cornerRadii: wgRadii, timing: timing, isDark: platter.isDark, tintColor: platter.tint) } else { // WRAITH: see above
         platter.glass.animateShape(sizes: glassFrames.map { CGSize(width: max(0.0, $0.width), height: max(0.0, $0.height)) }, timing: timing, isDark: platter.isDark, tintColor: platter.tint)
-        } // GHOST: see above
+        } // WRAITH: see above
         if let fadingContainer = platter.fadingContainer, let fadingGlass = platter.fadingGlass, let fadingTint = platter.fadingTint {
             add(fadingContainer.layer, "opacity", zip(times, dematerializations).map { NSNumber(value: Float(max(0.0, min(1.0, platter.tintFade.value(at: $0.0))) * (1.0 - $0.1))) })
             fadingContainer.animateSize(width: platter.width, height: platter.height, timing: timing, isDark: platter.isDark)
             add(fadingGlass.layer, "position", glassCenters)
             add(fadingGlass.layer, "bounds", bounds)
-            let ggFadingSizes = times.map { CGSize(width: max(0.0, platter.width.value(at: $0)), height: max(0.0, platter.height.value(at: $0))) } // GHOST: see above
-            if let ggRadii = ggNavigationGlassCornerRadii(sizes: ggFadingSizes, items: ggGlassItems) { fadingGlass.animateShape(sizes: ggFadingSizes, cornerRadii: ggRadii, timing: timing, isDark: platter.isDark, tintColor: fadingTint) } else { // GHOST: see above
+            let wgFadingSizes = times.map { CGSize(width: max(0.0, platter.width.value(at: $0)), height: max(0.0, platter.height.value(at: $0))) } // WRAITH: see above
+            if let wgRadii = wgNavigationGlassCornerRadii(sizes: wgFadingSizes, items: wgGlassItems) { fadingGlass.animateShape(sizes: wgFadingSizes, cornerRadii: wgRadii, timing: timing, isDark: platter.isDark, tintColor: fadingTint) } else { // WRAITH: see above
             fadingGlass.animateShape(width: platter.width, height: platter.height, timing: timing, isDark: platter.isDark, tintColor: fadingTint)
-            } // GHOST: see above
+            } // WRAITH: see above
         }
         if let glowView = platter.glowView {
             glowView.animate(sizes: glassFrames.map { $0.size }, glows: times.map { platter.glow.value(at: $0) }, timing: timing, isDark: platter.isDark)
@@ -1071,13 +1071,13 @@ public final class NavigationBarPlatterTransitionView: UIView {
             glassFrame = frame
             platter.glass.frame = bounds
         }
-        let ggGlassItems: [(view: UIView, height: CGFloat, presence: [CGFloat])] = platter.items.map { items in (view: items.view, height: items.frame.height, presence: [1.0 - max(0.0, min(1.0, items.appearance.value(at: self.time)))]) } // GHOST: square avatars keep their glass
-        platter.glass.update(size: glassFrame.size, cornerRadius: ggNavigationGlassCornerRadii(sizes: [glassFrame.size], items: ggGlassItems)?.first ?? min(glassFrame.width, glassFrame.height) * 0.5 /* GHOST: see above */, isDark: platter.isDark, tintColor: platter.tint, isInteractive: false, transition: .immediate)
+        let wgGlassItems: [(view: UIView, height: CGFloat, presence: [CGFloat])] = platter.items.map { items in (view: items.view, height: items.frame.height, presence: [1.0 - max(0.0, min(1.0, items.appearance.value(at: self.time)))]) } // WRAITH: square avatars keep their glass
+        platter.glass.update(size: glassFrame.size, cornerRadius: wgNavigationGlassCornerRadii(sizes: [glassFrame.size], items: wgGlassItems)?.first ?? min(glassFrame.width, glassFrame.height) * 0.5 /* WRAITH: see above */, isDark: platter.isDark, tintColor: platter.tint, isInteractive: false, transition: .immediate)
         if let fadingContainer = platter.fadingContainer, let fadingGlass = platter.fadingGlass, let fadingTint = platter.fadingTint {
             fadingContainer.layer.opacity = Float(max(0.0, min(1.0, platter.tintFade.value(at: self.time))) * (1.0 - d))
             fadingContainer.update(size: frame.size, isDark: platter.isDark, transition: .immediate)
             fadingGlass.frame = bounds
-            fadingGlass.update(size: frame.size, cornerRadius: ggNavigationGlassCornerRadii(sizes: [frame.size], items: ggGlassItems)?.first ?? min(frame.width, frame.height) * 0.5 /* GHOST: square avatars keep their glass */, isDark: platter.isDark, tintColor: fadingTint, isInteractive: false, transition: .immediate)
+            fadingGlass.update(size: frame.size, cornerRadius: wgNavigationGlassCornerRadii(sizes: [frame.size], items: wgGlassItems)?.first ?? min(frame.width, frame.height) * 0.5 /* WRAITH: square avatars keep their glass */, isDark: platter.isDark, tintColor: fadingTint, isInteractive: false, transition: .immediate)
         }
         platter.itemsHost.alpha = 1.0 - d
         if let glowView = platter.glowView {

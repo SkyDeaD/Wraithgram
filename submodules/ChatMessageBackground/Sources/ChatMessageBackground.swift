@@ -4,7 +4,7 @@ import AsyncDisplayKit
 import Display
 import TelegramPresentationData
 import WallpaperBackgroundNode
-import GGAppearanceSettings // GHOST: bubble editor (fill opacity)
+import WGAppearanceSettings // WRAITH: bubble editor (fill opacity)
 
 public enum ChatMessageBackgroundMergeType: Equatable {
     case None, Side, Top(side: Bool), Bottom, Both, Extracted
@@ -73,8 +73,8 @@ public class ChatMessageBackground: ASDisplayNode {
     private var imageFrame: CGRect?
     private var imageView: UIImageView?
     private var imageViewImage: UIImage?
-    // GHOST: bubble fill opacity of the bubble editor; 1 = upstream
-    private var ggFillAlpha: CGFloat = 1.0
+    // WRAITH: bubble fill opacity of the bubble editor; 1 = upstream
+    private var wgFillAlpha: CGFloat = 1.0
 
     private var tearBands: [BubbleTearBand] = []
     private var tearMaskView: BubbleTearMaskView?
@@ -111,7 +111,7 @@ public class ChatMessageBackground: ASDisplayNode {
         
         imageView.image = self.imageViewImage
         imageView.tintColor = self.customHighlightColor
-        imageView.alpha = self.ggFillAlpha // GHOST: bubble fill opacity
+        imageView.alpha = self.wgFillAlpha // WRAITH: bubble fill opacity
         
         if let imageFrame = self.imageFrame {
             imageView.frame = imageFrame
@@ -242,9 +242,9 @@ public class ChatMessageBackground: ASDisplayNode {
         self.graphics = graphics
         self.backgroundNode = backgroundNode
         self.hasWallpaper = hasWallpaper
-        // GHOST: bubble fill opacity (appearance snapshot; a change rebuilds the theme, so `graphics` changes too)
-        self.ggFillAlpha = CGFloat(GGAppearanceSnapshot.current.bubbles?.backgroundAlpha ?? 1.0)
-        self.imageView?.alpha = self.ggFillAlpha
+        // WRAITH: bubble fill opacity (appearance snapshot; a change rebuilds the theme, so `graphics` changes too)
+        self.wgFillAlpha = CGFloat(WGAppearanceSnapshot.current.bubbles?.backgroundAlpha ?? 1.0)
+        self.imageView?.alpha = self.wgFillAlpha
         
         var image: UIImage?
         
@@ -689,8 +689,8 @@ public final class ChatMessageBubbleBackdrop: ASDisplayNode {
             if let maskView = self.maskView {
                 maskView.image = self.overrideMask ? nil : bubbleMaskForType(type, graphics: essentialGraphics)
             }
-            // GHOST: bubble fill opacity of the bubble editor (appearance snapshot)
-            self.backgroundContent?.alpha = CGFloat(GGAppearanceSnapshot.current.bubbles?.backgroundAlpha ?? 1.0)
+            // WRAITH: bubble fill opacity of the bubble editor (appearance snapshot)
+            self.backgroundContent?.alpha = CGFloat(WGAppearanceSnapshot.current.bubbles?.backgroundAlpha ?? 1.0)
 
             // A mask created or re-imaged just now has no bands yet.
             self.updateTearBands(animation: .None)

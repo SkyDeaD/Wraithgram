@@ -32,8 +32,8 @@ swift_library(
         "//submodules/ContextUI",
         "//submodules/TelegramUI/Components/News/NewsFeedSupport",
         "//submodules/TelegramUI/Components/News/NewsChannelIsland",
-        # GHOST: «Скрыть кнопку под каналом» (GGMessagesPolicy)
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
+        # WRAITH: «Скрыть кнопку под каналом» (WGMessagesPolicy)
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
     ],
     visibility = [
         "//visibility:public",

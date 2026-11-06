@@ -8,8 +8,8 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: playback equalizer instances (W3-1)
-        "//Ghostgram/Features/Voice:UniversalMediaPlayerSources",
+        # WRAITH: playback equalizer instances (W3-1)
+        "//Wraithgram/Features/Voice:UniversalMediaPlayerSources",
     ],
     copts = [
         "-warnings-as-errors",
@@ -27,8 +27,8 @@ swift_library(
         "//submodules/Utils/RangeSet:RangeSet",
         "//submodules/TextFormat:TextFormat",
         "//submodules/ManagedFile",
-        # GHOST: playback equalizer DSP (W3-1)
-        "//Ghostgram/Features/Voice:GGVoiceDSP",
+        # WRAITH: playback equalizer DSP (W3-1)
+        "//Wraithgram/Features/Voice:WGVoiceDSP",
     ],
     visibility = [
         "//visibility:public",

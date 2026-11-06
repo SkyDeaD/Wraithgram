@@ -15,7 +15,7 @@ import TelegramPresentationData
 import TelegramStringFormatting
 import ChatTimerScreen
 import NotificationPeerExceptionController
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 func archiveContextMenuItems(context: AccountContext, group: EngineChatList.Group, chatListController: ChatListControllerImpl?) -> Signal<[ContextMenuItem], NoError> {
     let presentationData = context.sharedContext.currentPresentationData.with({ $0 })
@@ -107,7 +107,7 @@ func chatContextMenuItems(context: AccountContext, peerId: EnginePeer.Id, promoI
         }
 
         return combineLatest(
-            ggChatListFolders(context.engine.peers.updatedChatListFilters(), context: context) // GHOST: features may hide folders, e.g. a locked secret folder (GGChatListHooks.folders)
+            wgChatListFolders(context.engine.peers.updatedChatListFilters(), context: context) // WRAITH: features may hide folders, e.g. a locked secret folder (WGChatListHooks.folders)
             |> take(1),
             context.engine.peers.getPinnedItemIds(location: location)
         )
@@ -387,7 +387,7 @@ func chatContextMenuItems(context: AccountContext, peerId: EnginePeer.Id, promoI
                             }
                         }
                         
-                        let archiveEnabled = !isSavedMessages && peerId != EnginePeer.Id(namespace: Namespaces.Peer.CloudUser, id: EnginePeer.Id.Id._internalFromInt64Value(777000)) && (peerId == context.account.peerId || GGExtrasPolicy.showsArchiveInChatMenu) // GHOST: «Архивировать в меню чата» — upstream's condition never holds here (GGExtrasPolicy)
+                        let archiveEnabled = !isSavedMessages && peerId != EnginePeer.Id(namespace: Namespaces.Peer.CloudUser, id: EnginePeer.Id.Id._internalFromInt64Value(777000)) && (peerId == context.account.peerId || WGExtrasPolicy.showsArchiveInChatMenu) // WRAITH: «Архивировать в меню чата» — upstream's condition never holds here (WGExtrasPolicy)
                         if let group = peerGroup {
                             if archiveEnabled {
                                 let isArchived = group == .archive

@@ -20,8 +20,8 @@ public extension Peer {
     }
     
     func restrictionText(platform: String, contentSettings: ContentSettings) -> String? {
-        // GHOST: features may ignore platform restrictions (GGRestrictionHooks.peerRestriction)
-        if !ggPeerRestrictionApplies(self) { return nil }
+        // WRAITH: features may ignore platform restrictions (WGRestrictionHooks.peerRestriction)
+        if !wgPeerRestrictionApplies(self) { return nil }
         var restrictionInfo: PeerAccessRestrictionInfo?
         switch self {
         case let user as TelegramUser:
@@ -39,7 +39,7 @@ public extension Peer {
                 }
                 if rule.platform == "all" || rule.platform == platform || contentSettings.addContentRestrictionReasons.contains(rule.platform) {
                     if !contentSettings.ignoreContentRestrictionReasons.contains(rule.reason) {
-                        return ggExtrasRestrictionText(rule.text, reason: rule.reason, platform: rule.platform) // GHOST: «Код ограничения» (GGExtrasCoreHooks.restrictionText)
+                        return wgExtrasRestrictionText(rule.text, reason: rule.reason, platform: rule.platform) // WRAITH: «Код ограничения» (WGExtrasCoreHooks.restrictionText)
                     }
                 }
             }
@@ -254,8 +254,8 @@ public extension Peer {
     }
     
     var isCopyProtectionEnabled: Bool {
-        // GHOST: features may lift copy protection (GGRestrictionHooks.copyProtection)
-        if let value = ggCopyProtectionOverride(.peer(self)) { return value }
+        // WRAITH: features may lift copy protection (WGRestrictionHooks.copyProtection)
+        if let value = wgCopyProtectionOverride(.peer(self)) { return value }
         switch self {
         case let group as TelegramGroup:
             return group.flags.contains(.copyProtectionEnabled)

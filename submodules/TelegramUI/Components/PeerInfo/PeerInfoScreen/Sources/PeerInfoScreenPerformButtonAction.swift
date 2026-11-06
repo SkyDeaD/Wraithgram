@@ -14,7 +14,7 @@ import TelegramNotices
 import AlertComponent
 import WalletContext
 import WalletSendScreen
-import GGHooks // GHOST: peer info points
+import WGHooks // WRAITH: peer info points
 
 extension PeerInfoScreenNode {
     func performButtonAction(key: PeerInfoHeaderButtonKey, buttonNode: PeerInfoHeaderButtonNode?, gesture: ContextGesture?) {
@@ -566,7 +566,7 @@ extension PeerInfoScreenNode {
                         }
                     }
                     
-                    if user.botInfo == nil && data.isContact, case let .user(peer) = strongSelf.data?.peer, let phone = peer.phone, !GGPeerInfoHooks.hidesItem(.shareButton, context: GGPeerInfoContext(context: strongSelf.context, peer: .user(peer), chatPeer: strongSelf.data?.chatPeer, isSettings: strongSelf.isSettings, controller: strongSelf.controller, sourceChatPeerId: strongSelf.sourceMessageId?.peerId)) { // GHOST: features may hide «Поделиться контактом» (GGPeerInfoHooks.hidesItem)
+                    if user.botInfo == nil && data.isContact, case let .user(peer) = strongSelf.data?.peer, let phone = peer.phone, !WGPeerInfoHooks.hidesItem(.shareButton, context: WGPeerInfoContext(context: strongSelf.context, peer: .user(peer), chatPeer: strongSelf.data?.chatPeer, isSettings: strongSelf.isSettings, controller: strongSelf.controller, sourceChatPeerId: strongSelf.sourceMessageId?.peerId)) { // WRAITH: features may hide «Поделиться контактом» (WGPeerInfoHooks.hidesItem)
                         items.append(.action(ContextMenuActionItem(text: presentationData.strings.Profile_ShareContactButton, icon: { theme in
                             generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Forward"), color: theme.contextMenu.primaryColor)
                         }, action: { [weak self] _, f in
@@ -1290,8 +1290,8 @@ extension PeerInfoScreenNode {
                     }
                 }
                 
-                // GHOST: features add items to the profile's «…» menu (GGPeerInfoHooks.menuItems)
-                items = GGPeerInfoHooks.appendMenuItems(items, context: GGPeerInfoContext(context: strongSelf.context, peer: peer, chatPeer: chatPeer, isSettings: strongSelf.isSettings, controller: strongSelf.controller, sourceChatPeerId: strongSelf.sourceMessageId?.peerId))
+                // WRAITH: features add items to the profile's «…» menu (WGPeerInfoHooks.menuItems)
+                items = WGPeerInfoHooks.appendMenuItems(items, context: WGPeerInfoContext(context: strongSelf.context, peer: peer, chatPeer: chatPeer, isSettings: strongSelf.isSettings, controller: strongSelf.controller, sourceChatPeerId: strongSelf.sourceMessageId?.peerId))
                 return .single(items)
             }
             

@@ -3,8 +3,8 @@ import UIKit
 import AVFoundation
 import CoreMedia
 import SwiftSignalKit
-// GHOST: Ghostgram frame processor (masks) shared by CameraNeo and the legacy camera
-import GGCameraPipeline
+// WRAITH: Wraithgram frame processor (masks) shared by CameraNeo and the legacy camera
+import WGCameraPipeline
 
 public enum Camera {
     public typealias Preset = AVCaptureSession.Preset
@@ -44,8 +44,8 @@ public enum Camera {
         public let preferLowerFramerate: Bool
         public let reportAudioLevel: Bool
         public let isRoundVideo: Bool
-        // GHOST: applied to every frame of the visible camera before preview and recording; nil = upstream
-        public let frameProcessor: GGCameraFrameProcessor?
+        // WRAITH: applied to every frame of the visible camera before preview and recording; nil = upstream
+        public let frameProcessor: WGCameraFrameProcessor?
 
         public init(
             preset: Preset,
@@ -58,7 +58,7 @@ public enum Camera {
             preferLowerFramerate: Bool = false,
             reportAudioLevel: Bool = false,
             isRoundVideo: Bool = false,
-            frameProcessor: GGCameraFrameProcessor? = nil // GHOST: see `frameProcessor`
+            frameProcessor: WGCameraFrameProcessor? = nil // WRAITH: see `frameProcessor`
         ) {
             self.preset = preset
             self.position = position
@@ -70,7 +70,7 @@ public enum Camera {
             self.preferLowerFramerate = preferLowerFramerate
             self.reportAudioLevel = reportAudioLevel
             self.isRoundVideo = isRoundVideo
-            // GHOST: see `frameProcessor`
+            // WRAITH: see `frameProcessor`
             self.frameProcessor = frameProcessor
         }
     }

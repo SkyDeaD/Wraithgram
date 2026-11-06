@@ -48,7 +48,7 @@ import MessageHaptics
 import ChatMessageTransitionNode
 import ChatMessageSuggestedPostInfoNode
 import TelegramStringFormatting
-import GGHooks // GHOST: message decorations
+import WGHooks // WRAITH: message decorations
 
 private let nameFont = Font.medium(14.0)
 private let inlineBotPrefixFont = Font.regular(14.0)
@@ -1006,8 +1006,8 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
                 needsShareButton = false
             }
             
-            // GHOST: features may resize stickers, dice and big emoji and hide their time (GGMessageLayoutHooks.sticker)
-            let ggSticker = GGMessageLayoutHooks.stickerLayout(message: item.message, context: item.context)
+            // WRAITH: features may resize stickers, dice and big emoji and hide their time (WGMessageLayoutHooks.sticker)
+            let wgSticker = WGMessageLayoutHooks.stickerLayout(message: item.message, context: item.context)
             var isEmoji = false
             if let _ = telegramDice {
                 imageSize = displaySize
@@ -1056,7 +1056,7 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
                 
                 let maximumContentWidth = floor(tmpWidth - layoutConstants.bubble.edgeInset - layoutConstants.bubble.edgeInset - layoutConstants.bubble.contentInsets.left - layoutConstants.bubble.contentInsets.right - avatarInset)
 
-                let font = Font.regular(floor(fontSizeForEmojiString(item.message.text) * ggSticker.scale)) // GHOST: see ggSticker; emoji drawn as text scale by their font
+                let font = Font.regular(floor(fontSizeForEmojiString(item.message.text) * wgSticker.scale)) // WRAITH: see wgSticker; emoji drawn as text scale by their font
                 let textColor = item.presentationData.theme.theme.list.itemPrimaryTextColor
                 let attributedText = stringWithAppliedEntities(item.message.text, entities: item.message.textEntitiesAttribute?.entities ?? [], baseColor: textColor, linkColor: textColor, baseFont: font, linkFont: font, boldFont: font, italicFont: font, boldItalicFont: font, fixedFont: font, blockQuoteFont: font, message: item.message, adjustQuoteFontSize: true)
                 textLayoutAndApply = textLayout(TextNodeLayoutArguments(attributedString: attributedText, backgroundColor: nil, maximumNumberOfLines: 0, truncationType: .end, constrainedSize: CGSize(width: maximumContentWidth, height: CGFloat.greatestFiniteMagnitude), alignment: .natural))
@@ -1066,7 +1066,7 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
                 
                 imageInset = 0.0
             }
-            if ggSticker.scale != 1.0 && textLayoutAndApply == nil { imageSize = ggSticker.scaledSize(imageSize, maxWidth: params.width - params.leftInset - params.rightInset - 100.0) } // GHOST: see ggSticker; bigger stickers stay within the chat's width
+            if wgSticker.scale != 1.0 && textLayoutAndApply == nil { imageSize = wgSticker.scaledSize(imageSize, maxWidth: params.width - params.leftInset - params.rightInset - 100.0) } // WRAITH: see wgSticker; bigger stickers stay within the chat's width
                         
             var layoutInsets = UIEdgeInsets(top: mergedTop.merged ? layoutConstants.bubble.mergedSpacing : layoutConstants.bubble.defaultSpacing, left: 0.0, bottom: mergedBottom.merged ? layoutConstants.bubble.mergedSpacing : layoutConstants.bubble.defaultSpacing, right: 0.0)
             if dateHeaderAtBottom.hasDate && dateHeaderAtBottom.hasTopic {
@@ -1206,8 +1206,8 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
             var replyStory: EngineStoryId?
             var inlineBotNameString: String?
             for attribute in item.message.attributes {
-                // GHOST: features may hide "via @bot" (GGMessageDecorationHooks)
-                if let attribute = attribute as? InlineBotMessageAttribute, !GGMessageDecorationHooks.hidesViaBot(item.message, context: item.context) {
+                // WRAITH: features may hide "via @bot" (WGMessageDecorationHooks)
+                if let attribute = attribute as? InlineBotMessageAttribute, !WGMessageDecorationHooks.hidesViaBot(item.message, context: item.context) {
                     if let peerId = attribute.peerId, let bot = item.message.peers[peerId] as? TelegramUser {
                         inlineBotNameString = bot.addressName
                     } else {
@@ -1702,7 +1702,7 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
                     let dateAndStatusFrame = CGRect(origin: CGPoint(x: max(displayLeftInset, updatedImageFrame.maxX - dateAndStatusSize.width - 4.0), y: updatedImageFrame.maxY - dateAndStatusSize.height - 4.0 + imageBottomPadding), size: dateAndStatusSize)
                     animation.animator.updateFrame(layer: strongSelf.dateAndStatusNode.layer, frame: dateAndStatusFrame, completion: nil)
                     dateAndStatusApply(animation)
-                    if GGMessageLayoutHooks.adjustsStickers { strongSelf.dateAndStatusNode.isHidden = !ggSticker.showsTime } // GHOST: see ggSticker
+                    if WGMessageLayoutHooks.adjustsStickers { strongSelf.dateAndStatusNode.isHidden = !wgSticker.showsTime } // WRAITH: see wgSticker
                     if case .customChatContents = item.associatedData.subject {
                         strongSelf.dateAndStatusNode.isHidden = true
                     }

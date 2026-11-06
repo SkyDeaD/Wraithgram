@@ -6,8 +6,8 @@ import SwiftSignalKit
 func _internal_addRecentlySearchedPeer(postbox: Postbox, peerId: PeerId) -> Signal<Void, NoError> {
     return postbox.transaction { transaction -> Void in
         if let entry = CodableEntry(RecentPeerItem(rating: 0.0)) {
-            // GHOST: features may keep more recent searches (GGLimitHooks.recentSearchLimit)
-            transaction.addOrMoveToFirstPositionOrderedItemListItem(collectionId: Namespaces.OrderedItemList.RecentlySearchedPeerIds, item: OrderedItemListEntry(id: RecentPeerItemId(peerId).rawValue, contents: entry), removeTailIfCountExceeds: ggRecentSearchLimit(20))
+            // WRAITH: features may keep more recent searches (WGLimitHooks.recentSearchLimit)
+            transaction.addOrMoveToFirstPositionOrderedItemListItem(collectionId: Namespaces.OrderedItemList.RecentlySearchedPeerIds, item: OrderedItemListEntry(id: RecentPeerItemId(peerId).rawValue, contents: entry), removeTailIfCountExceeds: wgRecentSearchLimit(20))
         }
     }
 }
@@ -124,8 +124,8 @@ public func _internal_recentlySearchedPeers(postbox: Postbox) -> Signal<[Recentl
                     for (previousPeerId, updatedPeerId) in migratedPeerIds {
                         transaction.removeOrderedItemListItem(collectionId: Namespaces.OrderedItemList.RecentlySearchedPeerIds, itemId: RecentPeerItemId(previousPeerId).rawValue)
                         if let entry = CodableEntry(RecentPeerItem(rating: 0.0)) {
-                            // GHOST: features may keep more recent searches (GGLimitHooks.recentSearchLimit)
-                            transaction.addOrMoveToFirstPositionOrderedItemListItem(collectionId: Namespaces.OrderedItemList.RecentlySearchedPeerIds, item: OrderedItemListEntry(id: RecentPeerItemId(updatedPeerId).rawValue, contents: entry), removeTailIfCountExceeds: ggRecentSearchLimit(20))
+                            // WRAITH: features may keep more recent searches (WGLimitHooks.recentSearchLimit)
+                            transaction.addOrMoveToFirstPositionOrderedItemListItem(collectionId: Namespaces.OrderedItemList.RecentlySearchedPeerIds, item: OrderedItemListEntry(id: RecentPeerItemId(updatedPeerId).rawValue, contents: entry), removeTailIfCountExceeds: wgRecentSearchLimit(20))
                         }
                     }
                     return .complete()

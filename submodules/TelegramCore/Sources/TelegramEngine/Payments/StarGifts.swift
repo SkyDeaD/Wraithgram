@@ -1967,7 +1967,7 @@ private final class ProfileGiftsContextImpl {
     private let disposable = MetaDisposable()
     private let cacheDisposable = MetaDisposable()
     private let actionDisposable = MetaDisposable()
-    private var ggInvalidationDisposable: Disposable? // GHOST: re-publish on GGGiftHooks.invalidate()
+    private var wgInvalidationDisposable: Disposable? // WRAITH: re-publish on WGGiftHooks.invalidate()
     
     private var sorting: ProfileGiftsContext.Sorting
     private var filter: ProfileGiftsContext.Filters
@@ -2007,8 +2007,8 @@ private final class ProfileGiftsContextImpl {
         self.limit = limit
         
         self.loadMore()
-        // GHOST: an open profile re-publishes its gifts when a feature's local gifts change (GGGiftHooks.invalidate())
-        self.ggInvalidationDisposable = ggObserveProfileGiftsInvalidation(queue: queue, { [weak self] in
+        // WRAITH: an open profile re-publishes its gifts when a feature's local gifts change (WGGiftHooks.invalidate())
+        self.wgInvalidationDisposable = wgObserveProfileGiftsInvalidation(queue: queue, { [weak self] in
             if let strongSelf = self, strongSelf._state != nil { strongSelf.pushState() }
         })
     }
@@ -2017,7 +2017,7 @@ private final class ProfileGiftsContextImpl {
         self.disposable.dispose()
         self.cacheDisposable.dispose()
         self.actionDisposable.dispose()
-        self.ggInvalidationDisposable?.dispose() // GHOST: see ggInvalidationDisposable
+        self.wgInvalidationDisposable?.dispose() // WRAITH: see wgInvalidationDisposable
     }
     
     func reload() {
@@ -2206,8 +2206,8 @@ private final class ProfileGiftsContextImpl {
     }
     
     func updateStarGiftAddedToProfile(reference: StarGiftReference, added: Bool) {
-        // GHOST: local-only gifts are handled by the feature, not the network (GGGiftHooks.localGiftAction)
-        if ggHandleLocalGiftAction(reference, action: .setSavedToProfile(added), account: self.account, peerId: self.peerId, collectionId: self.collectionId) { self.pushState(); return }
+        // WRAITH: local-only gifts are handled by the feature, not the network (WGGiftHooks.localGiftAction)
+        if wgHandleLocalGiftAction(reference, action: .setSavedToProfile(added), account: self.account, peerId: self.peerId, collectionId: self.collectionId) { self.pushState(); return }
         self.actionDisposable.set(
             _internal_updateStarGiftAddedToProfile(account: self.account, reference: reference, added: added).startStrict()
         )
@@ -2248,8 +2248,8 @@ private final class ProfileGiftsContextImpl {
     }
     
     func updateStarGiftPinnedToTop(reference: StarGiftReference, pinnedToTop: Bool) {
-        // GHOST: local-only gifts are handled by the feature, not the network (GGGiftHooks.localGiftAction)
-        if ggHandleLocalGiftAction(reference, action: .setPinnedToTop(pinnedToTop), account: self.account, peerId: self.peerId, collectionId: self.collectionId) { self.pushState(); return }
+        // WRAITH: local-only gifts are handled by the feature, not the network (WGGiftHooks.localGiftAction)
+        if wgHandleLocalGiftAction(reference, action: .setPinnedToTop(pinnedToTop), account: self.account, peerId: self.peerId, collectionId: self.collectionId) { self.pushState(); return }
         var pinnedGifts = self.gifts.filter { $0.pinnedToTop }
         var saveToProfile = false
         if var gift = self.gifts.first(where: { $0.reference == reference }) {
@@ -2332,8 +2332,8 @@ private final class ProfileGiftsContextImpl {
     }
     
     public func updatePinnedToTopStarGifts(references: [StarGiftReference]) {
-        // GHOST: local-only gifts are pinned / unpinned by the feature; only the others go on to the server (GGGiftHooks.isLocalGift)
-        let references = ggSplitLocalPinnedGifts(references, currentlyPinned: self._state?.gifts.filter({ $0.pinnedToTop }).compactMap({ $0.reference }) ?? [], account: self.account, peerId: self.peerId, collectionId: self.collectionId)
+        // WRAITH: local-only gifts are pinned / unpinned by the feature; only the others go on to the server (WGGiftHooks.isLocalGift)
+        let references = wgSplitLocalPinnedGifts(references, currentlyPinned: self._state?.gifts.filter({ $0.pinnedToTop }).compactMap({ $0.reference }) ?? [], account: self.account, peerId: self.peerId, collectionId: self.collectionId)
         let existingGifts = Set(references)
         var saveSignals: [Signal<Never, NoError>] = []
         let currentPinnedGifts = self.gifts.filter { gift in
@@ -2778,7 +2778,7 @@ private final class ProfileGiftsContextImpl {
         let effectiveCount = useMainData ? self.count : self.filteredCount
         let effectiveDataState = useMainData ? self.dataState : self.filteredDataState
         
-        var state = ProfileGiftsContext.State( // GHOST: `var` for GGGiftHooks.profileGifts below
+        var state = ProfileGiftsContext.State( // WRAITH: `var` for WGGiftHooks.profileGifts below
             filter: self.filter,
             sorting: self.sorting,
             gifts: self.gifts,
@@ -2787,8 +2787,8 @@ private final class ProfileGiftsContextImpl {
             dataState: effectiveDataState,
             notificationsEnabled: self.notificationsEnabled
         )
-        // GHOST: features may add local-only gifts (GGGiftHooks.profileGifts); `let state` became `var`
-        ggTransformProfileGifts(&state, account: self.account, peerId: self.peerId, collectionId: self.collectionId)
+        // WRAITH: features may add local-only gifts (WGGiftHooks.profileGifts); `let state` became `var`
+        wgTransformProfileGifts(&state, account: self.account, peerId: self.peerId, collectionId: self.collectionId)
         self._state = state
         self.stateValue.set(.single(state))
     }

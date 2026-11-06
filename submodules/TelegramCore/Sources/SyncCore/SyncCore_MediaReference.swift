@@ -77,7 +77,7 @@ public struct MessageReference: PostboxCoding, Hashable, Equatable {
             } else {
                 author = nil
             }
-            self.content = .message(peer: inputPeer, author: author, id: message.id, timestamp: message.timestamp, incoming: message.flags.contains(.Incoming), secret: message.ggRawContainsSecretMedia, threadId: message.threadId) // GHOST: the message's own answer, also when it is shown as ordinary media (GGRestrictionHooks.secretMediaDisplay)
+            self.content = .message(peer: inputPeer, author: author, id: message.id, timestamp: message.timestamp, incoming: message.flags.contains(.Incoming), secret: message.wgRawContainsSecretMedia, threadId: message.threadId) // WRAITH: the message's own answer, also when it is shown as ordinary media (WGRestrictionHooks.secretMediaDisplay)
         } else {
             self.content = .none
         }

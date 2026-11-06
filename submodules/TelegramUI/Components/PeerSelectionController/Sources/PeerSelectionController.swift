@@ -72,7 +72,7 @@ public final class PeerSelectionControllerImpl: ViewController, PeerSelectionCon
     private let hasCreation: Bool
     let immediatelySwitchToContacts: Bool
     let immediatelyActivateMultipleSelection: Bool
-    private let ggHidesSenderNames: Bool // GHOST: «Переслать без автора»
+    private let wgHidesSenderNames: Bool // WRAITH: «Переслать без автора»
     
     override public var _presentedInModal: Bool {
         get {
@@ -120,7 +120,7 @@ public final class PeerSelectionControllerImpl: ViewController, PeerSelectionCon
         self.multipleSelectionLimit = params.multipleSelectionLimit
         self.suggestedPeers = params.suggestedPeers
         self.excludedPeerIds = params.excludedPeerIds
-        self.ggHidesSenderNames = params.ggHidesSenderNames
+        self.wgHidesSenderNames = params.wgHidesSenderNames
         
         super.init(navigationBarPresentationData: NavigationBarPresentationData(presentationData: self.presentationData))
         
@@ -373,7 +373,7 @@ public final class PeerSelectionControllerImpl: ViewController, PeerSelectionCon
             createNewGroup: self.createNewGroup,
             suggestedPeers: self.suggestedPeers,
             excludedPeerIds: self.excludedPeerIds,
-            ggHidesSenderNames: self.ggHidesSenderNames,
+            wgHidesSenderNames: self.wgHidesSenderNames,
             present: { [weak self] c, a in
                 self?.present(c, in: .window(.root), with: a)
             },

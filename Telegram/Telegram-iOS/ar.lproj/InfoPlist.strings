@@ -1,9 +1,9 @@
 /* Localized versions of Info.plist keys */
-"CFBundleDisplayName" = "Ghostgram"; /* GHOST: app name */
-"NSContactsUsageDescription" = "سيقوم تيليجرام برفع جهات الاتصال الخاصة بك باستمرار إلى خوادم التخزين السحابية ذات التشفير العالي لتتمكن من التواصل مع أصدقائك من خلال جميع أجهزتك."; /* GHOST: Telegram's cloud, the name stays */
-"NSLocationWhenInUseUsageDescription" = "عندما ترغب في مشاركة مكانك مع أصدقائك، Ghostgram يحتاج لصلاحيات لعرض الخريطة لهم."; /* GHOST: app name */
-"NSLocationAlwaysAndWhenInUseUsageDescription" = "عندما تختار أن تشارك مكانك بشكل حي مع أصدقائك في المحادثة، يحتاج Ghostgram إلى الوصول لموقعك في الخلفية حتى بعد إغلاق Ghostgram خلال فترة المشاركة."; /* GHOST: app name */
-"NSLocationAlwaysUsageDescription" = "عندما تقوم بمشاركة موقعك مع أصدقائك، Ghostgram يحتاج إلى الصلاحية ليعرض لهم الخريطة. كما تحتاج لإعطاء Ghostgram الصلاحية لتتمكن من إرسال موقعك من ساعة آبل."; /* GHOST: app name */
+"CFBundleDisplayName" = "Wraithgram"; /* WRAITH: app name */
+"NSContactsUsageDescription" = "سيقوم تيليجرام برفع جهات الاتصال الخاصة بك باستمرار إلى خوادم التخزين السحابية ذات التشفير العالي لتتمكن من التواصل مع أصدقائك من خلال جميع أجهزتك."; /* WRAITH: Telegram's cloud, the name stays */
+"NSLocationWhenInUseUsageDescription" = "عندما ترغب في مشاركة مكانك مع أصدقائك، Wraithgram يحتاج لصلاحيات لعرض الخريطة لهم."; /* WRAITH: app name */
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "عندما تختار أن تشارك مكانك بشكل حي مع أصدقائك في المحادثة، يحتاج Wraithgram إلى الوصول لموقعك في الخلفية حتى بعد إغلاق Wraithgram خلال فترة المشاركة."; /* WRAITH: app name */
+"NSLocationAlwaysUsageDescription" = "عندما تقوم بمشاركة موقعك مع أصدقائك، Wraithgram يحتاج إلى الصلاحية ليعرض لهم الخريطة. كما تحتاج لإعطاء Wraithgram الصلاحية لتتمكن من إرسال موقعك من ساعة آبل."; /* WRAITH: app name */
 "NSCameraUsageDescription" = "نحتاج ذلك لتتمكن من التقاط وإرسال الصور والفيديوهات.";
 "NSPhotoLibraryUsageDescription" = "نحتاج ذلك لتتمكن من إرسال الصور والفيديوهات من ألبوم الصور.";
 "NSPhotoLibraryAddUsageDescription" = "نحتاج هذه الصلاحية لتتمكن من حفظ وسائطك في مكتبة الصور الخاصة بك.";

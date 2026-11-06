@@ -28,7 +28,7 @@ import AnimatedTextComponent
 import BottomButtonPanelComponent
 import GlassBackgroundComponent
 import EdgeEffect
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 #if DEBUG
 import os.signpost
@@ -1985,7 +1985,7 @@ final class StorageUsageScreenComponent: Component {
                             guard let self, let component = self.component else {
                                 return
                             }
-                            let value = max(GGExtrasPolicy.minimumCacheSizeLimit, value) // GHOST: «1 ГБ» is allowed with «Больше вариантов кэша» (GGExtrasPolicy)
+                            let value = max(WGExtrasPolicy.minimumCacheSizeLimit, value) // WRAITH: «1 ГБ» is allowed with «Больше вариантов кэша» (WGExtrasPolicy)
                             let _ = updateCacheStorageSettingsInteractively(accountManager: component.context.sharedContext.accountManager, { current in
                                 var current = current
                                 current.defaultCacheStorageLimitGigabytes = value
@@ -3233,7 +3233,7 @@ final class StorageUsageScreenComponent: Component {
                     ]
                 }
                 
-                presetValues = GGExtrasPolicy.keepMediaPresets(presetValues) // GHOST: «1 час» with «Больше вариантов кэша» (GGExtrasPolicy)
+                presetValues = WGExtrasPolicy.keepMediaPresets(presetValues) // WRAITH: «1 час» with «Больше вариантов кэша» (WGExtrasPolicy)
                 if currentValue != 0 && !presetValues.contains(currentValue) {
                     presetValues.append(currentValue)
                     presetValues.sort(by: >)

@@ -298,7 +298,7 @@ final class GiftsListView: UIView {
                     let _ = self.giftsCollections?.reorderGifts(id: collectionId, gifts: orderedReferences).start()
                 } else {
                     var pinnedReferences: [StarGiftReference] = []
-                    for gift in ggPinnedPrefix(starsProducts, maxCount: self.maxPinnedCount, account: self.context.account) { // GHOST: fake gifts take no server pin slot (was starsProducts.prefix(self.maxPinnedCount))
+                    for gift in wgPinnedPrefix(starsProducts, maxCount: self.maxPinnedCount, account: self.context.account) { // WRAITH: fake gifts take no server pin slot (was starsProducts.prefix(self.maxPinnedCount))
                         if gift.pinnedToTop, let reference = gift.reference {
                             pinnedReferences.append(reference)
                         }
@@ -569,7 +569,7 @@ final class GiftsListView: UIView {
                                     self.updateScrolling(transition: .easeInOut(duration: 0.25))
                                 } else if self.isReordering {
                                     if case .unique = product.gift, !product.pinnedToTop, let reference = product.reference, let items = self.starsProducts {
-                                        if !ggIsLocalProfileGift(reference, account: self.context.account) && ggServerPinnedCount(self.pinnedReferences, account: self.context.account) >= self.maxPinnedCount { // GHOST: fake gifts take no server pin slot (GGGiftHooks.isLocalGift)
+                                        if !wgIsLocalProfileGift(reference, account: self.context.account) && wgServerPinnedCount(self.pinnedReferences, account: self.context.account) >= self.maxPinnedCount { // WRAITH: fake gifts take no server pin slot (WGGiftHooks.isLocalGift)
                                             self.parentController?.present(UndoOverlayController(presentationData: presentationData, content: .info(title: nil, text: presentationData.strings.PeerInfo_Gifts_ToastPinLimit_Text(Int32(self.maxPinnedCount)), timeout: nil, customUndoText: nil), elevatedLayout: true, animateInAsReplacement: false, action: { _ in return false }), in: .window(.root))
                                             return
                                         }
@@ -653,7 +653,7 @@ final class GiftsListView: UIView {
                                             guard let self else {
                                                 return false
                                             }
-                                            if pinnedToTop && !ggIsLocalProfileGift(reference, account: self.context.account) && ggServerPinnedCount(self.pinnedReferences, account: self.context.account) >= self.maxPinnedCount { // GHOST: fake gifts take no server pin slot (GGGiftHooks.isLocalGift)
+                                            if pinnedToTop && !wgIsLocalProfileGift(reference, account: self.context.account) && wgServerPinnedCount(self.pinnedReferences, account: self.context.account) >= self.maxPinnedCount { // WRAITH: fake gifts take no server pin slot (WGGiftHooks.isLocalGift)
                                                 self.displayUnpinScreen?(product, {
                                                     dismissImpl?()
                                                 })

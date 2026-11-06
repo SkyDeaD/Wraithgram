@@ -6,8 +6,8 @@ import TelegramStringFormatting
 import TextFormat
 import LocalizedPeerData
 import AccountContext
-import GGHooks // GHOST: message decorations
-import GGCore // GHOST: hook points (GGHookPoint.isEmpty)
+import WGHooks // WRAITH: message decorations
+import WGCore // WRAITH: hook points (WGHookPoint.isEmpty)
 
 public enum MessageTimestampStatusFormat {
     case full
@@ -110,8 +110,8 @@ public func stringForMessageTimestampStatus(
     }
     
     var dateText = stringForMessageTimestamp(timestamp: timestamp, dateTimeFormat: dateTimeFormat)
-    // GHOST: features prefix the status, e.g. a «deleted» mark (GGMessageDecorationHooks)
-    if !GGMessageDecorationHooks.decorations.isEmpty { dateText = GGMessageDecorationHooks.statusText(dateText, message: message._asMessage(), context: context) }
+    // WRAITH: features prefix the status, e.g. a «deleted» mark (WGMessageDecorationHooks)
+    if !WGMessageDecorationHooks.decorations.isEmpty { dateText = WGMessageDecorationHooks.statusText(dateText, message: message._asMessage(), context: context) }
     if timestamp == scheduleWhenOnlineTimestamp {
         dateText = "         "
     }

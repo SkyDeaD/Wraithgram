@@ -24,10 +24,10 @@ swift_library(
         "//submodules/TelegramUI/Components/GlassBackgroundComponent",
         "//submodules/ComponentFlow",
         "//submodules/Components/ComponentDisplayAdapters",
-        # GHOST: Swiftgram-parity settings and points (W5-SG)
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
-        "//Ghostgram/Features/Extras:GGExtrasHooks",
+        # WRAITH: Swiftgram-parity settings and points (W5-SG)
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
+        "//Wraithgram/Features/Extras:WGExtrasHooks",
     ],
     visibility = [
         "//visibility:public",

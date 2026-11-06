@@ -20,7 +20,7 @@ import TemporaryCachedPeerDataManager
 import CallsEmoji
 import TdBinding
 import LiquidGlassShapes
-import GGCallCameraHooks // GHOST: virtual camera capturer (W3-2)
+import WGCallCameraHooks // WRAITH: virtual camera capturer (W3-2)
 
 private extension PresentationGroupCallState {
     static func initialValue(myPeerId: PeerId, title: String?, scheduleTimestamp: Int32?, subscribedToScheduled: Bool, isChannel: Bool) -> PresentationGroupCallState {
@@ -812,8 +812,8 @@ public final class PresentationGroupCallImpl: PresentationGroupCall {
     public let isStream: Bool
     private let streamPeerId: EnginePeer.Id?
     private let sharedAudioContext: SharedCallAudioContext?
-    // GHOST: the shared audio device of this call for Ghostgram call features (soundboard)
-    public var ggAudioDevice: OngoingCallContext.AudioDevice? { return self.sharedAudioContext?.audioDevice }
+    // WRAITH: the shared audio device of this call for Wraithgram call features (soundboard)
+    public var wgAudioDevice: OngoingCallContext.AudioDevice? { return self.sharedAudioContext?.audioDevice }
     
     public let isConference: Bool
     private let beginWithVideo: Bool
@@ -3243,7 +3243,7 @@ public final class PresentationGroupCallImpl: PresentationGroupCall {
     
     public func makeOutgoingVideoView(requestClone: Bool, completion: @escaping (PresentationCallVideoView?, PresentationCallVideoView?) -> Void) {
         if self.videoCapturer == nil {
-            let videoCapturer = GGCallCameraHooks.makeCameraCapturer() ?? OngoingCallVideoCapturer() // GHOST: virtual camera (W3-2, GGCallCameraHooks)
+            let videoCapturer = WGCallCameraHooks.makeCameraCapturer() ?? OngoingCallVideoCapturer() // WRAITH: virtual camera (W3-2, WGCallCameraHooks)
             self.videoCapturer = videoCapturer
         }
 
@@ -3389,7 +3389,7 @@ public final class PresentationGroupCallImpl: PresentationGroupCall {
     
     public func requestVideo() {
         if self.videoCapturer == nil {
-            let videoCapturer = GGCallCameraHooks.makeCameraCapturer() ?? OngoingCallVideoCapturer() // GHOST: virtual camera (W3-2, GGCallCameraHooks)
+            let videoCapturer = WGCallCameraHooks.makeCameraCapturer() ?? OngoingCallVideoCapturer() // WRAITH: virtual camera (W3-2, WGCallCameraHooks)
             self.videoCapturer = videoCapturer
         }
 
@@ -3451,7 +3451,7 @@ public final class PresentationGroupCallImpl: PresentationGroupCall {
     
     public func switchVideoCamera() {
         self.useFrontCamera = !self.useFrontCamera
-        if let videoCapturer = self.videoCapturer, GGCallCameraHooks.switchCamera(capturer: videoCapturer, isFront: self.useFrontCamera) { return } // GHOST: virtual camera (W3-2, GGCallCameraHooks)
+        if let videoCapturer = self.videoCapturer, WGCallCameraHooks.switchCamera(capturer: videoCapturer, isFront: self.useFrontCamera) { return } // WRAITH: virtual camera (W3-2, WGCallCameraHooks)
         self.videoCapturer?.switchVideoInput(isFront: self.useFrontCamera)
     }
 

@@ -334,7 +334,7 @@ final class PeerInfoAvatarTransformContainerNode: ASDisplayNode {
             }
             
             var isForum = false
-            var avatarCornerRadius: CGFloat // GHOST: var — square avatars adjust it below
+            var avatarCornerRadius: CGFloat // WRAITH: var — square avatars adjust it below
             if case let .channel(channel) = peer, channel.isForumOrMonoForum {
                 avatarCornerRadius = floor(avatarSize * 0.25)
                 isForum = true
@@ -342,9 +342,9 @@ final class PeerInfoAvatarTransformContainerNode: ASDisplayNode {
                 avatarCornerRadius = avatarSize / 2.0
             }
             self.cornerFraction = isForum ? 0.25 : 0.5
-            let ggUpstreamCornerRadius = avatarCornerRadius
-            avatarCornerRadius = ggAvatarCornerRadius(side: avatarSize, isForum: isForum, upstream: avatarCornerRadius) // GHOST: square avatars (GGAvatarHooks.shape)
-            if avatarCornerRadius != ggUpstreamCornerRadius && avatarSize > 0.0 { self.cornerFraction = avatarCornerRadius / avatarSize } // GHOST: the profile expansion keeps the avatar's shape
+            let wgUpstreamCornerRadius = avatarCornerRadius
+            avatarCornerRadius = wgAvatarCornerRadius(side: avatarSize, isForum: isForum, upstream: avatarCornerRadius) // WRAITH: square avatars (WGAvatarHooks.shape)
+            if avatarCornerRadius != wgUpstreamCornerRadius && avatarSize > 0.0 { self.cornerFraction = avatarCornerRadius / avatarSize } // WRAITH: the profile expansion keeps the avatar's shape
             if self.avatarNode.layer.cornerRadius != 0.0 {
                 ContainedViewLayoutTransition.animated(duration: 0.3, curve: .easeInOut).updateCornerRadius(layer: self.avatarNode.contentNode.layer, cornerRadius: avatarCornerRadius)
             } else {
@@ -456,7 +456,7 @@ final class PeerInfoAvatarTransformContainerNode: ASDisplayNode {
                             self.videoNode = videoNode
                             
                             let maskPath: UIBezierPath
-                            if isForum || avatarCornerRadius < self.avatarNode.frame.width * 0.5 { // GHOST: square avatars — the video follows the avatar's corners
+                            if isForum || avatarCornerRadius < self.avatarNode.frame.width * 0.5 { // WRAITH: square avatars — the video follows the avatar's corners
                                 maskPath = UIBezierPath(roundedRect: CGRect(origin: CGPoint(), size: self.avatarNode.frame.size), cornerRadius: avatarCornerRadius)
                             } else {
                                 maskPath = UIBezierPath(ovalIn: CGRect(origin: CGPoint(), size: self.avatarNode.frame.size))

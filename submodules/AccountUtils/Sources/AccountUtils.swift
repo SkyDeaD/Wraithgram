@@ -4,12 +4,12 @@ import TelegramCore
 import TelegramUIPreferences
 import AccountContext
 
-// GHOST: the account limit goes through GGLimitHooks.accountLimit (Ghostgram: 100 with and without Premium); empty point = 3 / 4
+// WRAITH: the account limit goes through WGLimitHooks.accountLimit (Wraithgram: 100 with and without Premium); empty point = 3 / 4
 public var maximumNumberOfAccounts: Int {
-    return GGLimitHooks.maximumNumberOfAccounts(isPremium: false)
+    return WGLimitHooks.maximumNumberOfAccounts(isPremium: false)
 }
 public var maximumPremiumNumberOfAccounts: Int {
-    return GGLimitHooks.maximumNumberOfAccounts(isPremium: true)
+    return WGLimitHooks.maximumNumberOfAccounts(isPremium: true)
 }
 
 public func activeAccountsAndPeers(context: AccountContext, includePrimary: Bool = false) -> Signal<((AccountContext, EnginePeer)?, [(AccountContext, EnginePeer, Int32)]), NoError> {

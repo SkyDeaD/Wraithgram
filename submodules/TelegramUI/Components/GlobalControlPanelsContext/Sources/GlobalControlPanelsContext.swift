@@ -8,7 +8,7 @@ import TelegramUIPreferences
 import TelegramCallsUI
 import Display
 import UndoUI
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 
 public final class GlobalControlPanelsContext {
     public final class MediaPlayback: Equatable {
@@ -351,9 +351,9 @@ public final class GlobalControlPanelsContext {
                     context.account.stateManager.contactBirthdays,
                     starsSubscriptionsContextPromise.get(),
                     accountFreezeConfiguration,
-                    GGExtrasSettings.hidePremiumOffers.signal // GHOST: «Скрыть предложения Premium» applies at once (the panel is rebuilt on a change)
+                    WGExtrasSettings.hidePremiumOffers.signal // WRAITH: «Скрыть предложения Premium» applies at once (the panel is rebuilt on a change)
                 )
-                |> mapToSignal { suggestions, dismissedSuggestions, needsPasswordSetup, newSessionReviews, newBotConnectionReviews, data, birthdays, starsSubscriptionsContext, accountFreezeConfiguration, _ -> Signal<ChatListNotice?, NoError> in // GHOST: see above
+                |> mapToSignal { suggestions, dismissedSuggestions, needsPasswordSetup, newSessionReviews, newBotConnectionReviews, data, birthdays, starsSubscriptionsContext, accountFreezeConfiguration, _ -> Signal<ChatListNotice?, NoError> in // WRAITH: see above
                     let (accountPeer, birthday) = data
                     
                     if let newSessionReview = newSessionReviews.first {
@@ -414,9 +414,9 @@ public final class GlobalControlPanelsContext {
                         return .single(.setupPhoto(accountPeer))
                     } else if suggestions.contains(.gracePremium) {
                         return .single(.premiumGrace)
-                    } else if suggestions.contains(.xmasPremiumGift), !GGExtrasPolicy.hidesPremiumOffers { // GHOST: «Скрыть предложения Premium» (GGExtrasPolicy)
+                    } else if suggestions.contains(.xmasPremiumGift), !WGExtrasPolicy.hidesPremiumOffers { // WRAITH: «Скрыть предложения Premium» (WGExtrasPolicy)
                         return .single(.xmasPremiumGift)
-                    } else if suggestions.contains(.annualPremium) || suggestions.contains(.upgradePremium) || suggestions.contains(.restorePremium), !GGExtrasPolicy.hidesPremiumOffers, let inAppPurchaseManager = context.inAppPurchaseManager { // GHOST: see above
+                    } else if suggestions.contains(.annualPremium) || suggestions.contains(.upgradePremium) || suggestions.contains(.restorePremium), !WGExtrasPolicy.hidesPremiumOffers, let inAppPurchaseManager = context.inAppPurchaseManager { // WRAITH: see above
                         return inAppPurchaseManager.availableProducts
                         |> map { products -> ChatListNotice? in
                             if products.count > 1 {

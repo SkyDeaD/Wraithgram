@@ -6,19 +6,19 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: Ghostgram core and the shared part of the features
-        "//Ghostgram/GGHooks:ShareExtensionHookSources",
+        # WRAITH: Wraithgram core and the shared part of the features
+        "//Wraithgram/WGHooks:ShareExtensionHookSources",
     ],
     copts = [
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: Ghostgram core and the shared part of the features
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
-        # GHOST: outgoing photo size, quality and watermark (GGShareExtensionPhotos.swift)
+        # WRAITH: Wraithgram core and the shared part of the features
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
+        # WRAITH: outgoing photo size, quality and watermark (WGShareExtensionPhotos.swift)
         "//submodules/ImageCompression:ImageCompression",
-        "//Ghostgram/Features/CameraMasks:GGCameraPipeline",
+        "//Wraithgram/Features/CameraMasks:WGCameraPipeline",
         "//submodules/AsyncDisplayKit",
         "//submodules/Display",
         "//submodules/TelegramCore",

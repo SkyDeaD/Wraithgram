@@ -20,11 +20,11 @@ import SavedMessagesScreen
 import WallpaperGalleryScreen
 import ChatMessageNotificationItem
 import FaceScanScreen
-import GGHooks // GHOST: chat screen points
+import WGHooks // WRAITH: chat screen points
 
 public func navigateToChatControllerImpl(_ params: NavigateToChatControllerParams) {
-    // GHOST: features may ask for a passcode before a chat opens (GGChatScreenHooks.openChat)
-    if GGChatScreenHooks.interceptOpenChat(params, proceed: { navigateToChatControllerImpl(params) }) { return }
+    // WRAITH: features may ask for a passcode before a chat opens (WGChatScreenHooks.openChat)
+    if WGChatScreenHooks.interceptOpenChat(params, proceed: { navigateToChatControllerImpl(params) }) { return }
     if case let .peer(peer) = params.chatLocation {
         let _ = params.context.engine.peers.ensurePeerIsLocallyAvailable(peer: peer).startStandalone()
     }

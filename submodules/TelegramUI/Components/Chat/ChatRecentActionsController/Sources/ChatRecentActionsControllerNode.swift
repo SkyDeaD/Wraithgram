@@ -1306,7 +1306,7 @@ final class ChatRecentActionsControllerNode: ViewControllerTracingNode {
                                 messageEntities = attribute.entities
                             }
                             if let attribute = attribute as? RestrictedContentMessageAttribute {
-                                restrictedText = attribute.platformText(platform: "ios", contentSettings: context.currentContentSettings.with { $0 }) ?? (GGRestrictionHooks.messageRestrictionApplies(message) ? "" : nil) // GHOST: a lifted restriction copies / shares the message itself (GGRestrictionHooks.messageRestriction)
+                                restrictedText = attribute.platformText(platform: "ios", contentSettings: context.currentContentSettings.with { $0 }) ?? (WGRestrictionHooks.messageRestrictionApplies(message) ? "" : nil) // WRAITH: a lifted restriction copies / shares the message itself (WGRestrictionHooks.messageRestriction)
                             }
                         }
                         

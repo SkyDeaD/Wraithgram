@@ -61,9 +61,9 @@ swift_library(
         "//submodules/TelegramUI/Components/LottieComponent",
         "//submodules/TelegramUI/Components/AlertComponent",
         "//submodules/Components/BundleIconComponent",
-        # GHOST: SG-F5 and «Send as a round video» settings.
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/Features/CameraMasks:GGCameraPipeline",
+        # WRAITH: SG-F5 and «Send as a round video» settings.
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/Features/CameraMasks:WGCameraPipeline",
     ],
     visibility = [
         "//visibility:public",

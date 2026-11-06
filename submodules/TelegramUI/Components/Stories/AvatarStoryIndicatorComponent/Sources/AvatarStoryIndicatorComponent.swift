@@ -5,9 +5,9 @@ import ComponentFlow
 import HierarchyTrackingLayer
 import TelegramPresentationData
 
-// GHOST: a rounded square from the middle of its top edge, clockwise on screen — the progress ring of a
+// WRAITH: a rounded square from the middle of its top edge, clockwise on screen — the progress ring of a
 // rounded-rect avatar (square avatars) fills and dashes along it.
-private func ggRoundedRingPathFromTop(_ rect: CGRect, cornerRadius: CGFloat) -> CGPath {
+private func wgRoundedRingPathFromTop(_ rect: CGRect, cornerRadius: CGFloat) -> CGPath {
     let path = CGMutablePath()
     path.move(to: CGPoint(x: rect.midX, y: rect.minY))
     path.addArc(tangent1End: CGPoint(x: rect.maxX, y: rect.minY), tangent2End: CGPoint(x: rect.maxX, y: rect.maxY), radius: cornerRadius)
@@ -440,7 +440,7 @@ public final class AvatarStoryIndicatorComponent: Component {
     public let counters: Counters?
     public let progress: Progress?
     public let isRoundedRect: Bool
-    // GHOST: corner radius of the rounded-rect ring as a fraction of its diameter (square avatars; Telegram: 0.27)
+    // WRAITH: corner radius of the rounded-rect ring as a fraction of its diameter (square avatars; Telegram: 0.27)
     public let roundedRectCornerFraction: CGFloat
     
     public init(
@@ -453,7 +453,7 @@ public final class AvatarStoryIndicatorComponent: Component {
         counters: Counters?,
         progress: Progress? = nil,
         isRoundedRect: Bool = false,
-        roundedRectCornerFraction: CGFloat = 0.27 // GHOST: see the property
+        roundedRectCornerFraction: CGFloat = 0.27 // WRAITH: see the property
     ) {
         self.hasUnseen = hasUnseen
         self.hasUnseenCloseFriendsItems = hasUnseenCloseFriendsItems
@@ -464,7 +464,7 @@ public final class AvatarStoryIndicatorComponent: Component {
         self.counters = counters
         self.progress = progress
         self.isRoundedRect = isRoundedRect
-        self.roundedRectCornerFraction = roundedRectCornerFraction // GHOST: see the property
+        self.roundedRectCornerFraction = roundedRectCornerFraction // WRAITH: see the property
     }
     
     public static func ==(lhs: AvatarStoryIndicatorComponent, rhs: AvatarStoryIndicatorComponent) -> Bool {
@@ -495,7 +495,7 @@ public final class AvatarStoryIndicatorComponent: Component {
         if lhs.isRoundedRect != rhs.isRoundedRect {
             return false
         }
-        if lhs.roundedRectCornerFraction != rhs.roundedRectCornerFraction { // GHOST: see the property
+        if lhs.roundedRectCornerFraction != rhs.roundedRectCornerFraction { // WRAITH: see the property
             return false
         }
         return true
@@ -511,8 +511,8 @@ public final class AvatarStoryIndicatorComponent: Component {
             var size: CGSize
             var lineWidth: CGFloat
             var value: Value
-            var ggRingCorner: CGFloat? // GHOST: square avatars — the corner of the rounded-square ring, nil = circle
-            var ggRingLength: CGFloat = 0.0 // GHOST: see ggRingCorner
+            var wgRingCorner: CGFloat? // WRAITH: square avatars — the corner of the rounded-square ring, nil = circle
+            var wgRingLength: CGFloat = 0.0 // WRAITH: see wgRingCorner
         }
         private var currentParams: Params?
 
@@ -521,11 +521,11 @@ public final class AvatarStoryIndicatorComponent: Component {
         private let indefiniteDashLayer = SimpleShapeLayer()
         private let indefiniteReplicatorLayer = CAReplicatorLayer()
 
-        // GHOST: square avatars — a rounded square can not be drawn by rotating copies of an arc: the
+        // WRAITH: square avatars — a rounded square can not be drawn by rotating copies of an arc: the
         // loading dashes run along the whole ring (lineDashPhase) and nothing rotates. Upstream look otherwise.
-        private func ggApplyRingMode(_ params: Params) {
-            if let _ = params.ggRingCorner {
-                let segment = max(1.0, params.ggRingLength / 30.0)
+        private func wgApplyRingMode(_ params: Params) {
+            if let _ = params.wgRingCorner {
+                let segment = max(1.0, params.wgRingLength / 30.0)
                 self.indefiniteDashLayer.strokeStart = 0.0
                 self.indefiniteDashLayer.strokeEnd = 1.0
                 self.indefiniteDashLayer.lineDashPattern = [NSNumber(value: Double(segment * 0.5)), NSNumber(value: Double(segment * 0.5))]
@@ -538,7 +538,7 @@ public final class AvatarStoryIndicatorComponent: Component {
                 self.uploadProgressLayer.removeAnimation(forKey: "rotation")
             } else {
                 self.indefiniteDashLayer.lineDashPattern = nil
-                self.indefiniteDashLayer.removeAnimation(forKey: "ggDashPhase")
+                self.indefiniteDashLayer.removeAnimation(forKey: "wgDashPhase")
                 self.indefiniteDashLayer.strokeStart = 0.0
                 self.indefiniteDashLayer.strokeEnd = 0.0333
                 let count = 1.0 / self.indefiniteDashLayer.strokeEnd
@@ -606,7 +606,7 @@ public final class AvatarStoryIndicatorComponent: Component {
                     self.addSublayer(self.uploadProgressLayer)
                 }
                 transition.setShapeLayerStrokeEnd(layer: self.uploadProgressLayer, strokeEnd: CGFloat(progress))
-                if params.ggRingCorner == nil, self.uploadProgressLayer.animation(forKey: "rotation") == nil { // GHOST: a rounded-square ring fills from the top, it does not rotate
+                if params.wgRingCorner == nil, self.uploadProgressLayer.animation(forKey: "rotation") == nil { // WRAITH: a rounded-square ring fills from the top, it does not rotate
                     let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
                     rotationAnimation.duration = 2.0
                     rotationAnimation.fromValue = NSNumber(value: Float(0.0))
@@ -622,16 +622,16 @@ public final class AvatarStoryIndicatorComponent: Component {
                 if self.indefiniteReplicatorLayer.superlayer == nil {
                     self.addSublayer(self.indefiniteReplicatorLayer)
                 }
-                // GHOST: square avatars — the dashes run along the rounded square instead of rotating
-                if params.ggRingCorner != nil {
-                    if self.indefiniteDashLayer.animation(forKey: "ggDashPhase") == nil {
+                // WRAITH: square avatars — the dashes run along the rounded square instead of rotating
+                if params.wgRingCorner != nil {
+                    if self.indefiniteDashLayer.animation(forKey: "wgDashPhase") == nil {
                         let phaseAnimation = CABasicAnimation(keyPath: "lineDashPhase")
                         phaseAnimation.fromValue = NSNumber(value: 0.0)
-                        phaseAnimation.toValue = NSNumber(value: -Double(params.ggRingLength))
+                        phaseAnimation.toValue = NSNumber(value: -Double(params.wgRingLength))
                         phaseAnimation.duration = 4.0
                         phaseAnimation.repeatCount = Float.infinity
                         phaseAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
-                        self.indefiniteDashLayer.add(phaseAnimation, forKey: "ggDashPhase")
+                        self.indefiniteDashLayer.add(phaseAnimation, forKey: "wgDashPhase")
                     }
                     return
                 }
@@ -661,30 +661,30 @@ public final class AvatarStoryIndicatorComponent: Component {
             }
         }
         
-        func update(size: CGSize, radius: CGFloat, isRoundedRect: Bool, roundedRectCornerFraction: CGFloat, lineWidth: CGFloat, value: Value, transition: ComponentTransition) { // GHOST: + roundedRectCornerFraction
-            // GHOST: square avatars — a rounded-rect avatar gets a rounded-square ring with the corner of its static ring
-            var ggRing: (path: CGPath, length: CGFloat, cornerRadius: CGFloat)?
+        func update(size: CGSize, radius: CGFloat, isRoundedRect: Bool, roundedRectCornerFraction: CGFloat, lineWidth: CGFloat, value: Value, transition: ComponentTransition) { // WRAITH: + roundedRectCornerFraction
+            // WRAITH: square avatars — a rounded-rect avatar gets a rounded-square ring with the corner of its static ring
+            var wgRing: (path: CGPath, length: CGFloat, cornerRadius: CGFloat)?
             if isRoundedRect {
-                let ggRect = CGRect(x: size.width * 0.5 - radius, y: size.height * 0.5 - radius, width: radius * 2.0, height: radius * 2.0)
-                let ggCorner = min(radius, floor((radius * 2.0 + lineWidth) * roundedRectCornerFraction))
-                ggRing = (ggRoundedRingPathFromTop(ggRect, cornerRadius: ggCorner), 4.0 * max(0.0, ggRect.width - ggCorner * 2.0) + 2.0 * CGFloat.pi * ggCorner, ggCorner)
+                let wgRect = CGRect(x: size.width * 0.5 - radius, y: size.height * 0.5 - radius, width: radius * 2.0, height: radius * 2.0)
+                let wgCorner = min(radius, floor((radius * 2.0 + lineWidth) * roundedRectCornerFraction))
+                wgRing = (wgRoundedRingPathFromTop(wgRect, cornerRadius: wgCorner), 4.0 * max(0.0, wgRect.width - wgCorner * 2.0) + 2.0 * CGFloat.pi * wgCorner, wgCorner)
             }
             let params = Params(
                 size: size,
                 lineWidth: lineWidth,
                 value: value,
-                ggRingCorner: ggRing?.cornerRadius, // GHOST: see ggRing
-                ggRingLength: ggRing?.length ?? 0.0 // GHOST: see ggRing
+                wgRingCorner: wgRing?.cornerRadius, // WRAITH: see wgRing
+                wgRingLength: wgRing?.length ?? 0.0 // WRAITH: see wgRing
             )
             if self.currentParams == params {
                 return
             }
-            if let currentParams = self.currentParams, currentParams.size != params.size || currentParams.ggRingCorner != params.ggRingCorner { // GHOST: a shape change draws the ring again
+            if let currentParams = self.currentParams, currentParams.size != params.size || currentParams.wgRingCorner != params.wgRingCorner { // WRAITH: a shape change draws the ring again
                 self.uploadProgressLayer.path = nil
                 self.indefiniteDashLayer.path = nil
             }
             self.currentParams = params
-            self.ggApplyRingMode(params) // GHOST: see ggRing
+            self.wgApplyRingMode(params) // WRAITH: see wgRing
 
             self.indefiniteDashLayer.lineWidth = lineWidth
             self.uploadProgressLayer.lineWidth = lineWidth
@@ -693,14 +693,14 @@ public final class AvatarStoryIndicatorComponent: Component {
             if self.uploadProgressLayer.path == nil {
                 let path = CGMutablePath()
                 path.addEllipse(in: CGRect(origin: CGPoint(x: (size.width - radius * 2.0) * 0.5, y: (size.height - radius * 2.0) * 0.5), size: CGSize(width: radius * 2.0, height: radius * 2.0)))
-                self.uploadProgressLayer.path = ggRing?.path ?? path // GHOST: see ggRing
+                self.uploadProgressLayer.path = wgRing?.path ?? path // WRAITH: see wgRing
                 self.uploadProgressLayer.frame = bounds
             }
 
             if self.indefiniteDashLayer.path == nil {
                 let path = CGMutablePath()
                 path.addEllipse(in: CGRect(origin: CGPoint(x: (size.width - radius * 2.0) * 0.5, y: (size.height - radius * 2.0) * 0.5), size: CGSize(width: radius * 2.0, height: radius * 2.0)))
-                self.indefiniteDashLayer.path = ggRing?.path ?? path // GHOST: see ggRing
+                self.indefiniteDashLayer.path = wgRing?.path ?? path // WRAITH: see wgRing
                 self.indefiniteReplicatorLayer.frame = bounds
                 self.indefiniteDashLayer.frame = bounds
             }
@@ -770,7 +770,7 @@ public final class AvatarStoryIndicatorComponent: Component {
                     if component.isRoundedRect {
                         let lineWidth: CGFloat = (component.hasUnseen || component.hasLiveItems) ? component.activeLineWidth : component.inactiveLineWidth
                         context.setLineWidth(lineWidth)
-                        let path = UIBezierPath(roundedRect: CGRect(origin: CGPoint(x: size.width * 0.5 - diameter * 0.5, y: size.height * 0.5 - diameter * 0.5), size: size).insetBy(dx: lineWidth * 0.5, dy: lineWidth * 0.5), cornerRadius: floor(diameter * component.roundedRectCornerFraction)) // GHOST: square avatars
+                        let path = UIBezierPath(roundedRect: CGRect(origin: CGPoint(x: size.width * 0.5 - diameter * 0.5, y: size.height * 0.5 - diameter * 0.5), size: size).insetBy(dx: lineWidth * 0.5, dy: lineWidth * 0.5), cornerRadius: floor(diameter * component.roundedRectCornerFraction)) // WRAITH: square avatars
                         
                         var startPoint: CGPoint?
                         var vertices: [CurveVertex] = []
@@ -914,7 +914,7 @@ public final class AvatarStoryIndicatorComponent: Component {
                     let lineWidth: CGFloat = (component.hasUnseen || component.hasLiveItems) ? component.activeLineWidth : component.inactiveLineWidth
                     context.setLineWidth(lineWidth)
                     if component.isRoundedRect {
-                        let path = UIBezierPath(roundedRect: CGRect(origin: CGPoint(x: size.width * 0.5 - diameter * 0.5, y: size.height * 0.5 - diameter * 0.5), size: size).insetBy(dx: lineWidth * 0.5, dy: lineWidth * 0.5), cornerRadius: floor(diameter * component.roundedRectCornerFraction)) // GHOST: square avatars
+                        let path = UIBezierPath(roundedRect: CGRect(origin: CGPoint(x: size.width * 0.5 - diameter * 0.5, y: size.height * 0.5 - diameter * 0.5), size: size).insetBy(dx: lineWidth * 0.5, dy: lineWidth * 0.5), cornerRadius: floor(diameter * component.roundedRectCornerFraction)) // WRAITH: square avatars
                         context.addPath(path.cgPath)
                     } else {
                         context.addEllipse(in: CGRect(origin: CGPoint(x: size.width * 0.5 - diameter * 0.5, y: size.height * 0.5 - diameter * 0.5), size: size).insetBy(dx: lineWidth * 0.5, dy: lineWidth * 0.5))
@@ -942,7 +942,7 @@ public final class AvatarStoryIndicatorComponent: Component {
             transition.setFrame(view: self.indicatorView, frame: indicatorFrame)
             
             let progressTransition = ComponentTransition(animation: .curve(duration: 0.3, curve: .easeInOut))
-            if let progress = component.progress { // GHOST: square avatars — a rounded-rect ring shows its progress too (ProgressLayer draws it)
+            if let progress = component.progress { // WRAITH: square avatars — a rounded-rect ring shows its progress too (ProgressLayer draws it)
                 let colorLayer: SimpleGradientLayer
                 if let current = self.colorLayer {
                     colorLayer = current
@@ -988,7 +988,7 @@ public final class AvatarStoryIndicatorComponent: Component {
                     mappedProgress = .progress(value)
                 }
                 
-                progressLayer.update(size: indicatorFrame.size, radius: radius, isRoundedRect: component.isRoundedRect, roundedRectCornerFraction: component.roundedRectCornerFraction, lineWidth: lineWidth, value: mappedProgress, transition: .immediate) // GHOST: + the ring's corner
+                progressLayer.update(size: indicatorFrame.size, radius: radius, isRoundedRect: component.isRoundedRect, roundedRectCornerFraction: component.roundedRectCornerFraction, lineWidth: lineWidth, value: mappedProgress, transition: .immediate) // WRAITH: + the ring's corner
             } else {
                 progressTransition.setAlpha(view: self.indicatorView, alpha: 1.0)
                 

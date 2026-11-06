@@ -652,7 +652,7 @@ final class ChatSendMessageContextScreenComponent: Component {
                         }
                     )))
                 }
-                // GHOST: Ghostgram items (translation to the chat's language, W2-3)
+                // WRAITH: Wraithgram items (translation to the chat's language, W2-3)
                 if !sendMessage.additionalItems.isEmpty {
                     items.append(.separator)
                     items.append(contentsOf: sendMessage.additionalItems)

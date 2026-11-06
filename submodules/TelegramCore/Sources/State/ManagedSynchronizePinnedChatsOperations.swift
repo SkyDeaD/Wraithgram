@@ -225,9 +225,9 @@ private func synchronizePinnedChats(transaction: Transaction, postbox: Postbox, 
             return postbox.transaction { transaction -> Signal<Void, NoError> in
                 updatePeers(transaction: transaction, accountPeerId: accountPeerId, peers: parsedPeers)
                 
-                // GHOST: features keep a local tail of pins beyond the server limit (GGPinnedChatsHooks.sync)
-                let (storedItemIds, serverItemIds) = ggPinnedChatsSync(previous: initialRemoteItemIds, local: localItemIds, remote: remoteItemIds, merged: resultingItemIds, groupId: groupId, accountPeerId: accountPeerId, transaction: transaction)
-                transaction.setPinnedItemIds(groupId: groupId, itemIds: storedItemIds) // GHOST: see above
+                // WRAITH: features keep a local tail of pins beyond the server limit (WGPinnedChatsHooks.sync)
+                let (storedItemIds, serverItemIds) = wgPinnedChatsSync(previous: initialRemoteItemIds, local: localItemIds, remote: remoteItemIds, merged: resultingItemIds, groupId: groupId, accountPeerId: accountPeerId, transaction: transaction)
+                transaction.setPinnedItemIds(groupId: groupId, itemIds: storedItemIds) // WRAITH: see above
                 
                 transaction.updateCurrentPeerNotificationSettings(notificationSettings)
                 
@@ -266,12 +266,12 @@ private func synchronizePinnedChats(transaction: Transaction, postbox: Postbox, 
                     }
                 }
                 
-                // GHOST: only the server's prefix of the pins goes to the server (GGPinnedChatsHooks.sync)
+                // WRAITH: only the server's prefix of the pins goes to the server (WGPinnedChatsHooks.sync)
                 if remoteItemIds == serverItemIds {
                     return .complete()
                 } else {
                     var inputDialogPeers: [Api.InputDialogPeer] = []
-                    for itemId in serverItemIds { // GHOST: see above
+                    for itemId in serverItemIds { // WRAITH: see above
                         switch itemId {
                             case let .peer(peerId):
                                 if let peer = transaction.getPeer(peerId), let inputDialogPeer = apiInputDialogPeer(peer) {

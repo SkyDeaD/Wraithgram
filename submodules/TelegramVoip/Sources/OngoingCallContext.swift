@@ -6,7 +6,7 @@ import TelegramUIPreferences
 import CoreMedia
 
 import TgVoipWebrtc
-import GGCallAudio // GHOST: call audio effects of AudioDevice
+import WGCallAudio // WRAITH: call audio effects of AudioDevice
 
 #if os(iOS)
 import UIKit
@@ -874,9 +874,9 @@ public final class OngoingCallContext {
             })
         }
         
-        // GHOST: silent mute, soundboard, voice effect and recording tap of this device (GGCallAudio)
-        public var ggAudioEffects: GGCallAudioEffects {
-            return self.impl.ggAudioEffects
+        // WRAITH: silent mute, soundboard, voice effect and recording tap of this device (WGCallAudio)
+        public var wgAudioEffects: WGCallAudioEffects {
+            return self.impl.wgAudioEffects
         }
     }
     

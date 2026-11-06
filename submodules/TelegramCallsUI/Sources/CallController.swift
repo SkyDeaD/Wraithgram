@@ -13,7 +13,7 @@ import TelegramNotices
 import AppBundle
 import TooltipUI
 import CallScreen
-import GGCallsMediaHooks // GHOST: rating sheet (GGCallsMediaHooks.suppressRating)
+import WGCallsMediaHooks // WRAITH: rating sheet (WGCallsMediaHooks.suppressRating)
 
 protocol CallControllerNodeProtocol: AnyObject {
     var isMuted: Bool { get set }
@@ -277,7 +277,7 @@ public final class CallController: ViewController {
         }
         
         self.controllerNode.presentCallRating = { [weak self] callId, isVideo in
-            if GGCallsMediaHooks.shouldSuppressRating() { return } // GHOST: «don't ask to rate calls» (GGCallsMediaHooks.suppressRating)
+            if WGCallsMediaHooks.shouldSuppressRating() { return } // WRAITH: «don't ask to rate calls» (WGCallsMediaHooks.suppressRating)
             if let strongSelf = self, !strongSelf.presentedCallRating {
                 strongSelf.presentedCallRating = true
                 

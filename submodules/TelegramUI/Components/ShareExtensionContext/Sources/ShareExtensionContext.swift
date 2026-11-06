@@ -225,8 +225,8 @@ public class ShareRootControllerImpl {
             mainWindow.hostView.containerView.frame = bounds
             
             let rootPath = rootPathForBasePath(self.initializationData.appGroupPath)
-            // GHOST: Ghostgram core and the shared part of the features, before any account opens (FOUNDATION_SPEC §2)
-            ggShareExtensionDidStart(appGroupPath: self.initializationData.appGroupPath)
+            // WRAITH: Wraithgram core and the shared part of the features, before any account opens (FOUNDATION_SPEC §2)
+            wgShareExtensionDidStart(appGroupPath: self.initializationData.appGroupPath)
             performAppGroupUpgrades(appGroupPath: self.initializationData.appGroupPath, rootPath: rootPath)
             
             EngineTempBox.initializeShared(basePath: rootPath, processType: "share", launchSpecificId: Int64.random(in: Int64.min ... Int64.max))
@@ -267,8 +267,8 @@ public class ShareRootControllerImpl {
             })
             
             let accountManager: AccountManager<TelegramAccountManagerTypes> = setupAccountManager(basePath: rootPath + "/accounts-metadata", isTemporary: true, isReadOnly: false, useCaches: false, removeDatabaseOnError: false)
-            // GHOST: Ghostgram's own requests follow the user's SOCKS5 proxy (GGNetwork, W1-1 bridge)
-            ggCoreAttachProxySettings(accountManager: accountManager)
+            // WRAITH: Wraithgram's own requests follow the user's SOCKS5 proxy (WGNetwork, W1-1 bridge)
+            wgCoreAttachProxySettings(accountManager: accountManager)
             initializeAccountManagement()
             
             do {
@@ -500,7 +500,7 @@ public class ShareRootControllerImpl {
                         guard let appContext = context as? ShareControllerAppAccountContext else { return }
                         let shareController = ShareScreen(context: appContext.context, subject: .fromExternal(itemCount, { peerIds, threadIds, requireStars, additionalText, account, silently in
                             if let strongSelf = self, let inputItems = strongSelf.getExtensionContext()?.inputItems, !inputItems.isEmpty, !peerIds.isEmpty {
-                                TGItemProviderSignals.setGGPhotoMaxPixelSize(ggShareExtensionPhotoMaxPixelSize()) // GHOST: photo size, quality and watermark of Ghostgram's outgoing photo settings
+                                TGItemProviderSignals.setWGPhotoMaxPixelSize(wgShareExtensionPhotoMaxPixelSize()) // WRAITH: photo size, quality and watermark of Wraithgram's outgoing photo settings
                                 let rawSignals = TGItemProviderSignals.itemSignals(forInputItems: inputItems)!
                                 return preparedShareItems(postbox: account.stateManager.postbox, network: account.stateManager.network, to: peerIds[0], dataItems: rawSignals)
                                 |> map(Optional.init)

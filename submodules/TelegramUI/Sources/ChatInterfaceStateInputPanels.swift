@@ -12,7 +12,7 @@ import ChatTextInputPanelNode
 import RichTextEditorMediaView
 import RichTextEditorUIKit
 import InstantPageUI
-import GGFeaturesShared // GHOST: Ghostgram message settings (W2-3)
+import WGFeaturesShared // WRAITH: Wraithgram message settings (W2-3)
 
 func chatInputFormulaRenderResult(context: RichTextFormulaRenderContext) -> RichTextFormulaRenderResult? {
     guard let attachment = instantPageMathAttachment(
@@ -373,8 +373,8 @@ func inputPanelForChatPresentationIntefaceState(_ chatPresentationInterfaceState
             case .broadcast:
                 if chatPresentationInterfaceState.interfaceState.editMessage != nil, channel.hasPermission(.editAllMessages) {
                     displayInputTextPanel = true
-                } else if GGMessagesPolicy.isLocalCreatorMode(accountId: context.account.id, peerId: channel.id) {
-                    // GHOST: the local creator mode opens the composer; messages stay on this device (GGMessagesPolicy)
+                } else if WGMessagesPolicy.isLocalCreatorMode(accountId: context.account.id, peerId: channel.id) {
+                    // WRAITH: the local creator mode opens the composer; messages stay on this device (WGMessagesPolicy)
                     displayInputTextPanel = true
                 } else if !channel.hasPermission(.sendSomething) || !isMember {
                     if let currentPanel = (currentPanel as? ChatChannelSubscriberInputPanelNode) ?? (currentSecondaryPanel as? ChatChannelSubscriberInputPanelNode) {

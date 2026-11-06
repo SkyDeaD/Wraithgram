@@ -21,7 +21,7 @@ swift_library(
         "//submodules/Pdf:Pdf",
         "//submodules/AccountContext:AccountContext",
     	"//submodules/ShareItems/Impl:ShareItemsImpl",
-        # GHOST: Ghostgram's outgoing photo settings (GGOutgoingImageHooks)
+        # WRAITH: Wraithgram's outgoing photo settings (WGOutgoingImageHooks)
         "//submodules/ImageCompression:ImageCompression",
     ],
     visibility = [

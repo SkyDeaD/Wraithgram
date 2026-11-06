@@ -10,8 +10,8 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: Ghostgram (W2-3)
-        "//Ghostgram/GGHooks:GGHooks",
+        # WRAITH: Wraithgram (W2-3)
+        "//Wraithgram/WGHooks:WGHooks",
         "//submodules/AsyncDisplayKit",
         "//submodules/LottieSettings:LottieSettings",
         "//submodules/SSignalKit/SwiftSignalKit",

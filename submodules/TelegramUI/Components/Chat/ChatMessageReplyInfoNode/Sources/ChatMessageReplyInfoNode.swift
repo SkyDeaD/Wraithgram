@@ -18,7 +18,7 @@ import ChatMessageItemCommon
 import MessageInlineBlockBackgroundView
 import CheckNode
 import EmojiTextAttachmentView
-import GGHooks // GHOST: message decorations, capture protection
+import WGHooks // WRAITH: message decorations, capture protection
 
 public enum ChatMessageReplyInfoType {
     case bubble(incoming: Bool)
@@ -471,13 +471,13 @@ public class ChatMessageReplyInfoNode: ASDisplayNode {
                 } else {
                     text = foldLineBreaks(message.text)
                     messageEntities = message.textEntitiesAttribute?.entities ?? []
-                    // GHOST: the local text of the message and revealed spoilers here too (GGMessageDecorationHooks)
-                    var ggEntities: [MessageTextEntity]? = messageEntities
-                    GGMessageDecorationHooks.applyText(&text, entities: &ggEntities, message: message, context: arguments.context)
-                    messageEntities = ggEntities ?? []
+                    // WRAITH: the local text of the message and revealed spoilers here too (WGMessageDecorationHooks)
+                    var wgEntities: [MessageTextEntity]? = messageEntities
+                    WGMessageDecorationHooks.applyText(&text, entities: &wgEntities, message: message, context: arguments.context)
+                    messageEntities = wgEntities ?? []
                 }
-                // GHOST: anti-spoiler in quotes (GGMessageDecorationHooks)
-                if GGMessageDecorationHooks.decoration(for: message, context: arguments.context).revealsSpoilers { messageEntities = messageEntities.filter { if case .Spoiler = $0.type { return false } else { return true } } }
+                // WRAITH: anti-spoiler in quotes (WGMessageDecorationHooks)
+                if WGMessageDecorationHooks.decoration(for: message, context: arguments.context).revealsSpoilers { messageEntities = messageEntities.filter { if case .Spoiler = $0.type { return false } else { return true } } }
 
                 // A rich message's translation is a page, not text to show in place of the quote.
                 if let translateToLanguage = arguments.associatedData.translateToLanguage, !text.isEmpty, arguments.quote?.quote.richText == nil {
@@ -507,13 +507,13 @@ public class ChatMessageReplyInfoNode: ASDisplayNode {
                     messageText = NSAttributedString(string: text, font: textFont, textColor: textColor)
                 }
             } else if isText, let replyForward = arguments.replyForward, let quote = replyForward.quote {
-                // GHOST: anti-spoiler (GGMessageDecorationHooks)
-                let ggRevealsSpoilers = GGMessageDecorationHooks.decoration(for: arguments.parentMessage, context: arguments.context).revealsSpoilers
+                // WRAITH: anti-spoiler (WGMessageDecorationHooks)
+                let wgRevealsSpoilers = WGMessageDecorationHooks.decoration(for: arguments.parentMessage, context: arguments.context).revealsSpoilers
                 let entities = quote.entities.filter { entity in
                     if case .Strikethrough = entity.type {
                         return true
                     } else if case .Spoiler = entity.type {
-                        return !ggRevealsSpoilers // GHOST: anti-spoiler reveals the reply preview's spoilers (W2-3)
+                        return !wgRevealsSpoilers // WRAITH: anti-spoiler reveals the reply preview's spoilers (W2-3)
                     } else if case .CustomEmoji = entity.type {
                         return true
                     } else {
@@ -721,8 +721,8 @@ public class ChatMessageReplyInfoNode: ASDisplayNode {
             
             let hasSpoiler: Bool
             if let message = arguments.message {
-                // GHOST: anti-spoiler (GGMessageDecorationHooks)
-                hasSpoiler = message.attributes.contains(where: { $0 is MediaSpoilerMessageAttribute }) && !GGMessageDecorationHooks.decoration(for: message, context: arguments.context).revealsSpoilers
+                // WRAITH: anti-spoiler (WGMessageDecorationHooks)
+                hasSpoiler = message.attributes.contains(where: { $0 is MediaSpoilerMessageAttribute }) && !WGMessageDecorationHooks.decoration(for: message, context: arguments.context).revealsSpoilers
             } else {
                 hasSpoiler = false
             }
@@ -817,8 +817,8 @@ public class ChatMessageReplyInfoNode: ASDisplayNode {
                     node.imageNode = nil
                 }
                 if let message = arguments.message {
-                    // GHOST: features may lift capture protection (GGChatScreenHooks.captureProtection)
-                    node.imageNode?.captureProtected = GGChatScreenHooks.captureProtection(arguments.associatedData.isCopyProtectionEnabled || message.isCopyProtected(), context: arguments.context, chatLocation: .peer(id: message.id.peerId))
+                    // WRAITH: features may lift capture protection (WGChatScreenHooks.captureProtection)
+                    node.imageNode?.captureProtected = WGChatScreenHooks.captureProtection(arguments.associatedData.isCopyProtectionEnabled || message.isCopyProtected(), context: arguments.context, chatLocation: .peer(id: message.id.peerId))
                 }
                 
                 titleNode.frame = CGRect(origin: CGPoint(x: leftInset - textInsets.left - 2.0, y: spacing - textInsets.top + 1.0), size: titleLayout.size)

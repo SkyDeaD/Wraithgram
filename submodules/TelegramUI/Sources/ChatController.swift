@@ -78,8 +78,8 @@ import PremiumUI
 import ImageTransparency
 import StickerPackPreviewUI
 import TextNodeWithEntities
-import GGHooks // GHOST: chat screen points
-import GGFeaturesShared // GHOST: Swiftgram-parity settings (W5-SG)
+import WGHooks // WRAITH: chat screen points
+import WGFeaturesShared // WRAITH: Swiftgram-parity settings (W5-SG)
 import EntityKeyboard
 import ChatTitleView
 import EmojiStatusComponent
@@ -2381,7 +2381,7 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
             if !entities.isEmpty {
                 attributes.append(TextEntitiesMessageAttribute(entities: entities))
             }
-            attributes.append(contentsOf: GGChatScreenHooks.collectBotButtonReplyAttributes()) // GHOST: a reply with a bot button's text goes out verbatim (GGChatScreenHooks.botButtonReplyAttributes)
+            attributes.append(contentsOf: WGChatScreenHooks.collectBotButtonReplyAttributes()) // WRAITH: a reply with a bot button's text goes out verbatim (WGChatScreenHooks.botButtonReplyAttributes)
             let replyMessageSubject = sourceMessageId.flatMap {
                 EngineMessageReplySubject(messageId: $0, quote: nil, innerSubject: nil)
             } ?? strongSelf.presentationInterfaceState.interfaceState.replyMessageSubject?.subjectModel
@@ -6917,8 +6917,8 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
                 } else if let chatWallpaper {
                     presentationData = presentationData.withUpdated(chatWallpaper: chatWallpaper)
                 }
-                // GHOST: a chat's own theme goes through the features' theme chain too (GGThemeHooks.presentationData)
-                presentationData = GGThemeHooks.transformSubstitutedPresentationData(presentationData)
+                // WRAITH: a chat's own theme goes through the features' theme chain too (WGThemeHooks.presentationData)
+                presentationData = WGThemeHooks.transformSubstitutedPresentationData(presentationData)
                 
                 let isFirstTime = !strongSelf.didSetPresentationData
                 strongSelf.presentationData = presentationData
@@ -7702,8 +7702,8 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
     
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // GHOST: chat screen observers, e.g. chat lock cover (GGChatScreenHooks.lifecycle)
-        GGChatScreenHooks.notify(.willAppear, screen: ggChatScreen(self))
+        // WRAITH: chat screen observers, e.g. chat lock cover (WGChatScreenHooks.lifecycle)
+        WGChatScreenHooks.notify(.willAppear, screen: wgChatScreen(self))
 
         self.walletTransferAnimationsVisible = true
         self.chatDisplayNode.historyNode.forEachVisibleMessageItemNode { itemNode in
@@ -7876,10 +7876,10 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
 
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        // GHOST: chat screen observers (GGChatScreenHooks.lifecycle)
-        GGChatScreenHooks.notify(.didAppear, screen: ggChatScreen(self))
-        // GHOST: «Показать закреп» from a profile menu: the closed pinned bar comes back (GGExtrasPinnedRequests)
-        if let ggPeerId = self.chatLocation.peerId, GGExtrasPinnedRequests.take(peerId: ggPeerId) { self.updateChatPresentationInterfaceState(animated: true, interactive: true, { $0.updatedInterfaceState({ $0.withUpdatedMessageActionsState({ value in var value = value; value.closedPinnedMessageId = nil; return value }) }) }) }
+        // WRAITH: chat screen observers (WGChatScreenHooks.lifecycle)
+        WGChatScreenHooks.notify(.didAppear, screen: wgChatScreen(self))
+        // WRAITH: «Показать закреп» from a profile menu: the closed pinned bar comes back (WGExtrasPinnedRequests)
+        if let wgPeerId = self.chatLocation.peerId, WGExtrasPinnedRequests.take(peerId: wgPeerId) { self.updateChatPresentationInterfaceState(animated: true, interactive: true, { $0.updatedInterfaceState({ $0.withUpdatedMessageActionsState({ value in var value = value; value.closedPinnedMessageId = nil; return value }) }) }) }
         
         self.didAppear = true
         
@@ -8326,8 +8326,8 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
     
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        // GHOST: chat screen observers (GGChatScreenHooks.lifecycle)
-        GGChatScreenHooks.notify(.willDisappear, screen: ggChatScreen(self))
+        // WRAITH: chat screen observers (WGChatScreenHooks.lifecycle)
+        WGChatScreenHooks.notify(.willDisappear, screen: wgChatScreen(self))
 
         self.walletTransferAnimationsVisible = false
         
@@ -10219,7 +10219,7 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
     }
     
     func displayMediaRecordingTooltip() {
-        if GGExtrasPolicy.hidesRecordingTooltip { return } // GHOST: «Без подсказки записи» (GGExtrasPolicy)
+        if WGExtrasPolicy.hidesRecordingTooltip { return } // WRAITH: «Без подсказки записи» (WGExtrasPolicy)
         guard let peer = self.presentationInterfaceState.renderedPeer?.peer else {
             return
         }

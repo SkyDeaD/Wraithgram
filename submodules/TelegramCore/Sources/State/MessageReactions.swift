@@ -22,8 +22,8 @@ public enum UpdateMessageReaction {
 }
 
 public func updateMessageReactionsInteractively(account: Account, messageIds: [MessageId], reactions: [UpdateMessageReaction], isLarge: Bool, storeAsRecentlyUsed: Bool, add: Bool = false) -> Signal<Never, NoError> {
-    // GHOST: observers of the user's reactions, e.g. "read on action" (GGOutgoingHooks.didReact)
-    ggMessagesDidReact(account: account, messageIds: messageIds)
+    // WRAITH: observers of the user's reactions, e.g. "read on action" (WGOutgoingHooks.didReact)
+    wgMessagesDidReact(account: account, messageIds: messageIds)
     return account.postbox.transaction { transaction -> Void in
         guard let chatPeerId = messageIds.first?.peerId else {
             return

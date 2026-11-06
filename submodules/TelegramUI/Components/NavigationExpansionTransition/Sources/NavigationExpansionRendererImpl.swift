@@ -50,7 +50,7 @@ public final class NavigationExpansionRendererImpl: NavigationExpansionRenderer 
     /// one, as they always have.
     private var cornersDiffer = false
     private let companionDrop = GlassBackgroundView()
-    private var ggCompanionCornerFraction: CGFloat? // GHOST: the avatar glass's shape (square avatars), nil = a circle
+    private var wgCompanionCornerFraction: CGFloat? // WRAITH: the avatar glass's shape (square avatars), nil = a circle
     private let shadowView = UIView()
     private let cardMask = CALayer()
     /// The upper screen's lent parts, which ride the card under a swipe.
@@ -275,7 +275,7 @@ public final class NavigationExpansionRendererImpl: NavigationExpansionRenderer 
         if sourceLoan.companion != nil {
             dropsHost.addSubview(self.companionDrop)
         }
-        self.ggCompanionCornerFraction = ggNavigationGlassCornerFraction(around: sourceLoan.companionView, side: sourceLoan.companion?.height ?? 0.0) // GHOST: see the property
+        self.wgCompanionCornerFraction = wgNavigationGlassCornerFraction(around: sourceLoan.companionView, side: sourceLoan.companion?.height ?? 0.0) // WRAITH: see the property
         // The chat's avatar is lent to the flying circle once it is set up (below); without a circle it just hides.
         sourceLoan.companionView?.alpha = 0.0
 
@@ -543,7 +543,7 @@ public final class NavigationExpansionRendererImpl: NavigationExpansionRenderer 
         self.updateOriginDrop(size: f.card.size, radii: f.cardCornerRadii, isDark: sourceLoan.isDark, tintColor: self.dropTint(fill: fill))
         if let circle = f.circle {
             self.companionDrop.frame = circle
-            self.companionDrop.update(size: circle.size, cornerRadius: self.ggCompanionCornerFraction.map { min(circle.width, circle.height) * $0 } ?? circle.width * 0.5 /* GHOST: square avatars */, isDark: sourceLoan.isDark, tintColor: self.dropTint(fill: fill), transition: .immediate)
+            self.companionDrop.update(size: circle.size, cornerRadius: self.wgCompanionCornerFraction.map { min(circle.width, circle.height) * $0 } ?? circle.width * 0.5 /* WRAITH: square avatars */, isDark: sourceLoan.isDark, tintColor: self.dropTint(fill: fill), transition: .immediate)
         }
         self.glassContainer.alpha = f.glass
         // The card follows the clock (the screen at 1, while a finger holds the swipe); the pose carries it.
@@ -716,9 +716,9 @@ public final class NavigationExpansionRendererImpl: NavigationExpansionRenderer 
         if last.circle != nil {
             add(self.companionDrop.layer, "position", frames.map { point(CGPoint(x: $0.circle?.midX ?? 0.0, y: $0.circle?.midY ?? 0.0)) })
             add(self.companionDrop.layer, "bounds", frames.map { bounds($0.circle ?? CGRect()) })
-            if let ggFraction = self.ggCompanionCornerFraction { self.companionDrop.animateShape(sizes: frames.map { $0.circle?.size ?? CGSize() }, cornerRadii: frames.map { min($0.circle?.width ?? 0.0, $0.circle?.height ?? 0.0) * ggFraction }, timing: timing, isDark: sourceLoan.isDark, tintColor: self.dropTint(fill: min(max(last.tint / 0.55, 0.0), 1.0))) } else { // GHOST: square avatars
+            if let wgFraction = self.wgCompanionCornerFraction { self.companionDrop.animateShape(sizes: frames.map { $0.circle?.size ?? CGSize() }, cornerRadii: frames.map { min($0.circle?.width ?? 0.0, $0.circle?.height ?? 0.0) * wgFraction }, timing: timing, isDark: sourceLoan.isDark, tintColor: self.dropTint(fill: min(max(last.tint / 0.55, 0.0), 1.0))) } else { // WRAITH: square avatars
             self.companionDrop.animateShape(sizes: frames.map { $0.circle?.size ?? CGSize() }, timing: timing, isDark: sourceLoan.isDark, tintColor: self.dropTint(fill: min(max(last.tint / 0.55, 0.0), 1.0)))
-            } // GHOST: see above
+            } // WRAITH: see above
         }
         add(self.glassContainer.layer, "opacity", frames.map { number($0.glass) })
 
@@ -869,7 +869,7 @@ public final class NavigationExpansionRendererImpl: NavigationExpansionRenderer 
         self.appliedTintFill = fill
         let tint = self.dropTint(fill: fill)
         self.updateOriginDrop(size: self.originDrop.bounds.size, radii: self.originDropCornerRadii, isDark: sourceLoan.isDark, tintColor: tint)
-        self.companionDrop.update(size: self.companionDrop.bounds.size, cornerRadius: self.ggCompanionCornerFraction.map { min(self.companionDrop.bounds.width, self.companionDrop.bounds.height) * $0 } ?? self.companionDrop.bounds.width * 0.5 /* GHOST: square avatars */, isDark: sourceLoan.isDark, tintColor: tint, transition: .immediate)
+        self.companionDrop.update(size: self.companionDrop.bounds.size, cornerRadius: self.wgCompanionCornerFraction.map { min(self.companionDrop.bounds.width, self.companionDrop.bounds.height) * $0 } ?? self.companionDrop.bounds.width * 0.5 /* WRAITH: square avatars */, isDark: sourceLoan.isDark, tintColor: tint, transition: .immediate)
     }
 
     // MARK: End

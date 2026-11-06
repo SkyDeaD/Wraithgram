@@ -7,8 +7,8 @@ import SwiftSignalKit
 import DeviceModel
 import Camera
 import os.log
-// GHOST: Ghostgram round video settings and frame processor (masks)
-import GGCameraPipeline
+// WRAITH: Wraithgram round video settings and frame processor (masks)
+import WGCameraPipeline
 
 private let cameraCaptureLog = OSLog(subsystem: "org.telegram.CameraNeo", category: "Capture")
 
@@ -76,15 +76,15 @@ final class CameraNeo: NSObject, CameraProtocol {
 
     let metrics: Camera.Metrics
 
-    // GHOST: round video settings of this session (snapshot), the frame processor (masks) and the
+    // WRAITH: round video settings of this session (snapshot), the frame processor (masks) and the
     // capture parameters derived from them; defaults are upstream's 640×480 at 30 fps
-    private let ggRecording: GGRoundVideoRecordingConfig
-    // GHOST: the zoom asked for since the last flip (`setZoomLevel`'s level, nil = 1×). A flip
+    private let wgRecording: WGRoundVideoRecordingConfig
+    // WRAITH: the zoom asked for since the last flip (`setZoomLevel`'s level, nil = 1×). A flip
     // reconfigures the session after the request arrives, so the new device takes it from here.
-    private let ggRequestedZoomLevel = Atomic<CGFloat?>(value: nil)
-    private let ggFrameProcessor: GGCameraFrameProcessor?
-    private var ggFrameRate: Double = roundVideoCaptureFrameRate
-    private var ggFormatDescription: CMVideoFormatDescription?
+    private let wgRequestedZoomLevel = Atomic<CGFloat?>(value: nil)
+    private let wgFrameProcessor: WGCameraFrameProcessor?
+    private var wgFrameRate: Double = roundVideoCaptureFrameRate
+    private var wgFormatDescription: CMVideoFormatDescription?
 
     init(
         configuration: Camera.Configuration,
@@ -104,9 +104,9 @@ final class CameraNeo: NSObject, CameraProtocol {
         self.positionValue = Atomic<Camera.Position>(value: configuration.position)
         self.positionPromise = ValuePromise<Camera.Position>(configuration.position)
         self.metrics = Camera.Metrics(model: DeviceModel.current)
-        // GHOST: see `ggRecording`
-        self.ggRecording = configuration.isRoundVideo ? GGRoundVideoConfig.recording() : .standard
-        self.ggFrameProcessor = configuration.frameProcessor
+        // WRAITH: see `wgRecording`
+        self.wgRecording = configuration.isRoundVideo ? WGRoundVideoConfig.recording() : .standard
+        self.wgFrameProcessor = configuration.frameProcessor
 
         if useMultiCam, #available(iOS 13.0, *) {
             self.session = AVCaptureMultiCamSession()
@@ -236,7 +236,7 @@ final class CameraNeo: NSObject, CameraProtocol {
         guard previousPosition != position else {
             return
         }
-        let _ = self.ggRequestedZoomLevel.swap(nil) // GHOST: the new camera starts at 1× unless asked otherwise
+        let _ = self.wgRequestedZoomLevel.swap(nil) // WRAITH: the new camera starts at 1× unless asked otherwise
 
         let switchGeneration = self.useMultiCam ? 0 : self.singleCameraSwitchGeneration.modify { $0 + 1 }
 
@@ -349,11 +349,11 @@ final class CameraNeo: NSObject, CameraProtocol {
                     let processor: RoundVideoFrameProcessor
                     if let current = self.frameProcessor {
                         processor = current
-                    } else if let decorationResources, let current = RoundVideoFrameProcessor(mediaQueue: self.mediaQueue, decorationResources: decorationResources, mode: self.roundVideoMode, outputSide: self.ggOutputSide /* GHOST: round video resolution */) {
+                    } else if let decorationResources, let current = RoundVideoFrameProcessor(mediaQueue: self.mediaQueue, decorationResources: decorationResources, mode: self.roundVideoMode, outputSide: self.wgOutputSide /* WRAITH: round video resolution */) {
                         self.frameProcessor = current
                         processor = current
                     } else {
-                        guard let current = RoundVideoFrameProcessor(mediaQueue: self.mediaQueue, decorationResources: nil, mode: self.roundVideoMode, outputSide: self.ggOutputSide /* GHOST: round video resolution */) else {
+                        guard let current = RoundVideoFrameProcessor(mediaQueue: self.mediaQueue, decorationResources: nil, mode: self.roundVideoMode, outputSide: self.wgOutputSide /* WRAITH: round video resolution */) else {
                             let _ = self.recordingActive.modify { _ in false }
                             let _ = self.recordingStopRequested.modify { _ in false }
                             if subscriberActive.swap(false) {
@@ -370,11 +370,11 @@ final class CameraNeo: NSObject, CameraProtocol {
                         mediaQueue: self.mediaQueue,
                         processor: processor,
                         url: outputUrl,
-                        hasAudio: self.ggCapturesAudio, // GHOST: «record without sound»
+                        hasAudio: self.wgCapturesAudio, // WRAITH: «record without sound»
                         initialPosition: self.positionValue.with { $0 },
-                        // GHOST: bitrate, codec and watermark from the round video settings
-                        ggRecording: self.ggRecording,
-                        ggWatermark: GGRoundVideoConfig.watermark(side: processor.outputSide),
+                        // WRAITH: bitrate, codec and watermark from the round video settings
+                        wgRecording: self.wgRecording,
+                        wgWatermark: WGRoundVideoConfig.watermark(side: processor.outputSide),
                         mode: self.roundVideoMode,
                         usesMultiCam: self.useMultiCam,
                         log: self.log,
@@ -407,7 +407,7 @@ final class CameraNeo: NSObject, CameraProtocol {
                                         path: url.path,
                                         thumbnail: thumbnail ?? UIImage(),
                                         isMirrored: false,
-                                        dimensions: CGSize(width: processor.outputSide, height: processor.outputSide) // GHOST: round video resolution
+                                        dimensions: CGSize(width: processor.outputSide, height: processor.outputSide) // WRAITH: round video resolution
                                     ),
                                     additional: nil,
                                     duration: duration,
@@ -506,27 +506,27 @@ final class CameraNeo: NSObject, CameraProtocol {
     }
 
     func setZoomLevel(_ zoomLevel: CGFloat) {
-        let _ = self.ggRequestedZoomLevel.swap(zoomLevel) // GHOST: survives a flip that is still reconfiguring
+        let _ = self.wgRequestedZoomLevel.swap(zoomLevel) // WRAITH: survives a flip that is still reconfiguring
         self.updateZoom { [weak self] device in
-            return (self?.ggNeutralZoomFactor(device) ?? 1.0) * (1.0 + zoomLevel) // GHOST: relative to 1× (the ultra-wide camera makes 0.5× possible)
+            return (self?.wgNeutralZoomFactor(device) ?? 1.0) * (1.0 + zoomLevel) // WRAITH: relative to 1× (the ultra-wide camera makes 0.5× possible)
         }
     }
 
     func setZoomDelta(_ zoomDelta: CGFloat) {
-        let _ = self.ggRequestedZoomLevel.swap(nil) // GHOST: a pinch replaces the requested zoom
+        let _ = self.wgRequestedZoomLevel.swap(nil) // WRAITH: a pinch replaces the requested zoom
         self.updateZoom { device in
             return device.videoZoomFactor * zoomDelta
         }
     }
 
     func rampZoom(_ zoomLevel: CGFloat, rate: CGFloat) {
-        let _ = self.ggRequestedZoomLevel.swap(zoomLevel - 1.0) // GHOST: the ramp's target is the requested zoom (1.0 = 1×)
+        let _ = self.wgRequestedZoomLevel.swap(zoomLevel - 1.0) // WRAITH: the ramp's target is the requested zoom (1.0 = 1×)
         self.sessionQueue.async { [weak self] in
             guard let self, let device = self.activeDevice else {
                 return
             }
             self.withLockedDevice(device) { device in
-                device.ramp(toVideoZoomFactor: self.clampedZoom(zoomLevel * self.ggNeutralZoomFactor(device), device: device), withRate: Float(rate)) // GHOST: 1.0 = 1×, not the ultra-wide 0.5×
+                device.ramp(toVideoZoomFactor: self.clampedZoom(zoomLevel * self.wgNeutralZoomFactor(device), device: device), withRate: Float(rate)) // WRAITH: 1.0 = 1×, not the ultra-wide 0.5×
             }
         }
     }
@@ -613,7 +613,7 @@ final class CameraNeo: NSObject, CameraProtocol {
         } else {
             videoConfigured = self.configureSingleCameraVideo(position: self.positionValue.with { $0 }, addOutput: true)
         }
-        let audioConfigured = !self.ggCapturesAudio || self.configureAudio() // GHOST: no microphone when recording without sound
+        let audioConfigured = !self.wgCapturesAudio || self.configureAudio() // WRAITH: no microphone when recording without sound
         self.session.commitConfiguration()
         self.configureVideoStabilization()
         if videoConfigured && self.useMultiCam {
@@ -651,8 +651,8 @@ final class CameraNeo: NSObject, CameraProtocol {
             return false
         }
         if !self.configureCaptureFormat(device: device) {
-            // GHOST: the ultra-wide virtual camera has no matching format: the plain wide camera, as upstream
-            guard self.ggIsUltraWideVirtualDevice(device), let fallback = self.makeWideVideoDevice(position: position), self.configureCaptureFormat(device: fallback) else {
+            // WRAITH: the ultra-wide virtual camera has no matching format: the plain wide camera, as upstream
+            guard self.wgIsUltraWideVirtualDevice(device), let fallback = self.makeWideVideoDevice(position: position), self.configureCaptureFormat(device: fallback) else {
                 return false
             }
             device = fallback
@@ -668,8 +668,8 @@ final class CameraNeo: NSObject, CameraProtocol {
             return false
         }
         self.session.addInput(videoInput)
-        self.configureFrameRate(self.ggFrameRate, device: device, input: videoInput) // GHOST: 30 or 60 fps
-        self.ggApplyNeutralZoom(device) // GHOST: the ultra-wide virtual camera at 1×, also after a flip
+        self.configureFrameRate(self.wgFrameRate, device: device, input: videoInput) // WRAITH: 30 or 60 fps
+        self.wgApplyNeutralZoom(device) // WRAITH: the ultra-wide virtual camera at 1×, also after a flip
 
         if addOutput {
             guard let output = self.makeVideoOutput(), self.session.canAddOutput(output) else {
@@ -713,9 +713,9 @@ final class CameraNeo: NSObject, CameraProtocol {
 
         multiCamSession.addInputWithNoConnections(backInput)
         multiCamSession.addInputWithNoConnections(frontInput)
-        // GHOST: 30 or 60 fps (60 records with one camera, so this stays 30 here)
-        self.configureFrameRate(self.ggFrameRate, device: backDevice, input: backInput)
-        self.configureFrameRate(self.ggFrameRate, device: frontDevice, input: frontInput)
+        // WRAITH: 30 or 60 fps (60 records with one camera, so this stays 30 here)
+        self.configureFrameRate(self.wgFrameRate, device: backDevice, input: backInput)
+        self.configureFrameRate(self.wgFrameRate, device: frontDevice, input: frontInput)
         multiCamSession.addOutputWithNoConnections(backOutput)
         multiCamSession.addOutputWithNoConnections(frontOutput)
 
@@ -836,9 +836,9 @@ final class CameraNeo: NSObject, CameraProtocol {
     }
 
     private func makeVideoDevice(position: Camera.Position) -> AVCaptureDevice? {
-        // GHOST: Ghostgram's 0.5× zoom of round videos: the back camera as the virtual camera with the
+        // WRAITH: Wraithgram's 0.5× zoom of round videos: the back camera as the virtual camera with the
         // ultra-wide lens (one camera only; the dual-camera session keeps the plain one)
-        if self.ggRecording.usesUltraWideCamera, position == .back, !self.useMultiCam, #available(iOS 13.0, *) {
+        if self.wgRecording.usesUltraWideCamera, position == .back, !self.useMultiCam, #available(iOS 13.0, *) {
             if let device = AVCaptureDevice.default(.builtInTripleCamera, for: .video, position: .back) {
                 return device
             }
@@ -849,7 +849,7 @@ final class CameraNeo: NSObject, CameraProtocol {
         return self.makeWideVideoDevice(position: position)
     }
 
-    // GHOST: upstream's own choice, also the fallback of the ultra-wide virtual camera
+    // WRAITH: upstream's own choice, also the fallback of the ultra-wide virtual camera
     private func makeWideVideoDevice(position: Camera.Position) -> AVCaptureDevice? {
         if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position) {
             return device
@@ -862,12 +862,12 @@ final class CameraNeo: NSObject, CameraProtocol {
     }
 
     private func configureCaptureFormat(device: AVCaptureDevice) -> Bool {
-        // GHOST: capture format and frame rate from the round video settings when they differ from
+        // WRAITH: capture format and frame rate from the round video settings when they differ from
         // Telegram's: the first option that the device supports wins, the last one is 640×480 at 30 fps
-        if self.ggUsesOwnCaptureFormat {
-            for option in self.ggCaptureOptions {
-                if let format = self.ggCaptureFormat(device: device, width: option.width, height: option.height, frameRate: option.frameRate), self.applyCaptureFormat(format, device: device) {
-                    self.ggFrameRate = option.frameRate
+        if self.wgUsesOwnCaptureFormat {
+            for option in self.wgCaptureOptions {
+                if let format = self.wgCaptureFormat(device: device, width: option.width, height: option.height, frameRate: option.frameRate), self.applyCaptureFormat(format, device: device) {
+                    self.wgFrameRate = option.frameRate
                     return true
                 }
             }
@@ -890,9 +890,9 @@ final class CameraNeo: NSObject, CameraProtocol {
             if device.isExposureModeSupported(.continuousAutoExposure) {
                 device.exposureMode = .continuousAutoExposure
             }
-            // GHOST: the ultra-wide virtual camera starts at 1× (its own factor 1 is the 0.5× lens)
-            if self.ggIsUltraWideVirtualDevice(device) {
-                device.videoZoomFactor = self.clampedZoom(self.ggNeutralZoomFactor(device), device: device)
+            // WRAITH: the ultra-wide virtual camera starts at 1× (its own factor 1 is the 0.5× lens)
+            if self.wgIsUltraWideVirtualDevice(device) {
+                device.videoZoomFactor = self.clampedZoom(self.wgNeutralZoomFactor(device), device: device)
             }
             return true
         } catch {
@@ -964,7 +964,7 @@ final class CameraNeo: NSObject, CameraProtocol {
                 continue
             }
             let supportsStandard = connection.isVideoStabilizationSupported && device.activeFormat.isVideoStabilizationModeSupported(.standard)
-            connection.preferredVideoStabilizationMode = self.ggStabilizationMode(device: device, upstream: supportsStandard ? .standard : .off) // GHOST: stabilization setting
+            connection.preferredVideoStabilizationMode = self.wgStabilizationMode(device: device, upstream: supportsStandard ? .standard : .off) // WRAITH: stabilization setting
             self.stabilizationObservers.append(connection.observe(\.activeVideoStabilizationMode, options: [.new]) { [weak self, weak connection] _, _ in
                 self?.sessionQueue.async { [weak self, weak connection] in
                     guard let self, let connection,
@@ -1056,32 +1056,32 @@ final class CameraNeo: NSObject, CameraProtocol {
         }
     }
 
-    // GHOST: a virtual camera that starts with the ultra-wide lens (zoom factor 1 = 0.5×)
-    private func ggIsUltraWideVirtualDevice(_ device: AVCaptureDevice) -> Bool {
+    // WRAITH: a virtual camera that starts with the ultra-wide lens (zoom factor 1 = 0.5×)
+    private func wgIsUltraWideVirtualDevice(_ device: AVCaptureDevice) -> Bool {
         if #available(iOS 13.0, *) {
             return device.isVirtualDevice && device.constituentDevices.first?.deviceType == .builtInUltraWideCamera
         }
         return false
     }
 
-    // GHOST: the ultra-wide virtual camera at 1× once its input is in the session. The factor set with
+    // WRAITH: the ultra-wide virtual camera at 1× once its input is in the session. The factor set with
     // the format did not survive adding the input: a flip to the back camera showed the 0.5× lens while
     // the zoom slider said 1×.
-    private func ggApplyNeutralZoom(_ device: AVCaptureDevice) {
-        guard self.ggIsUltraWideVirtualDevice(device) else {
+    private func wgApplyNeutralZoom(_ device: AVCaptureDevice) {
+        guard self.wgIsUltraWideVirtualDevice(device) else {
             return
         }
-        // GHOST: the zoom asked for while the flip was reconfiguring («0,5× на задней камере»): applied
+        // WRAITH: the zoom asked for while the flip was reconfiguring («0,5× на задней камере»): applied
         // to the new device here, or the camera showed 1× under a slider at 0.5×.
-        let requestedLevel = self.ggRequestedZoomLevel.with { $0 } ?? 0.0
+        let requestedLevel = self.wgRequestedZoomLevel.with { $0 } ?? 0.0
         self.withLockedDevice(device) { device in
-            device.videoZoomFactor = self.clampedZoom(self.ggNeutralZoomFactor(device) * (1.0 + requestedLevel), device: device) // GHOST: see requestedLevel
+            device.videoZoomFactor = self.clampedZoom(self.wgNeutralZoomFactor(device) * (1.0 + requestedLevel), device: device) // WRAITH: see requestedLevel
         }
     }
 
-    // GHOST: the zoom factor of 1× — the switch-over to the wide lens on the ultra-wide virtual camera, 1 elsewhere
-    private func ggNeutralZoomFactor(_ device: AVCaptureDevice) -> CGFloat {
-        if #available(iOS 13.0, *), self.ggIsUltraWideVirtualDevice(device), let wideIndex = device.constituentDevices.firstIndex(where: { $0.deviceType == .builtInWideAngleCamera }), wideIndex > 0, wideIndex - 1 < device.virtualDeviceSwitchOverVideoZoomFactors.count {
+    // WRAITH: the zoom factor of 1× — the switch-over to the wide lens on the ultra-wide virtual camera, 1 elsewhere
+    private func wgNeutralZoomFactor(_ device: AVCaptureDevice) -> CGFloat {
+        if #available(iOS 13.0, *), self.wgIsUltraWideVirtualDevice(device), let wideIndex = device.constituentDevices.firstIndex(where: { $0.deviceType == .builtInWideAngleCamera }), wideIndex > 0, wideIndex - 1 < device.virtualDeviceSwitchOverVideoZoomFactors.count {
             return CGFloat(device.virtualDeviceSwitchOverVideoZoomFactors[wideIndex - 1].doubleValue)
         }
         return 1.0
@@ -1139,12 +1139,12 @@ final class CameraNeo: NSObject, CameraProtocol {
     }
 
     @objc private func sessionRuntimeError(_ notification: Notification) {
-        // GHOST: two guards — any error other than a media-services reset goes to ggSessionDidFail (upstream returned)
+        // WRAITH: two guards — any error other than a media-services reset goes to wgSessionDidFail (upstream returned)
         guard let errorValue = notification.userInfo?[AVCaptureSessionErrorKey] as? NSError else {
             return
         }
         guard AVError(_nsError: errorValue).code == .mediaServicesWereReset else {
-            self.ggSessionDidFail() // GHOST: see ggSessionDidFail
+            self.wgSessionDidFail() // WRAITH: see wgSessionDidFail
             return
         }
         self.sessionQueue.async { [weak self] in
@@ -1176,14 +1176,14 @@ final class CameraNeo: NSObject, CameraProtocol {
     }
 }
 
-// GHOST: Ghostgram round video settings and frame processor
+// WRAITH: Wraithgram round video settings and frame processor
 extension CameraNeo {
     /// Any other runtime error stops the session for good (a dual-camera session over its hardware
     /// budget, a device it can not run…). Upstream ignored it, so the recording waited for frames that
     /// never came; now it fails, and the round camera screen goes on with the legacy camera
-    /// (`VideoMessageCameraScreen.Node.ggFallBackToLegacyCamera`). Only once the session has stopped,
+    /// (`VideoMessageCameraScreen.Node.wgFallBackToLegacyCamera`). Only once the session has stopped,
     /// and only before anything was recorded: a clip already under way is finished by «stop» as before.
-    func ggSessionDidFail() {
+    func wgSessionDidFail() {
         self.sessionQueue.async { [weak self] in
             guard let self, !self.isInvalidated, !self.session.isRunning, self.recordingDuration.with({ $0 }) == 0.0 else {
                 return
@@ -1196,23 +1196,23 @@ extension CameraNeo {
         }
     }
 
-    private var ggCapturesAudio: Bool {
-        return self.configuration.audio && !self.ggRecording.muteAudio
+    private var wgCapturesAudio: Bool {
+        return self.configuration.audio && !self.wgRecording.muteAudio
     }
 
-    private var ggOutputSide: Int {
-        return self.ggRecording.outputSide(defaultSide: RoundVideoFrameProcessor.outputWidth)
+    private var wgOutputSide: Int {
+        return self.wgRecording.outputSide(defaultSide: RoundVideoFrameProcessor.outputWidth)
     }
 
     /// The round video settings ask for a capture of their own (a side or a frame rate other than
     /// Telegram's); otherwise the capture is Telegram's (`roundVideoCaptureFormat`).
-    private var ggUsesOwnCaptureFormat: Bool {
-        return self.ggRecording.side != nil || Double(self.ggRecording.frameRate) != roundVideoCaptureFrameRate
+    private var wgUsesOwnCaptureFormat: Bool {
+        return self.wgRecording.side != nil || Double(self.wgRecording.frameRate) != roundVideoCaptureFrameRate
     }
 
     /// The format of one capture option: `width` 0 = any 4:3 format at least `height` high (up to
     /// 1440 — the photo-sized ones are slow and heavy), the smallest matching one first.
-    private func ggCaptureFormat(device: AVCaptureDevice, width: Int32, height: Int32, frameRate: Double) -> AVCaptureDevice.Format? {
+    private func wgCaptureFormat(device: AVCaptureDevice, width: Int32, height: Int32, frameRate: Double) -> AVCaptureDevice.Format? {
         let candidates = device.formats.filter { format in
             if self.useMultiCam, #available(iOS 13.0, *), !format.isMultiCamSupported {
                 return false
@@ -1240,14 +1240,14 @@ extension CameraNeo {
         }
     }
 
-    private var ggCaptureOptions: [(width: Int32, height: Int32, frameRate: Double)] {
+    private var wgCaptureOptions: [(width: Int32, height: Int32, frameRate: Double)] {
         var options: [(width: Int32, height: Int32, frameRate: Double)] = []
-        let frameRate = Double(self.ggRecording.frameRate)
-        if self.ggRecording.needsHighResolutionCapture(defaultSide: RoundVideoFrameProcessor.outputWidth) {
+        let frameRate = Double(self.wgRecording.frameRate)
+        if self.wgRecording.needsHighResolutionCapture(defaultSide: RoundVideoFrameProcessor.outputWidth) {
             // A 4:3 format first (width 0 = «4:3, at least this high», see configureCaptureFormat): the
             // square of a round video keeps the sensor's whole short side, as upstream's 640×480 does.
             // From 1280×720 (16:9) it lost a quarter of the view — the front camera looked zoomed in.
-            let side = Int32(self.ggRecording.outputSide(defaultSide: RoundVideoFrameProcessor.outputWidth))
+            let side = Int32(self.wgRecording.outputSide(defaultSide: RoundVideoFrameProcessor.outputWidth))
             options.append((0, side, frameRate))
             options.append((1280, 720, frameRate))
             if frameRate != roundVideoCaptureFrameRate {
@@ -1263,8 +1263,8 @@ extension CameraNeo {
     }
 
     /// Stabilization from the settings; `upstream` is Telegram's own choice for this format.
-    private func ggStabilizationMode(device: AVCaptureDevice, upstream: AVCaptureVideoStabilizationMode) -> AVCaptureVideoStabilizationMode {
-        switch self.ggRecording.stabilization {
+    private func wgStabilizationMode(device: AVCaptureDevice, upstream: AVCaptureVideoStabilizationMode) -> AVCaptureVideoStabilizationMode {
+        switch self.wgRecording.stabilization {
         case .standard:
             return upstream
         case .off:
@@ -1277,8 +1277,8 @@ extension CameraNeo {
         }
     }
 
-    private func ggProcessedSampleBuffer(_ sampleBuffer: CMSampleBuffer, position: Camera.Position) -> CMSampleBuffer {
-        guard let processor = self.ggFrameProcessor, position == self.positionValue.with({ $0 }), let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+    private func wgProcessedSampleBuffer(_ sampleBuffer: CMSampleBuffer, position: Camera.Position) -> CMSampleBuffer {
+        guard let processor = self.wgFrameProcessor, position == self.positionValue.with({ $0 }), let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return sampleBuffer
         }
         let quarterTurns: Int
@@ -1292,24 +1292,24 @@ extension CameraNeo {
         default:
             quarterTurns = 1
         }
-        let info = GGCameraFrameInfo(
+        let info = WGCameraFrameInfo(
             facing: position == .front ? .front : .back,
             timestamp: CMSampleBufferGetPresentationTimeStamp(sampleBuffer),
-            orientation: GGCameraFrameInfo.orientation(quarterTurns: quarterTurns, mirrored: position == .front)
+            orientation: WGCameraFrameInfo.orientation(quarterTurns: quarterTurns, mirrored: position == .front)
         )
         guard let processed = processor.process(pixelBuffer, info: info) else {
             return sampleBuffer
         }
         // One format description is reused while the buffers match it (no allocation per frame).
-        if let current = self.ggFormatDescription, CMVideoFormatDescriptionMatchesImageBuffer(current, imageBuffer: processed) {
+        if let current = self.wgFormatDescription, CMVideoFormatDescriptionMatchesImageBuffer(current, imageBuffer: processed) {
         } else {
             var formatDescription: CMVideoFormatDescription?
             guard CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: processed, formatDescriptionOut: &formatDescription) == noErr, let formatDescription else {
                 return sampleBuffer
             }
-            self.ggFormatDescription = formatDescription
+            self.wgFormatDescription = formatDescription
         }
-        guard let formatDescription = self.ggFormatDescription else {
+        guard let formatDescription = self.wgFormatDescription else {
             return sampleBuffer
         }
         var timing = CMSampleTimingInfo(
@@ -1361,9 +1361,9 @@ extension CameraNeo: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudi
             return
         }
 
-        // GHOST: Ghostgram frame processor (masks): once per frame of the visible camera, the same
+        // WRAITH: Wraithgram frame processor (masks): once per frame of the visible camera, the same
         // processed frame goes to the recorder and to the live preview
-        let sampleBuffer = self.ggProcessedSampleBuffer(sampleBuffer, position: position)
+        let sampleBuffer = self.wgProcessedSampleBuffer(sampleBuffer, position: position)
 
         self.recorder?.appendVideoSampleBuffer(
             sampleBuffer,

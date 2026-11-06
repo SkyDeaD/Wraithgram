@@ -12,8 +12,8 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: bubble editor (fill opacity) — W2-4
-        "//Ghostgram/Features/Appearance:GGAppearanceSettings",
+        # WRAITH: bubble editor (fill opacity) — W2-4
+        "//Wraithgram/Features/Appearance:WGAppearanceSettings",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
     	"//submodules/Display:Display",
     	"//submodules/TelegramPresentationData:TelegramPresentationData",

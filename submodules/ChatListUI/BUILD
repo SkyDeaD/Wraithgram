@@ -8,20 +8,20 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: Ghostgram hook points (chat list points compile in via the filegroup)
-        "//Ghostgram/GGHooks:ChatListUIHookSources",
+        # WRAITH: Wraithgram hook points (chat list points compile in via the filegroup)
+        "//Wraithgram/WGHooks:ChatListUIHookSources",
     ],
     copts = [
         "-warnings-as-errors",
     ],
     deps = [
-        # GHOST: Ghostgram hook points (chat list points compile in via the filegroup)
-        "//Ghostgram/GGCore:GGCore",
-        "//Ghostgram/GGHooks:GGHooks",
-        # GHOST: Swiftgram-parity settings (W5-SG)
-        "//Ghostgram/Features/Shared:GGFeaturesShared",
-        # GHOST: checkmark colors of the rows (appearance snapshot)
-        "//Ghostgram/Features/Appearance:GGAppearanceSettings",
+        # WRAITH: Wraithgram hook points (chat list points compile in via the filegroup)
+        "//Wraithgram/WGCore:WGCore",
+        "//Wraithgram/WGHooks:WGHooks",
+        # WRAITH: Swiftgram-parity settings (W5-SG)
+        "//Wraithgram/Features/Shared:WGFeaturesShared",
+        # WRAITH: checkmark colors of the rows (appearance snapshot)
+        "//Wraithgram/Features/Appearance:WGAppearanceSettings",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/LottieSettings:LottieSettings",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",

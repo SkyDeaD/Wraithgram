@@ -2,7 +2,7 @@ import Foundation
 import TelegramCore
 import TelegramPresentationData
 import TelegramUIPreferences
-import GGAppearanceSettings // GHOST: appearance snapshot
+import WGAppearanceSettings // WRAITH: appearance snapshot
 
 public func stringForEntityFormattedDate(timestamp: Int32, format: MessageTextEntityType.DateTimeFormat, strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat) -> String {
     switch format {
@@ -140,8 +140,8 @@ public func stringForMessageTimestamp(timestamp: Int32, dateTimeFormat: Presenta
     } else {
         gmtime_r(&t, &timeinfo)
     }
-    // GHOST: seconds in message times (appearance.messages.secondsInTime)
-    let withSeconds = withSeconds || GGAppearanceSnapshot.current.secondsInTime
+    // WRAITH: seconds in message times (appearance.messages.secondsInTime)
+    let withSeconds = withSeconds || WGAppearanceSnapshot.current.secondsInTime
     
     return stringForShortTimestamp(hours: timeinfo.tm_hour, minutes: timeinfo.tm_min, seconds: withSeconds ? timeinfo.tm_sec : nil, dateTimeFormat: dateTimeFormat)
 }

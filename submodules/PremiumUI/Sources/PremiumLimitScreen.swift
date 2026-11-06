@@ -857,8 +857,8 @@ private final class LimitSheetContent: CombinedComponent {
             let isPremiumDisabled: Bool
             if case .storiesChannelBoost = subject {
                 isPremiumDisabled = false
-            } else if case .accounts = subject, !GGLimitHooks.premiumRaisesAccountLimit {
-                // GHOST: Premium adds no accounts over the account limit (GGLimitHooks.accountLimit): "limit reached" with OK, no Premium offer
+            } else if case .accounts = subject, !WGLimitHooks.premiumRaisesAccountLimit {
+                // WRAITH: Premium adds no accounts over the account limit (WGLimitHooks.accountLimit): "limit reached" with OK, no Premium offer
                 isPremiumDisabled = true
             } else {
                 isPremiumDisabled = premiumConfiguration.isPremiumDisabled
@@ -1070,9 +1070,9 @@ private final class LimitSheetContent: CombinedComponent {
                     string = strings.Premium_MaxFileSizeNoPremiumText(dataSizeString(premiumLimit, formatting: DataSizeStringFormatting(strings: environment.strings, decimalSeparator: environment.dateTimeFormat.decimalSeparator))).string
                 }
             case .accounts:
-                // GHOST: both limits go through GGLimitHooks.accountLimit (empty point = 3 and 4)
-                let limit = GGLimitHooks.maximumNumberOfAccounts(isPremium: false)
-                let premiumLimit = GGLimitHooks.maximumNumberOfAccounts(isPremium: true)
+                // WRAITH: both limits go through WGLimitHooks.accountLimit (empty point = 3 and 4)
+                let limit = WGLimitHooks.maximumNumberOfAccounts(isPremium: false)
+                let premiumLimit = WGLimitHooks.maximumNumberOfAccounts(isPremium: true)
                 iconName = "Premium/Account"
                 badgeText = "\(component.count)"
                 string = component.count >= premiumLimit ? strings.Premium_MaxAccountsFinalText("\(premiumLimit)").string : strings.Premium_MaxAccountsText("\(limit)").string

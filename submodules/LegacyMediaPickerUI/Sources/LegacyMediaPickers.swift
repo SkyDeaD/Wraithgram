@@ -405,9 +405,9 @@ public func legacyAssetPickerEnqueueMessages(
                                     var randomId: Int64 = 0
                                     arc4random_buf(&randomId, 8)
                                     let tempFilePath = NSTemporaryDirectory() + "\(randomId).jpeg"
-                                    // GHOST: features may change outgoing photo size, quality and pixels (GGOutgoingImageHooks)
-                                    let ggMaxSide = GGOutgoingImageHooks.maxSide(item.forceHd ? 2560.0 : 1280.0, hd: item.forceHd)
-                                    let maxSize = CGSize(width: ggMaxSide, height: ggMaxSide)
+                                    // WRAITH: features may change outgoing photo size, quality and pixels (WGOutgoingImageHooks)
+                                    let wgMaxSide = WGOutgoingImageHooks.maxSide(item.forceHd ? 2560.0 : 1280.0, hd: item.forceHd)
+                                    let maxSize = CGSize(width: wgMaxSide, height: wgMaxSide)
                                     let scaledSize = image.size.aspectFittedOrSmaller(maxSize)
                                 
                                     if let scaledImage = TGScaleImageToPixelSize(image, scaledSize) {
@@ -415,8 +415,8 @@ public func legacyAssetPickerEnqueueMessages(
                                         defer {
                                             EngineTempBox.shared.dispose(tempFile)
                                         }
-                                        // GHOST: see GGOutgoingImageHooks above
-                                        if let scaledImageData = compressImageToJPEG(GGOutgoingImageHooks.transform(scaledImage, hd: item.forceHd), quality: GGOutgoingImageHooks.jpegQuality(0.6, hd: item.forceHd), tempFilePath: tempFile.path) {
+                                        // WRAITH: see WGOutgoingImageHooks above
+                                        if let scaledImageData = compressImageToJPEG(WGOutgoingImageHooks.transform(scaledImage, hd: item.forceHd), quality: WGOutgoingImageHooks.jpegQuality(0.6, hd: item.forceHd), tempFilePath: tempFile.path) {
                                             let _ = try? scaledImageData.write(to: URL(fileURLWithPath: tempFilePath))
 
                                             let resource = LocalFileReferenceMediaResource(localFilePath: tempFilePath, randomId: randomId)

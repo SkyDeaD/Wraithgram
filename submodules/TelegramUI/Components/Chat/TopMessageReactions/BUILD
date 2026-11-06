@@ -6,8 +6,8 @@ swift_library(
     srcs = glob([
         "Sources/**/*.swift",
     ]) + [
-        # GHOST: own recent reactions point (W2-5)
-        "//Ghostgram/Features/Interface:TopMessageReactionsPointSources",
+        # WRAITH: own recent reactions point (W2-5)
+        "//Wraithgram/Features/Interface:TopMessageReactionsPointSources",
     ],
     copts = [
         "-warnings-as-errors",
@@ -17,8 +17,8 @@ swift_library(
         "//submodules/TelegramCore",
         "//submodules/AccountContext",
         "//submodules/ReactionSelectionNode",
-        # GHOST: hook points
-        "//Ghostgram/GGCore:GGCore",
+        # WRAITH: hook points
+        "//Wraithgram/WGCore:WGCore",
     ],
     visibility = [
         "//visibility:public",

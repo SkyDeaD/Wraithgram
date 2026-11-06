@@ -252,7 +252,7 @@ func chatMessageDisplaySendMessageOptions(selfController: ChatControllerImpl, no
                     hasTimers: false,
                     sendPaidMessageStars: selfController.presentationInterfaceState.sendPaidMessageStars,
                     isMonoforum: selfController.presentationInterfaceState.renderedPeer?.peer?.isMonoForum ?? false,
-                    additionalItems: ggSendMenuItems(selfController) // GHOST: features' items in the Send menu (GGChatScreenHooks.sendMenuItems)
+                    additionalItems: wgSendMenuItems(selfController) // WRAITH: features' items in the Send menu (WGChatScreenHooks.sendMenuItems)
                 )),
                 hasEntityKeyboard: hasEntityKeyboard,
                 gesture: gesture,

@@ -23,7 +23,7 @@ import MultilineTextComponent
 import ContextUI
 import NewsFeedSupport
 import NewsChannelIsland
-import GGFeaturesShared // GHOST: «Скрыть кнопку под каналом» (GGMessagesPolicy)
+import WGFeaturesShared // WRAITH: «Скрыть кнопку под каналом» (WGMessagesPolicy)
 
 private enum SubscriberAction: Equatable, Hashable {
     case join
@@ -900,9 +900,9 @@ public final class ChatChannelSubscriberInputPanelNode: ChatInputPanelNode {
             centerAction = (title, isAccent)
         }
         
-        // GHOST: «Скрыть кнопку под каналом» hides only the button of a channel one is subscribed to (mute, or the News island's «added to chats»); search, gift and «suggest a post» stay (GGMessagesPolicy.hidesChannelBottomButton)
-        var ggHidesSubscribedButton = false
-        if GGMessagesPolicy.hidesChannelBottomButton, let channel = interfaceState.renderedPeer?.peer as? TelegramChannel, case .broadcast = channel.info { switch self.action { case .muteNotifications, .unmuteNotifications, .addedToChats: ggHidesSubscribedButton = true; centerAction = nil; default: break } }
+        // WRAITH: «Скрыть кнопку под каналом» hides only the button of a channel one is subscribed to (mute, or the News island's «added to chats»); search, gift and «suggest a post» stay (WGMessagesPolicy.hidesChannelBottomButton)
+        var wgHidesSubscribedButton = false
+        if WGMessagesPolicy.hidesChannelBottomButton, let channel = interfaceState.renderedPeer?.peer as? TelegramChannel, case .broadcast = channel.info { switch self.action { case .muteNotifications, .unmuteNotifications, .addedToChats: wgHidesSubscribedButton = true; centerAction = nil; default: break } }
         
         let islandContent: NewsChannelIslandView.Content?
         switch self.action {
@@ -911,7 +911,7 @@ public final class ChatChannelSubscriberInputPanelNode: ChatInputPanelNode {
         case .addedToNews:
             islandContent = .addedToNews
         case let .addedToChats(muted):
-            islandContent = ggHidesSubscribedButton ? nil : .addedToChats(muted: muted) // GHOST: hidden like the mute button
+            islandContent = wgHidesSubscribedButton ? nil : .addedToChats(muted: muted) // WRAITH: hidden like the mute button
         default:
             islandContent = nil
         }
